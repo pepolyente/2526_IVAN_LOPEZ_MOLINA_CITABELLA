@@ -1,4 +1,4 @@
-package com.citabella.citabellaapi.entity.utiles;
+package com.citabella.citabellaapi.entity.empleado;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;

@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.repository;
 
-public class CitaRepository {
+public interface CitaRepository {
 }

@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.repository;
 
-public class DetalleVentaServicioRepository {
+public interface DetalleVentaServicioRepository {
 }

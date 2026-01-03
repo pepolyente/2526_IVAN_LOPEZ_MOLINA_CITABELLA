@@ -1,4 +1,13 @@
 package com.citabella.citabellaapi.repository;
 
-public class ClienteRepository {
+import com.citabella.citabellaapi.entity.cliente.Cliente;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface ClienteRepository extends JpaRepository<Cliente, Integer> {
+
+    boolean existsByTelefono(String telefono);
+
+    boolean existsByUsuario_IdUsuario(Integer idUsuario);
 }

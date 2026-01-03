@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 //DE MOMENTO SIN USO
 @Entity
-@Table(name = "tokendispositivo")
+@Table(name = "token_dispositivo")
 public class TokenDispositivo {
 
     @Id

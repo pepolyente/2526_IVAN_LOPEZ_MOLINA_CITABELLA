@@ -1,11 +1,10 @@
 package com.citabella.citabellaapi.entity.empleado;
 
 import com.citabella.citabellaapi.entity.servicio.Servicio;
-import com.citabella.citabellaapi.entity.utiles.EmpleadoServicioId;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "empleadoservicio")
+@Table(name = "empleado_servicio")
 public class EmpleadoServicio {
 
     @EmbeddedId

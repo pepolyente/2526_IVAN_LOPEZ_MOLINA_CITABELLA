@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.service.interfaces;
 
-public class AuditoriaService {
+public interface AuditoriaService {
 }
