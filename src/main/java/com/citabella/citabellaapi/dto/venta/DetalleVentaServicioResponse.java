@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.dto.venta;
 
-public class DetalleVentaServicioResponse {
+public record DetalleVentaServicioResponse() {
 }

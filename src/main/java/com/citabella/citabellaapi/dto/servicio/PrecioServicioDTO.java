@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.dto.servicio;
 
-public class PrecioServicioDTO {
+public record PrecioServicioDTO() {
 }

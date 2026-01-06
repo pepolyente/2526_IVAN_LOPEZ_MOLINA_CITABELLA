@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.dto.cita;
 
-public class ReprogramarCitaRequest {
+public record ReprogramarCitaRequest() {
 }

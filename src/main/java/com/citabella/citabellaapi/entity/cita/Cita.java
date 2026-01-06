@@ -6,11 +6,17 @@ import com.citabella.citabellaapi.entity.empleado.Empleado;
 import com.citabella.citabellaapi.entity.servicio.Servicio;
 import com.citabella.citabellaapi.entity.utiles.EstadoCita;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "cita")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Cita {
 
     @Id
@@ -30,15 +36,15 @@ public class Cita {
     @Column(columnDefinition = "TEXT")
     private String notas;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente cliente;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "id_empleado",nullable = false)
     private Empleado empleado;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "id_servicio",nullable = false)
     private Servicio servicio;
 

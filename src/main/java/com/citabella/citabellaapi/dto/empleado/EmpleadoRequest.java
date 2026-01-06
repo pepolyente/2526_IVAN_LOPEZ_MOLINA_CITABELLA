@@ -1,4 +1,6 @@
 package com.citabella.citabellaapi.dto.empleado;
 
-public class EmpleadoRequest {
-}
+public record EmpleadoRequest(
+        String nombre,
+        String puesto
+) {}

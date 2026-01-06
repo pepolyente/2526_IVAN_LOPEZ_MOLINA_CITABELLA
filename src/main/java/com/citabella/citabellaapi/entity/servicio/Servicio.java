@@ -2,11 +2,17 @@ package com.citabella.citabellaapi.entity.servicio;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "servicio")
+@Getter
+@Setter
+@NoArgsConstructor
 public class Servicio {
 
     @Id
@@ -31,9 +37,7 @@ public class Servicio {
 
     @PrePersist
     private void prePersist() {
-        if (activo == null) {
-            activo = true;
-        }
+        if (activo == null) activo = true;
     }
 
 }

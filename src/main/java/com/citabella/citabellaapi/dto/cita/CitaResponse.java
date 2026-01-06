@@ -1,4 +1,7 @@
 package com.citabella.citabellaapi.dto.cita;
 
-public class CitaResponse {
+public record CitaResponse(
+        Integer idCita,
+        boolean haySolape
+) {
 }

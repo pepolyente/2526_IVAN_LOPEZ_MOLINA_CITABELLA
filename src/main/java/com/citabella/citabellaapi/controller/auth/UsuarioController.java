@@ -39,9 +39,9 @@ public class UsuarioController {
     public ResponseEntity<UsuarioResponse> crear(@RequestBody @Valid UsuarioRequest request) {
 
         Usuario usuario = usuarioService.crearUsuario(
-                request.getNombreUsuario(),
-                request.getEmail(),
-                request.getPassword()
+                request.nombreUsuario(),
+                request.email(),
+                request.password()
         );
 
         UsuarioResponse response = new UsuarioResponse(

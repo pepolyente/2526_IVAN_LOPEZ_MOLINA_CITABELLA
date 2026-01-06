@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.dto.producto;
 
-public class ProductoRequest {
+public record ProductoRequest() {
 }
