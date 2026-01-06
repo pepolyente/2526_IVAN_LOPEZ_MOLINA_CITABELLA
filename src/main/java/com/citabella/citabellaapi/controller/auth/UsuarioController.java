@@ -20,7 +20,7 @@ public class UsuarioController {
     }
 
     //@GetMapping("/me")
-    public UsuarioResponse me() {
+    /*public UsuarioResponse me() {
 
         Usuario usuario = usuarioService.obtenerUsuarioAutenticado();
 
@@ -34,24 +34,10 @@ public class UsuarioController {
                 tieneCliente
         );
     }
+    */
 
     @PostMapping
     public ResponseEntity<UsuarioResponse> crear(@RequestBody @Valid UsuarioRequest request) {
-
-        Usuario usuario = usuarioService.crearUsuario(
-                request.nombreUsuario(),
-                request.email(),
-                request.password()
-        );
-
-        UsuarioResponse response = new UsuarioResponse(
-                usuario.getIdUsuario(),
-                usuario.getNombreUsuario(),
-                usuario.getEmail(),
-                usuario.getRol().getNombre(),
-                false
-        );
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.crearUsuario(request));
     }
 }

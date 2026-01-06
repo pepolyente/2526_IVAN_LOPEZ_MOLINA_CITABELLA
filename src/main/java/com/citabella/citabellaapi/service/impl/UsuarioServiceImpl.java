@@ -1,5 +1,9 @@
 package com.citabella.citabellaapi.service.impl;
 
+import com.citabella.citabellaapi.dto.empleado.EmpleadoResponse;
+import com.citabella.citabellaapi.dto.usuario.UsuarioRequest;
+import com.citabella.citabellaapi.dto.usuario.UsuarioResponse;
+import com.citabella.citabellaapi.entity.empleado.Empleado;
 import com.citabella.citabellaapi.entity.seguridad.Rol;
 import com.citabella.citabellaapi.entity.seguridad.Usuario;
 import com.citabella.citabellaapi.repository.ClienteRepository;
@@ -29,12 +33,12 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public Usuario crearUsuario(String nombreUsuario, String email, String password) {
+    public UsuarioResponse crearUsuario(UsuarioRequest request) {
 
-        if(usuarioRepository.existsByEmail(email)) {
+        if(usuarioRepository.existsByEmail(request.email())) {
             throw new IllegalArgumentException("Email ya registrado");
         }
-        if(usuarioRepository.existsByNombreUsuario(nombreUsuario)) {
+        if(usuarioRepository.existsByNombreUsuario(request.nombreUsuario())) {
             throw new IllegalArgumentException("Nombre de usuario ya existe");
         }
 
@@ -42,28 +46,31 @@ public class UsuarioServiceImpl implements UsuarioService {
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
         Usuario usuario = new Usuario();
-        usuario.setNombreUsuario(nombreUsuario);
-        usuario.setEmail(email);
-        usuario.setPasswordHash(passwordEncoder.encode(password));
+        usuario.setNombreUsuario(request.nombreUsuario());
+        usuario.setEmail(request.email());
+        usuario.setPasswordHash(passwordEncoder.encode(request.password()));
         usuario.setRol(rol);
 
-        return usuarioRepository.save(usuario);
+        Usuario creado = usuarioRepository.save(usuario);
+        return mapToResponse(creado);
     }
 
     @Override
-    public Usuario obtenerPorId(Integer id) {
-        return usuarioRepository.findById(id)
+    public UsuarioResponse obtenerPorId(Integer id) {
+        Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return mapToResponse(usuario);
     }
 
     @Override
-    public Usuario obtenerPorEmail(String email) {
-        return usuarioRepository.findByEmail(email)
+    public UsuarioResponse obtenerPorEmail(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        return mapToResponse(usuario);
     }
 
     @Override
-    public Usuario obtenerUsuarioAutenticado() {
+    public UsuarioResponse obtenerUsuarioAutenticado() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null || !auth.isAuthenticated()) {
@@ -76,14 +83,27 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public void cambiarRol(Integer idUsuario, String nombreRol) {
-        Usuario usuario = obtenerPorId(idUsuario);
+        Usuario usuario = usuarioRepository.findById(idUsuario)
+                .orElseThrow(()-> new RuntimeException("Usuario no encontrado"));
         Rol rol = rolRepository.findByNombre(nombreRol)
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+
         usuario.setRol(rol);
+        usuarioRepository.save(usuario);
     }
 
     @Override
     public boolean tieneCliente(Integer idUsuario) {
         return clienteRepository.existsByUsuario_IdUsuario(idUsuario);
+    }
+
+
+    private UsuarioResponse mapToResponse(Usuario usuario) {
+        return new UsuarioResponse(
+                usuario.getIdUsuario(),
+                usuario.getNombreUsuario(),
+                usuario.getEmail(),
+                usuario.getRol().getNombre()
+        );
     }
 }

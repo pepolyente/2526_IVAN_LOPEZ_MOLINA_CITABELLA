@@ -1,5 +1,7 @@
 package com.citabella.citabellaapi.entity.seguridad;
 
+import com.citabella.citabellaapi.entity.utiles.EstadoCuenta;
+import com.citabella.citabellaapi.entity.utiles.TipoPerfil;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +30,11 @@ public class Usuario {
     @Column(nullable = false)
     private String passwordHash;
 
-    private Boolean activo = true;
+    @Enumerated(value = EnumType.STRING)
+    private TipoPerfil tipoPerfil;
+
+    @Enumerated(value = EnumType.STRING)
+    private EstadoCuenta estadoCuenta;
 
     private LocalDateTime fechaRegistro;
 
@@ -38,8 +44,11 @@ public class Usuario {
 
     @PrePersist
     private void prePersist() {
-        if (activo == null) {
-            activo = true;
+        if (tipoPerfil == null) {
+            tipoPerfil = TipoPerfil.NONE;
+        }
+        if (estadoCuenta == null) {
+            estadoCuenta = EstadoCuenta.ACTIVO;
         }
         if (fechaRegistro == null) {
             fechaRegistro = LocalDateTime.now();

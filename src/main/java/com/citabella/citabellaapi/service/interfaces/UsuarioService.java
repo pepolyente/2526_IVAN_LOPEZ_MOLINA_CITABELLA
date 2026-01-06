@@ -1,16 +1,18 @@
 package com.citabella.citabellaapi.service.interfaces;
 
+import com.citabella.citabellaapi.dto.usuario.UsuarioRequest;
+import com.citabella.citabellaapi.dto.usuario.UsuarioResponse;
 import com.citabella.citabellaapi.entity.seguridad.Usuario;
 
 public interface UsuarioService {
 
-    Usuario crearUsuario(String nombreUsuario, String email, String password);
+    UsuarioResponse crearUsuario(UsuarioRequest request);
 
-    Usuario obtenerPorId(Integer id);
+    UsuarioResponse obtenerPorId(Integer id);
 
-    Usuario obtenerPorEmail(String email);
+    UsuarioResponse obtenerPorEmail(String email);
 
-    Usuario obtenerUsuarioAutenticado();
+    UsuarioResponse obtenerUsuarioAutenticado();
 
     boolean tieneCliente(Integer idUsuario);
 

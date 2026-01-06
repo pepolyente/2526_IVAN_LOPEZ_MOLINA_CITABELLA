@@ -4,7 +4,8 @@ public record UsuarioResponse(
         Integer idUsuario,
         String nombreUsuario,
         String email,
-        String rol,
-        boolean tieneCliente
+        String rol
+        //TIPO PERFIL ??
+        //OPTIONAL PERFILID
 ) {
 }

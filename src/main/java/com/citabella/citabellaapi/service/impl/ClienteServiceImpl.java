@@ -1,6 +1,7 @@
 package com.citabella.citabellaapi.service.impl;
 
 import com.citabella.citabellaapi.dto.cliente.ClienteRequest;
+import com.citabella.citabellaapi.dto.cliente.ClienteResponse;
 import com.citabella.citabellaapi.entity.cliente.Cliente;
 import com.citabella.citabellaapi.entity.seguridad.Usuario;
 import com.citabella.citabellaapi.repository.ClienteRepository;
@@ -22,7 +23,7 @@ public class ClienteServiceImpl implements ClienteService {
 
 
     @Override
-    public Cliente crearCliente(ClienteRequest request) {
+    public ClienteResponse crearCliente(ClienteRequest request) {
 
         if (clienteRepository.existsByTelefono(request.telefono())) {
             throw new IllegalArgumentException("Teléfono ya registrado");
@@ -34,22 +35,25 @@ public class ClienteServiceImpl implements ClienteService {
         cliente.setGenero(request.genero());
         cliente.setFechaNacimiento(request.fechaNacimiento());
 
-        return clienteRepository.save(cliente);
+        Cliente creado = clienteRepository.save(cliente);
+        return mapToResponse(creado);
     }
 
     @Override
-    public Cliente obtenerPorId(Integer id) {
-        return clienteRepository.findById(id)
+    public ClienteResponse obtenerPorId(Integer id) {
+        Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+        return mapToResponse(cliente);
     }
 
     @Override
-    public List<Cliente> listar() {
-        return clienteRepository.findAll();
+    public List<ClienteResponse> listar() {
+        return clienteRepository.findAll().stream()
+                .map(this::mapToResponse).toList();
     }
 
     @Override
-    public Cliente asignarUsuario(Integer idCliente, Integer idUsuario) {
+    public ClienteResponse asignarUsuario(Integer idCliente, Integer idUsuario) {
         Cliente cliente = clienteRepository.findById(idCliente)
                 .orElseThrow(()-> new RuntimeException("Cliente no encontrado"));
         if (cliente.getUsuario() != null) {
@@ -64,11 +68,12 @@ public class ClienteServiceImpl implements ClienteService {
 
         cliente.setUsuario(usuario);
 
-        return clienteRepository.save(cliente);
+        Cliente cambiado = clienteRepository.save(cliente);
+        return mapToResponse(cambiado);
     }
 
     @Override
-    public Cliente desasignarUsuario(Integer idCliente) {
+    public ClienteResponse desasignarUsuario(Integer idCliente) {
         Cliente cliente = clienteRepository.findById(idCliente)
                 .orElseThrow(()-> new RuntimeException("Cliente no encontrado"));
         if (cliente.getUsuario() == null) {
@@ -76,11 +81,13 @@ public class ClienteServiceImpl implements ClienteService {
         }
         cliente.setUsuario(null);
 
-        return clienteRepository.save(cliente);
+        Cliente cambiado = clienteRepository.save(cliente);
+
+        return mapToResponse(cambiado);
     }
 
     @Override
-    public Cliente crearClienteMinimo(String nombre, String telefono) {
+    public ClienteResponse crearClienteMinimo(String nombre, String telefono) {
         if (telefono == null || telefono.isBlank()) {
             throw new IllegalArgumentException("El teléfono es obligatorio");
         }
@@ -91,7 +98,18 @@ public class ClienteServiceImpl implements ClienteService {
         cliente.setNombre(nombre);
         cliente.setTelefono(telefono);
 
-        return clienteRepository.save(cliente);
+        Cliente creado = clienteRepository.save(cliente);
+
+        return mapToResponse(creado);
     }
 
+
+    private ClienteResponse mapToResponse(Cliente cliente) {
+        return new ClienteResponse(
+                cliente.getIdCliente(),
+                cliente.getNombre(),
+                cliente.getTelefono(),
+                cliente.getGenero()
+        );
+    }
 }
