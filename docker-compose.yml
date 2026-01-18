@@ -1,0 +1,4 @@
+version: "3.9"
+
+# docker-compose global del sistema CitaBella
+# Los servicios se activarán cuando las ramas dev-* se integren
