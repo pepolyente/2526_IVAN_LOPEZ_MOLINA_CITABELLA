@@ -9,9 +9,12 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface CitaRepository extends JpaRepository<Cita,Integer> {
+
+        //añadir campos para la nueva entidad peticion (countByEmpleadoAndFechaOverlapAndEstado(empleado, inicio, fin, ESTADO_CONFIRMADA))
         @Query(""" 
 SELECT COUNT(c) > 0 FROM Cita c WHERE c.empleado.idEmpleado = :idEmpleado AND c.fechaInicio < :fechaFin AND c.fechaFin < :fechaInicio""")
         boolean existeSolape(@Param("idEmpleado")Integer idEmpleado,
@@ -20,5 +23,9 @@ SELECT COUNT(c) > 0 FROM Cita c WHERE c.empleado.idEmpleado = :idEmpleado AND c.
 
         List<Cita> findByEmpleado_IdEmpleado(Integer idEmpleado);
         List<Cita> findByCliente_IdCliente(Integer idCliente);
+
+        //metodo (dame todas las citas de este empleado entre hora A y hora B que no esten canceladas)
+
+
 
 }

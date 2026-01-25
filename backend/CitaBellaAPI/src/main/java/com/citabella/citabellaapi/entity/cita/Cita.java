@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "cita")
@@ -36,6 +37,10 @@ public class Cita {
     @Column(columnDefinition = "TEXT")
     private String notas;
 
+    //añadir atributo solape
+    @Column(name = "solape")
+    private Boolean tieneSolape;
+
     @ManyToOne(fetch = FetchType.LAZY,optional = false)
     @JoinColumn(name = "id_cliente", nullable = false)
     private Cliente cliente;
@@ -44,14 +49,18 @@ public class Cita {
     @JoinColumn(name = "id_empleado",nullable = false)
     private Empleado empleado;
 
-    @ManyToOne(fetch = FetchType.LAZY,optional = false)
-    @JoinColumn(name = "id_servicio",nullable = false)
-    private Servicio servicio;
+    //Posibilidad de varios servicios por cita
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "cita_servicio",
+            joinColumns = @JoinColumn(name = "id_cita"),
+            inverseJoinColumns = @JoinColumn(name = "id_servicio"))
+    private Set<Servicio> servicio;
 
     @PrePersist
     private void prePersist() {
         if (estado == null) {
-            estado = EstadoCita.pendiente;
+            estado = EstadoCita.PENDIENTE;
         }
     }
 }

@@ -6,7 +6,6 @@ import com.citabella.citabellaapi.entity.utiles.EstadoNotificacion;
 import com.citabella.citabellaapi.entity.utiles.TipoNotificacion;
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -41,7 +40,7 @@ public class Notificacion {
     @PrePersist
     private void prePersist() {
         if (estado == null) {
-            estado = EstadoNotificacion.pendiente;
+            estado = EstadoNotificacion.PENDIENTE;
         }
     }
 

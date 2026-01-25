@@ -1,5 +1,5 @@
 package com.citabella.citabellaapi.entity.utiles;
 
 public enum TipoDispositivo {
-    android, ios, web
+    ANDROID, IOS, WEB
 }

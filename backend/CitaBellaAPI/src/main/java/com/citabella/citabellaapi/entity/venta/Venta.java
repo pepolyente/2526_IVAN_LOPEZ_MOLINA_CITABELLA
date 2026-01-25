@@ -1,5 +1,6 @@
 package com.citabella.citabellaapi.entity.venta;
 
+import com.citabella.citabellaapi.entity.cita.Cita;
 import com.citabella.citabellaapi.entity.cliente.Cliente;
 import com.citabella.citabellaapi.entity.empleado.Empleado;
 import com.citabella.citabellaapi.entity.utiles.MetodoPago;
@@ -23,7 +24,7 @@ public class Venta {
     @Enumerated(value = EnumType.STRING)
     private MetodoPago metodoPago;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
 
@@ -31,13 +32,17 @@ public class Venta {
     @JoinColumn(name = "id_empleado")
     private Empleado empleado;
 
+    @OneToOne(optional = true)
+    @JoinColumn(name = "id_cita")
+    private Cita cita;
+
     @PrePersist
     private void prePersist() {
         if (fecha == null) {
             fecha = LocalDateTime.now();
         }
         if (metodoPago == null) {
-            metodoPago = MetodoPago.efectivo;
+            metodoPago = MetodoPago.EFECTIVO;
         }
     }
 

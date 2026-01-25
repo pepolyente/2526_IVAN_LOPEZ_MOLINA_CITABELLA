@@ -6,6 +6,8 @@ import com.citabella.citabellaapi.entity.cita.Cita;
 import com.citabella.citabellaapi.entity.cliente.Cliente;
 import com.citabella.citabellaapi.entity.empleado.Empleado;
 import com.citabella.citabellaapi.entity.servicio.Servicio;
+import com.citabella.citabellaapi.entity.utiles.EstadoCita;
+import com.citabella.citabellaapi.entity.venta.Venta;
 import com.citabella.citabellaapi.repository.*;
 import com.citabella.citabellaapi.service.interfaces.CitaService;
 import jakarta.transaction.Transactional;
@@ -55,7 +57,11 @@ public class CitaServiceImpl implements CitaService {
         Cita cita = new Cita();
         cita.setCliente(cliente);
         cita.setEmpleado(empleado);
-        cita.setServicio(servicio);
+
+        //CAMBIAR A SET
+        //cita.setServicio(servicio);
+
+
         cita.setFechaInicio(request.fechaInicio());
         cita.setFechaFin(request.fechaFin());
         cita.setNotas(request.notas());
@@ -69,6 +75,16 @@ public class CitaServiceImpl implements CitaService {
     }
 
     @Override
+    public CitaResponse cancelarCita(CrearCitaRequest request) {
+        return null;
+    }
+
+    @Override
+    public CitaResponse finalizarCita(Integer idCita) {
+        return null;
+    }
+
+    @Override
     public List<Cita> listarPorEmpleado(Integer idEmpleado) {
         return citaRepository.findByEmpleado_IdEmpleado(idEmpleado);
     }
@@ -76,5 +92,20 @@ public class CitaServiceImpl implements CitaService {
     @Override
     public List<Cita> listarPorCliente(Integer idCliente) {
         return citaRepository.findByCliente_IdCliente(idCliente);
+    }
+
+    @Override
+    public void validarCambioDeEstado(EstadoCita estadoCitaAnterior, EstadoCita estadoCitaNuevo) {
+
+    }
+
+    @Override
+    public boolean detectarSolape() {
+        return false;
+    }
+
+    @Override
+    public Venta cerrarCita() {
+        return null;
     }
 }

@@ -36,7 +36,7 @@ public class Producto {
     @PrePersist
     private void prePersist() {
         if (tipoUso == null) {
-            tipoUso = TipoUso.ambos;
+            tipoUso = TipoUso.AMBOS;
         }
         if (prioridadAlerta == null) {
             prioridadAlerta = false;
