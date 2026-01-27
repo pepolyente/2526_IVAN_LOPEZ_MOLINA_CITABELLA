@@ -2,7 +2,7 @@ package com.citabella.citabellaapi.entity.client;
 
 
 import com.citabella.citabellaapi.entity.appointment.Cita;
-import com.citabella.citabellaapi.entity.enums.Genero;
+import com.citabella.citabellaapi.entity.enums.Gender;
 import com.citabella.citabellaapi.entity.security.Usuario;
 import com.citabella.citabellaapi.entity.sale.Venta;
 import jakarta.persistence.*;
@@ -33,7 +33,7 @@ public class Cliente {
     private LocalDate fechaNacimiento;
 
     @Enumerated(EnumType.STRING)
-    private Genero genero;
+    private Gender gender;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario",unique = true)

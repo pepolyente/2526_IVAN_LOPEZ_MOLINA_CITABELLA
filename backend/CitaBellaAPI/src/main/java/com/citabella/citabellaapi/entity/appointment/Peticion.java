@@ -3,9 +3,9 @@ package com.citabella.citabellaapi.entity.appointment;
 import com.citabella.citabellaapi.entity.client.Cliente;
 import com.citabella.citabellaapi.entity.employee.Empleado;
 import com.citabella.citabellaapi.entity.treatment.Servicio;
-import com.citabella.citabellaapi.entity.enums.CanalPeticion;
-import com.citabella.citabellaapi.entity.enums.EstadoPeticion;
-import com.citabella.citabellaapi.entity.enums.TipoPeticion;
+import com.citabella.citabellaapi.entity.enums.RequestChannel;
+import com.citabella.citabellaapi.entity.enums.RequestStatus;
+import com.citabella.citabellaapi.entity.enums.RequestType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
@@ -29,13 +29,13 @@ public class Peticion {
     private LocalDateTime fechaPropuesta;
 
     @Enumerated(value = EnumType.STRING)
-    private EstadoPeticion estado;
+    private RequestStatus estado;
 
     @Enumerated(EnumType.STRING)
-    private CanalPeticion canal;
+    private RequestChannel canal;
 
     @Enumerated(EnumType.STRING)
-    private TipoPeticion tipo;
+    private RequestType tipo;
 
     @NotEmpty
     @ManyToMany
@@ -61,7 +61,7 @@ public class Peticion {
     @PrePersist
     void prePersist() {
         cita = null;
-        estado = EstadoPeticion.PENDIENTE;
+        estado = RequestStatus.PENDING;
     }
 
     private LocalDateTime calcularFechaFin(LocalDateTime fechaInicio, Set<Servicio> servicios) {

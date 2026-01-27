@@ -3,7 +3,7 @@ package com.citabella.citabellaapi.entity.sale;
 import com.citabella.citabellaapi.entity.appointment.Cita;
 import com.citabella.citabellaapi.entity.client.Cliente;
 import com.citabella.citabellaapi.entity.employee.Empleado;
-import com.citabella.citabellaapi.entity.enums.MetodoPago;
+import com.citabella.citabellaapi.entity.enums.PaymentMethod;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -22,7 +22,7 @@ public class Venta {
     private BigDecimal total;
 
     @Enumerated(value = EnumType.STRING)
-    private MetodoPago metodoPago;
+    private PaymentMethod paymentMethod;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente")
@@ -41,8 +41,8 @@ public class Venta {
         if (fecha == null) {
             fecha = LocalDateTime.now();
         }
-        if (metodoPago == null) {
-            metodoPago = MetodoPago.EFECTIVO;
+        if (paymentMethod == null) {
+            paymentMethod = PaymentMethod.CASH;
         }
     }
 

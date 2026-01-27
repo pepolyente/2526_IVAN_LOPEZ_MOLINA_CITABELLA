@@ -32,7 +32,7 @@ public class ClienteServiceImpl implements ClienteService {
         Cliente cliente = new Cliente();
         cliente.setNombre(request.nombre());
         cliente.setTelefono(request.telefono());
-        cliente.setGenero(request.genero());
+        cliente.setGender(request.gender());
         cliente.setFechaNacimiento(request.fechaNacimiento());
 
         Cliente creado = clienteRepository.save(cliente);
@@ -109,7 +109,7 @@ public class ClienteServiceImpl implements ClienteService {
                 cliente.getIdCliente(),
                 cliente.getNombre(),
                 cliente.getTelefono(),
-                cliente.getGenero()
+                cliente.getGender()
         );
     }
 }

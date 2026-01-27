@@ -1,6 +1,6 @@
 package com.citabella.citabellaapi.entity.security;
 
-import com.citabella.citabellaapi.entity.enums.AccionAuditoria;
+import com.citabella.citabellaapi.entity.enums.AuditAction;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ public class Auditoria {
 
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
-    private AccionAuditoria accion;
+    private AuditAction accion;
 
     private LocalDateTime fecha;
 

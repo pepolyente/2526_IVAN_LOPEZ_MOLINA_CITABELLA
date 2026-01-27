@@ -1,7 +1,7 @@
 package com.citabella.citabellaapi.entity.product;
 
-import com.citabella.citabellaapi.entity.enums.ReferenciaTipo;
-import com.citabella.citabellaapi.entity.enums.TipoMovimiento;
+import com.citabella.citabellaapi.entity.enums.ReferenceType;
+import com.citabella.citabellaapi.entity.enums.MovementType;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ public class MovimientoStock {
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private TipoMovimiento tipo;
+    private MovementType tipo;
 
     @Column(nullable = false)
     private Integer cantidad;
@@ -26,7 +26,7 @@ public class MovimientoStock {
     private LocalDateTime fecha;
 
     @Enumerated(value = EnumType.STRING)
-    private ReferenciaTipo referenciaTipo;
+    private ReferenceType referenceType;
 
     private Integer referenciaId;
 

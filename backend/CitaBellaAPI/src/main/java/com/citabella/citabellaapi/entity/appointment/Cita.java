@@ -4,7 +4,7 @@ package com.citabella.citabellaapi.entity.appointment;
 import com.citabella.citabellaapi.entity.client.Cliente;
 import com.citabella.citabellaapi.entity.employee.Empleado;
 import com.citabella.citabellaapi.entity.treatment.Servicio;
-import com.citabella.citabellaapi.entity.enums.EstadoCita;
+import com.citabella.citabellaapi.entity.enums.AppointmentStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,7 +35,7 @@ public class Cita {
 
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
-    private EstadoCita estado;
+    private AppointmentStatus estado;
 
     @Column(columnDefinition = "TEXT")
     private String notas;
@@ -67,7 +67,7 @@ public class Cita {
     @PrePersist
     private void prePersist() {
         if (estado == null) {
-            estado = EstadoCita.PENDIENTE;
+            estado = AppointmentStatus.PENDING;
         }
     }
 }

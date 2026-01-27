@@ -6,7 +6,7 @@ import com.citabella.citabellaapi.entity.appointment.Cita;
 import com.citabella.citabellaapi.entity.client.Cliente;
 import com.citabella.citabellaapi.entity.employee.Empleado;
 import com.citabella.citabellaapi.entity.treatment.Servicio;
-import com.citabella.citabellaapi.entity.enums.EstadoCita;
+import com.citabella.citabellaapi.entity.enums.AppointmentStatus;
 import com.citabella.citabellaapi.entity.sale.Venta;
 import com.citabella.citabellaapi.repository.*;
 import com.citabella.citabellaapi.service.interfaces.CitaService;
@@ -95,7 +95,7 @@ public class CitaServiceImpl implements CitaService {
     }
 
     @Override
-    public void validarCambioDeEstado(EstadoCita estadoCitaAnterior, EstadoCita estadoCitaNuevo) {
+    public void validarCambioDeEstado(AppointmentStatus appointmentStatusAnterior, AppointmentStatus appointmentStatusNuevo) {
 
     }
 

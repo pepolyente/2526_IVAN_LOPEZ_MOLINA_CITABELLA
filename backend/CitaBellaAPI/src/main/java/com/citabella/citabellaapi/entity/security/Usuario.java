@@ -2,8 +2,8 @@ package com.citabella.citabellaapi.entity.security;
 
 import com.citabella.citabellaapi.entity.client.Cliente;
 import com.citabella.citabellaapi.entity.employee.Empleado;
-import com.citabella.citabellaapi.entity.enums.EstadoCuenta;
-import com.citabella.citabellaapi.entity.enums.TipoPerfil;
+import com.citabella.citabellaapi.entity.enums.AccountStatus;
+import com.citabella.citabellaapi.entity.enums.ProfileType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,10 +33,10 @@ public class Usuario {
     private String passwordHash;
 
     @Enumerated(value = EnumType.STRING)
-    private TipoPerfil tipoPerfil;
+    private ProfileType profileType;
 
     @Enumerated(value = EnumType.STRING)
-    private EstadoCuenta estadoCuenta;
+    private AccountStatus accountStatus;
 
     private LocalDateTime fechaRegistro;
 
@@ -52,11 +52,11 @@ public class Usuario {
 
     @PrePersist
     private void prePersist() {
-        if (tipoPerfil == null) {
-            tipoPerfil = TipoPerfil.NONE;
+        if (profileType == null) {
+            profileType = ProfileType.NONE;
         }
-        if (estadoCuenta == null) {
-            estadoCuenta = EstadoCuenta.ACTIVO;
+        if (accountStatus == null) {
+            accountStatus = AccountStatus.ACTIVE;
         }
         if (fechaRegistro == null) {
             fechaRegistro = LocalDateTime.now();
@@ -64,27 +64,27 @@ public class Usuario {
     }
 
     public void asignarCliente(Cliente cliente) {
-        if (tipoPerfil != TipoPerfil.NONE) {
+        if (profileType != ProfileType.NONE) {
             throw new IllegalStateException("Perfil ya asignado");
         }
-        this.tipoPerfil = TipoPerfil.CLIENTE;
+        this.profileType = ProfileType.CLIENT;
         this.cliente = cliente;
     }
 
     public void asignarEmpleado(Empleado empleado) {
-        if (tipoPerfil != TipoPerfil.NONE) {
+        if (profileType != ProfileType.NONE) {
             throw new IllegalStateException("Perfil ya asignado");
         }
-        this.tipoPerfil = TipoPerfil.EMPLEADO;
+        this.profileType = ProfileType.EMPLOYEE;
         this.empleado = empleado;
     }
 
     public boolean esCliente() {
-        return tipoPerfil == TipoPerfil.CLIENTE;
+        return profileType == ProfileType.CLIENT;
     }
 
     public boolean esEmpleado() {
-        return tipoPerfil == TipoPerfil.EMPLEADO;
+        return profileType == ProfileType.EMPLOYEE;
     }
 
 

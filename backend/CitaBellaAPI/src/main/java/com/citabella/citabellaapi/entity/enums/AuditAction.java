@@ -1,5 +1,5 @@
 package com.citabella.citabellaapi.entity.enums;
 
-public enum AccionAuditoria {
+public enum AuditAction {
     INSERT, UPDATE, DELETE
 }

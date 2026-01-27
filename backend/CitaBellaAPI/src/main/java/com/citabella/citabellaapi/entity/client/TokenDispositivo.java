@@ -1,6 +1,6 @@
 package com.citabella.citabellaapi.entity.client;
 
-import com.citabella.citabellaapi.entity.enums.TipoDispositivo;
+import com.citabella.citabellaapi.entity.enums.DeviceType;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -17,7 +17,7 @@ public class TokenDispositivo {
     private String token;
 
     @Enumerated(EnumType.STRING)
-    private TipoDispositivo tipoDispositivo;
+    private DeviceType deviceType;
 
     private LocalDateTime fechaRegistro;
 

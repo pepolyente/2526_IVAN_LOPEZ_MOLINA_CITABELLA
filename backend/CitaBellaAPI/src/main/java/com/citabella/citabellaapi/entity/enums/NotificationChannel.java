@@ -1,5 +1,5 @@
 package com.citabella.citabellaapi.entity.enums;
 
-public enum CanalNotificacion {
+public enum NotificationChannel {
     EMAIL, PUSH, WHATSAPP
 }

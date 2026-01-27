@@ -1,6 +1,6 @@
 package com.citabella.citabellaapi.entity.product;
 
-import com.citabella.citabellaapi.entity.enums.TipoUso;
+import com.citabella.citabellaapi.entity.enums.UsageType;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
@@ -24,7 +24,7 @@ public class Producto {
     private BigDecimal precioVenta;
 
     @Enumerated(value = EnumType.STRING)
-    private TipoUso tipoUso;
+    private UsageType usageType;
 
     @Column(length = 100)
     private String proveedor;
@@ -35,8 +35,8 @@ public class Producto {
 
     @PrePersist
     private void prePersist() {
-        if (tipoUso == null) {
-            tipoUso = TipoUso.AMBOS;
+        if (usageType == null) {
+            usageType = UsageType.BOTH;
         }
         if (prioridadAlerta == null) {
             prioridadAlerta = false;
