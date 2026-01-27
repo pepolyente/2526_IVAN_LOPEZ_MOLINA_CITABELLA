@@ -1,8 +1,7 @@
 package com.citabella.citabellaapi.service.interfaces;
 
-import com.citabella.citabellaapi.dto.cliente.ClienteRequest;
-import com.citabella.citabellaapi.dto.cliente.ClienteResponse;
-import com.citabella.citabellaapi.entity.cliente.Cliente;
+import com.citabella.citabellaapi.dto.client.ClienteRequest;
+import com.citabella.citabellaapi.dto.client.ClienteResponse;
 
 import java.util.List;
 

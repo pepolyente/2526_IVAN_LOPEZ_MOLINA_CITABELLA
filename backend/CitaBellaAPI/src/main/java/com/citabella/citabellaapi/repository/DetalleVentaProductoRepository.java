@@ -1,6 +1,6 @@
 package com.citabella.citabellaapi.repository;
 
-import com.citabella.citabellaapi.entity.venta.DetalleVentaProducto;
+import com.citabella.citabellaapi.entity.sale.DetalleVentaProducto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

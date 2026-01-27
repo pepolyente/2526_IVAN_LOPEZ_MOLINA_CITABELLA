@@ -1,11 +1,9 @@
 package com.citabella.citabellaapi.repository;
 
-import com.citabella.citabellaapi.entity.empleado.EmpleadoServicio;
-import com.citabella.citabellaapi.entity.empleado.EmpleadoServicioId;
+import com.citabella.citabellaapi.entity.employee.EmpleadoServicio;
+import com.citabella.citabellaapi.entity.employee.EmpleadoServicioId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface EmpleadoServicioRepository extends JpaRepository<EmpleadoServicio, EmpleadoServicioId> {

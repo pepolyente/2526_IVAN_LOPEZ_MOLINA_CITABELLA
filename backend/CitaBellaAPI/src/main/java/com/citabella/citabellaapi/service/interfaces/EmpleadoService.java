@@ -1,8 +1,7 @@
 package com.citabella.citabellaapi.service.interfaces;
 
-import com.citabella.citabellaapi.dto.empleado.EmpleadoRequest;
-import com.citabella.citabellaapi.dto.empleado.EmpleadoResponse;
-import com.citabella.citabellaapi.entity.empleado.Empleado;
+import com.citabella.citabellaapi.dto.employee.EmpleadoRequest;
+import com.citabella.citabellaapi.dto.employee.EmpleadoResponse;
 
 import java.util.List;
 

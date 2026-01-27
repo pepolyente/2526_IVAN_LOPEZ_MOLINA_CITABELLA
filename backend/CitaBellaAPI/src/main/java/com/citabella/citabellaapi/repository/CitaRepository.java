@@ -1,7 +1,6 @@
 package com.citabella.citabellaapi.repository;
 
-import com.citabella.citabellaapi.entity.cita.Cita;
-import com.citabella.citabellaapi.entity.empleado.Empleado;
+import com.citabella.citabellaapi.entity.appointment.Cita;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -9,7 +8,6 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Repository
 public interface CitaRepository extends JpaRepository<Cita,Integer> {

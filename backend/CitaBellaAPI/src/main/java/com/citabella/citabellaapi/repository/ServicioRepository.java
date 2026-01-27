@@ -1,6 +1,6 @@
 package com.citabella.citabellaapi.repository;
 
-import com.citabella.citabellaapi.entity.servicio.Servicio;
+import com.citabella.citabellaapi.entity.treatment.Servicio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

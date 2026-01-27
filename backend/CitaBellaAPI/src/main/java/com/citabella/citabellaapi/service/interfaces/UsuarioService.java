@@ -1,8 +1,7 @@
 package com.citabella.citabellaapi.service.interfaces;
 
-import com.citabella.citabellaapi.dto.usuario.UsuarioRequest;
-import com.citabella.citabellaapi.dto.usuario.UsuarioResponse;
-import com.citabella.citabellaapi.entity.seguridad.Usuario;
+import com.citabella.citabellaapi.dto.user.UsuarioRequest;
+import com.citabella.citabellaapi.dto.user.UsuarioResponse;
 
 public interface UsuarioService {
 

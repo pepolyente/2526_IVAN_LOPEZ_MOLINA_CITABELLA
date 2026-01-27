@@ -1,12 +1,11 @@
 package com.citabella.citabellaapi.service.interfaces;
 
-import com.citabella.citabellaapi.dto.cita.CitaResponse;
-import com.citabella.citabellaapi.dto.cita.CrearCitaRequest;
-import com.citabella.citabellaapi.entity.cita.Cita;
-import com.citabella.citabellaapi.entity.utiles.EstadoCita;
-import com.citabella.citabellaapi.entity.venta.Venta;
+import com.citabella.citabellaapi.dto.appointment.CitaResponse;
+import com.citabella.citabellaapi.dto.appointment.CrearCitaRequest;
+import com.citabella.citabellaapi.entity.appointment.Cita;
+import com.citabella.citabellaapi.entity.enums.EstadoCita;
+import com.citabella.citabellaapi.entity.sale.Venta;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CitaService {

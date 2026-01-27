@@ -1,6 +1,6 @@
 package com.citabella.citabellaapi.service.interfaces;
 
-import com.citabella.citabellaapi.entity.servicio.Servicio;
+import com.citabella.citabellaapi.entity.treatment.Servicio;
 
 import java.util.List;
 
