@@ -1,12 +1,15 @@
 package com.citabella.citabellaapi.entity.empleado;
 
+import com.citabella.citabellaapi.entity.cita.Cita;
 import com.citabella.citabellaapi.entity.seguridad.Usuario;
+import com.citabella.citabellaapi.entity.venta.Venta;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "empleado")
@@ -19,10 +22,6 @@ public class Empleado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idEmpleado;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario", unique = true)
-    private Usuario usuario;
-
     @Column(nullable = false, length = 100, unique = true)//cambiar db a unique
     private String nombre;
 
@@ -32,6 +31,16 @@ public class Empleado {
     private BigDecimal comision;
 
     private Boolean activo;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario", unique = true)
+    private Usuario usuario;
+
+    @OneToMany(mappedBy = "empleado")
+    private List<Cita> citas;
+
+    @OneToMany(mappedBy = "empleado")
+    private List<Venta> ventas;
 
     @PrePersist
     private void prePersist() {

@@ -1,5 +1,7 @@
 package com.citabella.citabellaapi.entity.seguridad;
 
+import com.citabella.citabellaapi.entity.cliente.Cliente;
+import com.citabella.citabellaapi.entity.empleado.Empleado;
 import com.citabella.citabellaapi.entity.utiles.EstadoCuenta;
 import com.citabella.citabellaapi.entity.utiles.TipoPerfil;
 import jakarta.persistence.*;
@@ -38,9 +40,15 @@ public class Usuario {
 
     private LocalDateTime fechaRegistro;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_rol")
     private Rol rol;
+
+    @OneToOne(mappedBy = "usuario")
+    private Cliente cliente;
+
+    @OneToOne(mappedBy = "usuario")
+    private Empleado empleado;
 
     @PrePersist
     private void prePersist() {
@@ -54,5 +62,30 @@ public class Usuario {
             fechaRegistro = LocalDateTime.now();
         }
     }
+
+    public void asignarCliente(Cliente cliente) {
+        if (tipoPerfil != TipoPerfil.NONE) {
+            throw new IllegalStateException("Perfil ya asignado");
+        }
+        this.tipoPerfil = TipoPerfil.CLIENTE;
+        this.cliente = cliente;
+    }
+
+    public void asignarEmpleado(Empleado empleado) {
+        if (tipoPerfil != TipoPerfil.NONE) {
+            throw new IllegalStateException("Perfil ya asignado");
+        }
+        this.tipoPerfil = TipoPerfil.EMPLEADO;
+        this.empleado = empleado;
+    }
+
+    public boolean esCliente() {
+        return tipoPerfil == TipoPerfil.CLIENTE;
+    }
+
+    public boolean esEmpleado() {
+        return tipoPerfil == TipoPerfil.EMPLEADO;
+    }
+
 
 }

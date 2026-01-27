@@ -1,14 +1,17 @@
 package com.citabella.citabellaapi.entity.cliente;
 
 
+import com.citabella.citabellaapi.entity.cita.Cita;
 import com.citabella.citabellaapi.entity.utiles.Genero;
 import com.citabella.citabellaapi.entity.seguridad.Usuario;
+import com.citabella.citabellaapi.entity.venta.Venta;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Table(name = "cliente")
@@ -32,7 +35,13 @@ public class Cliente {
     @Enumerated(EnumType.STRING)
     private Genero genero;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario",unique = true)
     private Usuario usuario;
+
+    @OneToMany(mappedBy = "cliente")
+    private List<Cita> citas;
+
+    @OneToMany(mappedBy = "cliente")
+    private List<Venta> ventas;
 }

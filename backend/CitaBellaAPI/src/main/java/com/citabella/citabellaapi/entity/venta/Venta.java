@@ -24,7 +24,7 @@ public class Venta {
     @Enumerated(value = EnumType.STRING)
     private MetodoPago metodoPago;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_cliente")
     private Cliente cliente;
 

@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -55,7 +58,11 @@ public class Cita {
             name = "cita_servicio",
             joinColumns = @JoinColumn(name = "id_cita"),
             inverseJoinColumns = @JoinColumn(name = "id_servicio"))
-    private Set<Servicio> servicio;
+    private Set<Servicio> servicios = new HashSet<>();
+
+    @OneToMany(mappedBy = "cita")
+    private List<Peticion> peticiones = new ArrayList<>();
+
 
     @PrePersist
     private void prePersist() {
