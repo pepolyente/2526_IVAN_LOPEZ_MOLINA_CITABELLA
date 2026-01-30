@@ -1,24 +1,111 @@
-# Compiled class file
-*.class
+# ==================================================
+# OS
+# ==================================================
+.DS_Store
+Thumbs.db
+desktop.ini
 
-# Log file
+# ==================================================
+# IntelliJ IDEA
+# ==================================================
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Eclipse / legacy tooling (por si acaso)
+.project
+.classpath
+.settings/
+
+# Editor temp files
+*.swp
+*.swo
+*.bak
+
+# ==================================================
+# Logs
+# ==================================================
+logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# BlueJ files
-*.ctxt
+# ==================================================
+# Environment / Secrets
+# ==================================================
+.env
+.env.*
+!.env.example
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# ==================================================
+# Node / Angular
+# ==================================================
+node_modules/
+dist/
+.angular/
+.cache/
+tmp/
+out-tsc/
+coverage/
+.sass-cache/
+__screenshots__/
+.history/
 
-# Package Files #
+# Angular generated local env files
+**/environment*.local.ts
+
+# ==================================================
+# Java / Maven / Gradle / Spring Boot
+# ==================================================
+*.class
 *.jar
 *.war
-*.nar
 *.ear
-*.zip
-*.tar.gz
-*.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+target/
+**/target/
+
+.gradle/
+build/
+
+# Maven Wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+# ==================================================
+# Flutter / Dart
+# ==================================================
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+build/
+
+android/.gradle/
+android/local.properties
+
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/ephemeral/
+
+# ==================================================
+# Docker
+# ==================================================
+docker-compose.override.yml
+*.env.docker
+
+# ==================================================
+# Nginx
+# ==================================================
+nginx/logs/
+nginx/cache/
+
+# ==================================================
+# Git
+# ==================================================
+*.orig
+*.rej
+
