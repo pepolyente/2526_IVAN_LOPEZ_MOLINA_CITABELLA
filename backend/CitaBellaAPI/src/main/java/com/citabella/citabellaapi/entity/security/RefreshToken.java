@@ -1,7 +1,6 @@
 package com.citabella.citabellaapi.entity.security;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -10,29 +9,29 @@ public class RefreshToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idRefresh;
+    private Integer id;
 
     @Column(nullable = false,unique = true)
     private String token;
 
-    private LocalDateTime fechaCreacion;
+    private LocalDateTime creationDate;
 
     @Column(nullable = false)
-    private LocalDateTime fechaExpiracion;
+    private LocalDateTime expirationDate;
 
-    private Boolean revocado;
+    private Boolean revoked;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario")
-    private Usuario usuario;
+    @JoinColumn(name = "id_user")
+    private User user;
 
     @PrePersist
     private void prePersist() {
-        if (fechaCreacion == null) {
-            fechaCreacion = LocalDateTime.now();
+        if (creationDate == null) {
+            creationDate = LocalDateTime.now();
         }
-        if (revocado == null) {
-            revocado = false;
+        if (revoked == null) {
+            revoked = false;
         }
     }
 

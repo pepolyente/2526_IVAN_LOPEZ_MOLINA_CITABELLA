@@ -2,47 +2,48 @@ package com.citabella.citabellaapi.entity.product;
 
 import com.citabella.citabellaapi.entity.enums.UsageType;
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "producto")
-public class Producto {
+@Table(name = "product")
+public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idProducto;
+    private Integer id;
 
     @Column(nullable = false,length = 100)
-    private String nombre;
+    private String name;
 
     @Column(length = 100)
-    private String categoria;
+    private String category;
 
-    private BigDecimal precioCompra;
+    private BigDecimal purchasePrice;
 
-    private BigDecimal precioVenta;
+    private BigDecimal salePrice;
 
     @Enumerated(value = EnumType.STRING)
     private UsageType usageType;
 
     @Column(length = 100)
-    private String proveedor;
+    private String supplier;
 
-    private Boolean prioridadAlerta;
+    private Boolean alertPriority;
 
-    private Boolean activo;
+    private Boolean active;
+
+    private String imageKey;
 
     @PrePersist
     private void prePersist() {
         if (usageType == null) {
             usageType = UsageType.BOTH;
         }
-        if (prioridadAlerta == null) {
-            prioridadAlerta = false;
+        if (alertPriority == null) {
+            alertPriority = false;
         }
-        if (activo == null) {
-            activo = true;
+        if (active == null) {
+            active = true;
         }
     }
 }

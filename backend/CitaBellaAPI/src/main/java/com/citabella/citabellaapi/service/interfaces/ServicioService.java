@@ -1,11 +1,13 @@
 package com.citabella.citabellaapi.service.interfaces;
 
-import com.citabella.citabellaapi.entity.treatment.Servicio;
+import com.citabella.citabellaapi.entity.treatment.Treatment;
 
 import java.util.List;
 
 public interface ServicioService {
-    Servicio crear(Servicio servicio);
-    Servicio obtener(Integer id);
-    List<Servicio> listarActivos();
+    Treatment crear(Treatment treatment);
+
+    Treatment obtener(Integer id);
+
+    List<Treatment> listarActivos();
 }

@@ -1,9 +1,9 @@
 package com.citabella.citabellaapi.repository;
 
-import com.citabella.citabellaapi.entity.appointment.Peticion;
+import com.citabella.citabellaapi.entity.appointment.AppointmentSubmission;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PeticionRepository extends JpaRepository<Peticion, Integer> {
+public interface PeticionRepository extends JpaRepository<AppointmentSubmission, Integer> {
 }

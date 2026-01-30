@@ -1,47 +1,45 @@
 package com.citabella.citabellaapi.entity.client;
 
-
-import com.citabella.citabellaapi.entity.appointment.Cita;
+import com.citabella.citabellaapi.entity.appointment.Appointment;
 import com.citabella.citabellaapi.entity.enums.Gender;
-import com.citabella.citabellaapi.entity.security.Usuario;
-import com.citabella.citabellaapi.entity.sale.Venta;
+import com.citabella.citabellaapi.entity.security.User;
+import com.citabella.citabellaapi.entity.sale.Sale;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Table(name = "cliente")
+@Table(name = "client")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Cliente {
+public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idCliente;
+    private Integer id;
 
     @Column(nullable = false, length = 100)
-    private String nombre;
+    private String name;
 
     @Column(unique = true,length = 20)
-    private String telefono;
+    private String phoneNumber;
 
-    private LocalDate fechaNacimiento;
+    private LocalDate birthday;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_usuario",unique = true)
-    private Usuario usuario;
+    @JoinColumn(name = "id_user", unique = true)
+    private User user;
 
-    @OneToMany(mappedBy = "cliente")
-    private List<Cita> citas;
+    @OneToMany(mappedBy = "client")
+    private List<Appointment> appointments;
 
-    @OneToMany(mappedBy = "cliente")
-    private List<Venta> ventas;
+    @OneToMany(mappedBy = "client")
+    private List<Sale> sales;
 }

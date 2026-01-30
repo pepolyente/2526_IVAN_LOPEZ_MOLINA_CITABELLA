@@ -1,9 +1,9 @@
 package com.citabella.citabellaapi.repository;
 
-import com.citabella.citabellaapi.entity.product.MovimientoStock;
+import com.citabella.citabellaapi.entity.product.StockMovement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface MovimientoStockRepository extends JpaRepository<MovimientoStock, Integer> {
+public interface MovimientoStockRepository extends JpaRepository<StockMovement, Integer> {
 }

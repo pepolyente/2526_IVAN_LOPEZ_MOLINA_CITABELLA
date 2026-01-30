@@ -2,9 +2,9 @@ package com.citabella.citabellaapi.service.interfaces;
 
 import com.citabella.citabellaapi.dto.appointment.CitaResponse;
 import com.citabella.citabellaapi.dto.appointment.CrearCitaRequest;
-import com.citabella.citabellaapi.entity.appointment.Cita;
+import com.citabella.citabellaapi.entity.appointment.Appointment;
 import com.citabella.citabellaapi.entity.enums.AppointmentStatus;
-import com.citabella.citabellaapi.entity.sale.Venta;
+import com.citabella.citabellaapi.entity.sale.Sale;
 
 import java.util.List;
 
@@ -15,13 +15,14 @@ public interface CitaService {
 
     CitaResponse finalizarCita(Integer idCita);
 
-    List<Cita> listarPorEmpleado(Integer idEmpleado);
-    List<Cita> listarPorCliente(Integer idCliente);
+    List<Appointment> listarPorEmpleado(Integer idEmpleado);
+
+    List<Appointment> listarPorCliente(Integer idCliente);
 
     void validarCambioDeEstado(AppointmentStatus appointmentStatusAnterior, AppointmentStatus appointmentStatusNuevo);
 
     boolean detectarSolape();
 
-    Venta cerrarCita();
+    Sale cerrarCita();
 
 }

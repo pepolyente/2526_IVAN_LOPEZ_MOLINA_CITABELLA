@@ -2,8 +2,8 @@ package com.citabella.citabellaapi.service.implementations;
 
 import com.citabella.citabellaapi.dto.client.ClienteRequest;
 import com.citabella.citabellaapi.dto.client.ClienteResponse;
-import com.citabella.citabellaapi.entity.client.Cliente;
-import com.citabella.citabellaapi.entity.security.Usuario;
+import com.citabella.citabellaapi.entity.client.Client;
+import com.citabella.citabellaapi.entity.security.User;
 import com.citabella.citabellaapi.repository.ClienteRepository;
 import com.citabella.citabellaapi.repository.UsuarioRepository;
 import com.citabella.citabellaapi.service.interfaces.ClienteService;
@@ -29,21 +29,21 @@ public class ClienteServiceImpl implements ClienteService {
             throw new IllegalArgumentException("Teléfono ya registrado");
         }
 
-        Cliente cliente = new Cliente();
-        cliente.setNombre(request.nombre());
-        cliente.setTelefono(request.telefono());
-        cliente.setGender(request.gender());
-        cliente.setFechaNacimiento(request.fechaNacimiento());
+        Client client = new Client();
+        client.setName(request.nombre());
+        client.setPhoneNumber(request.telefono());
+        client.setGender(request.gender());
+        client.setBirthday(request.fechaNacimiento());
 
-        Cliente creado = clienteRepository.save(cliente);
+        Client creado = clienteRepository.save(client);
         return mapToResponse(creado);
     }
 
     @Override
     public ClienteResponse obtenerPorId(Integer id) {
-        Cliente cliente = clienteRepository.findById(id)
+        Client client = clienteRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
-        return mapToResponse(cliente);
+        return mapToResponse(client);
     }
 
     @Override
@@ -54,34 +54,34 @@ public class ClienteServiceImpl implements ClienteService {
 
     @Override
     public ClienteResponse asignarUsuario(Integer idCliente, Integer idUsuario) {
-        Cliente cliente = clienteRepository.findById(idCliente)
+        Client client = clienteRepository.findById(idCliente)
                 .orElseThrow(()-> new RuntimeException("Cliente no encontrado"));
-        if (cliente.getUsuario() != null) {
+        if (client.getUser() != null) {
             throw new IllegalStateException("El cliente ya tiene un usuario asignado");
         }
         if (clienteRepository.existsByUsuario_IdUsuario(idUsuario)) {
             throw new IllegalStateException("El usuario ya está asignado a otro cliente");
         }
 
-        Usuario usuario = usuarioRepository.findById(idUsuario)
+        User user = usuarioRepository.findById(idUsuario)
                 .orElseThrow(()-> new RuntimeException("Usuario no encontrado"));
 
-        cliente.setUsuario(usuario);
+        client.setUser(user);
 
-        Cliente cambiado = clienteRepository.save(cliente);
+        Client cambiado = clienteRepository.save(client);
         return mapToResponse(cambiado);
     }
 
     @Override
     public ClienteResponse desasignarUsuario(Integer idCliente) {
-        Cliente cliente = clienteRepository.findById(idCliente)
+        Client client = clienteRepository.findById(idCliente)
                 .orElseThrow(()-> new RuntimeException("Cliente no encontrado"));
-        if (cliente.getUsuario() == null) {
+        if (client.getUser() == null) {
             throw new IllegalStateException("El cliente no tiene usuario asignado");
         }
-        cliente.setUsuario(null);
+        client.setUser(null);
 
-        Cliente cambiado = clienteRepository.save(cliente);
+        Client cambiado = clienteRepository.save(client);
 
         return mapToResponse(cambiado);
     }
@@ -94,22 +94,22 @@ public class ClienteServiceImpl implements ClienteService {
         if (clienteRepository.existsByTelefono(telefono)) {
             throw new IllegalArgumentException("Teléfono ya registrado");
         }
-        Cliente cliente = new Cliente();
-        cliente.setNombre(nombre);
-        cliente.setTelefono(telefono);
+        Client client = new Client();
+        client.setName(nombre);
+        client.setPhoneNumber(telefono);
 
-        Cliente creado = clienteRepository.save(cliente);
+        Client creado = clienteRepository.save(client);
 
         return mapToResponse(creado);
     }
 
 
-    private ClienteResponse mapToResponse(Cliente cliente) {
+    private ClienteResponse mapToResponse(Client client) {
         return new ClienteResponse(
-                cliente.getIdCliente(),
-                cliente.getNombre(),
-                cliente.getTelefono(),
-                cliente.getGender()
+                client.getId(),
+                client.getName(),
+                client.getPhoneNumber(),
+                client.getGender()
         );
     }
 }

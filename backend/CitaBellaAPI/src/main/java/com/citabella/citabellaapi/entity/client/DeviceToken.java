@@ -2,16 +2,15 @@ package com.citabella.citabellaapi.entity.client;
 
 import com.citabella.citabellaapi.entity.enums.DeviceType;
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
-//DE MOMENTO SIN USO
+
 @Entity
-@Table(name = "token_dispositivo")
-public class TokenDispositivo {
+@Table(name = "device_token")
+public class DeviceToken {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idToken;
+    private Integer id;
 
     @Column(nullable = false)
     private String token;
@@ -19,21 +18,21 @@ public class TokenDispositivo {
     @Enumerated(EnumType.STRING)
     private DeviceType deviceType;
 
-    private LocalDateTime fechaRegistro;
+    private LocalDateTime registeredAt;
 
-    private Boolean activo;
+    private Boolean active;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_cliente",nullable = false)
-    private Cliente cliente;
+    @JoinColumn(name = "id_client", nullable = false)
+    private Client client;
 
     @PrePersist
     private void prePersist() {
-        if (fechaRegistro == null) {
-            fechaRegistro = LocalDateTime.now();
+        if (registeredAt == null) {
+            registeredAt = LocalDateTime.now();
         }
-        if (activo == null) {
-            activo = true;
+        if (active == null) {
+            active = true;
         }
     }
 

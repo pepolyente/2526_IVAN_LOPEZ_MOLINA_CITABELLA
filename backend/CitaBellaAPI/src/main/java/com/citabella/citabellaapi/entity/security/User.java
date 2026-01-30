@@ -1,30 +1,28 @@
 package com.citabella.citabellaapi.entity.security;
 
-import com.citabella.citabellaapi.entity.client.Cliente;
-import com.citabella.citabellaapi.entity.employee.Empleado;
+import com.citabella.citabellaapi.entity.client.Client;
+import com.citabella.citabellaapi.entity.employee.Employee;
 import com.citabella.citabellaapi.entity.enums.AccountStatus;
 import com.citabella.citabellaapi.entity.enums.ProfileType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "usuario")
+@Table(name = "user")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Usuario {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idUsuario;
+    private Integer id;
 
     @Column(nullable = false, unique = true,length = 100)
-    private String nombreUsuario;
+    private String username;
 
     @Column(nullable = false, unique = true)
     private String email;
@@ -38,17 +36,17 @@ public class Usuario {
     @Enumerated(value = EnumType.STRING)
     private AccountStatus accountStatus;
 
-    private LocalDateTime fechaRegistro;
+    private LocalDateTime createdAt;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_rol")
-    private Rol rol;
+    @JoinColumn(name = "id_role")
+    private Role role;
 
-    @OneToOne(mappedBy = "usuario")
-    private Cliente cliente;
+    @OneToOne(mappedBy = "user")
+    private Client client;
 
-    @OneToOne(mappedBy = "usuario")
-    private Empleado empleado;
+    @OneToOne(mappedBy = "user")
+    private Employee employee;
 
     @PrePersist
     private void prePersist() {
@@ -58,32 +56,32 @@ public class Usuario {
         if (accountStatus == null) {
             accountStatus = AccountStatus.ACTIVE;
         }
-        if (fechaRegistro == null) {
-            fechaRegistro = LocalDateTime.now();
+        if (createdAt == null) {
+            createdAt = LocalDateTime.now();
         }
     }
 
-    public void asignarCliente(Cliente cliente) {
+    public void assignClient(Client client) {
         if (profileType != ProfileType.NONE) {
-            throw new IllegalStateException("Perfil ya asignado");
+            throw new IllegalStateException("Profile already assigned");
         }
         this.profileType = ProfileType.CLIENT;
-        this.cliente = cliente;
+        this.client = client;
     }
 
-    public void asignarEmpleado(Empleado empleado) {
+    public void assignEmployee(Employee employee) {
         if (profileType != ProfileType.NONE) {
-            throw new IllegalStateException("Perfil ya asignado");
+            throw new IllegalStateException("Profile already assigned");
         }
         this.profileType = ProfileType.EMPLOYEE;
-        this.empleado = empleado;
+        this.employee = employee;
     }
 
-    public boolean esCliente() {
+    public boolean isClient() {
         return profileType == ProfileType.CLIENT;
     }
 
-    public boolean esEmpleado() {
+    public boolean isEmployee() {
         return profileType == ProfileType.EMPLOYEE;
     }
 

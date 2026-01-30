@@ -1,9 +1,9 @@
 package com.citabella.citabellaapi.repository;
 
-import com.citabella.citabellaapi.entity.product.Producto;
+import com.citabella.citabellaapi.entity.product.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ProductoRepository extends JpaRepository<Producto, Integer> {
+public interface ProductoRepository extends JpaRepository<Product, Integer> {
 }

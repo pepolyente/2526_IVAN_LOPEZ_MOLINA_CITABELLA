@@ -2,12 +2,12 @@ package com.citabella.citabellaapi.service.implementations;
 
 import com.citabella.citabellaapi.dto.appointment.CitaResponse;
 import com.citabella.citabellaapi.dto.appointment.CrearCitaRequest;
-import com.citabella.citabellaapi.entity.appointment.Cita;
-import com.citabella.citabellaapi.entity.client.Cliente;
-import com.citabella.citabellaapi.entity.employee.Empleado;
-import com.citabella.citabellaapi.entity.treatment.Servicio;
+import com.citabella.citabellaapi.entity.appointment.Appointment;
+import com.citabella.citabellaapi.entity.client.Client;
+import com.citabella.citabellaapi.entity.employee.Employee;
+import com.citabella.citabellaapi.entity.treatment.Treatment;
 import com.citabella.citabellaapi.entity.enums.AppointmentStatus;
-import com.citabella.citabellaapi.entity.sale.Venta;
+import com.citabella.citabellaapi.entity.sale.Sale;
 import com.citabella.citabellaapi.repository.*;
 import com.citabella.citabellaapi.service.interfaces.CitaService;
 import jakarta.transaction.Transactional;
@@ -39,37 +39,37 @@ public class CitaServiceImpl implements CitaService {
             throw new IllegalArgumentException("La fecha fin debe ser posterior a la fecha inicio");
         }
 
-        Cliente cliente = clienteRepository.findById(request.idCliente())
+        Client client = clienteRepository.findById(request.idCliente())
                 .orElseThrow(() -> new IllegalArgumentException("El cliente no existe"));
 
-        Empleado empleado = empleadoRepository.findById(request.idEmpleado())
+        Employee employee = empleadoRepository.findById(request.idEmpleado())
                 .orElseThrow(() -> new IllegalArgumentException("El empleado no existe"));
 
-        Servicio servicio = servicioRepository.findById(request.idServicio())
+        Treatment treatment = servicioRepository.findById(request.idServicio())
                 .orElseThrow(() -> new IllegalArgumentException("El servicio no existe"));
 
         boolean haySolape = citaRepository.existeSolape(
-                empleado.getIdEmpleado(),
+                employee.getId(),
                 request.fechaInicio(),
                 request.fechaFin()
         );
 
-        Cita cita = new Cita();
-        cita.setCliente(cliente);
-        cita.setEmpleado(empleado);
+        Appointment appointment = new Appointment();
+        appointment.setClient(client);
+        appointment.setEmployee(employee);
 
         //CAMBIAR A SET
         //cita.setServicio(servicio);
 
 
-        cita.setFechaInicio(request.fechaInicio());
-        cita.setFechaFin(request.fechaFin());
-        cita.setNotas(request.notas());
+        appointment.setStartAt(request.fechaInicio());
+        appointment.setEndAt(request.fechaFin());
+        appointment.setNotes(request.notas());
 
-        citaRepository.save(cita);
+        citaRepository.save(appointment);
 
         return new CitaResponse(
-                cita.getIdCita(),
+                appointment.getId(),
                 haySolape
         );
     }
@@ -85,12 +85,12 @@ public class CitaServiceImpl implements CitaService {
     }
 
     @Override
-    public List<Cita> listarPorEmpleado(Integer idEmpleado) {
+    public List<Appointment> listarPorEmpleado(Integer idEmpleado) {
         return citaRepository.findByEmpleado_IdEmpleado(idEmpleado);
     }
 
     @Override
-    public List<Cita> listarPorCliente(Integer idCliente) {
+    public List<Appointment> listarPorCliente(Integer idCliente) {
         return citaRepository.findByCliente_IdCliente(idCliente);
     }
 
@@ -105,7 +105,7 @@ public class CitaServiceImpl implements CitaService {
     }
 
     @Override
-    public Venta cerrarCita() {
+    public Sale cerrarCita() {
         return null;
     }
 }

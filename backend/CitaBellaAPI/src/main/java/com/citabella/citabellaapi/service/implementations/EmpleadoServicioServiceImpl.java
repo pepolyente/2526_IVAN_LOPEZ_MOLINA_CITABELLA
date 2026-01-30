@@ -1,9 +1,9 @@
 package com.citabella.citabellaapi.service.implementations;
 
-import com.citabella.citabellaapi.entity.employee.Empleado;
-import com.citabella.citabellaapi.entity.employee.EmpleadoServicio;
-import com.citabella.citabellaapi.entity.employee.EmpleadoServicioId;
-import com.citabella.citabellaapi.entity.treatment.Servicio;
+import com.citabella.citabellaapi.entity.employee.Employee;
+import com.citabella.citabellaapi.entity.employee.EmployeeTreatment;
+import com.citabella.citabellaapi.entity.employee.EmployeeTreatmentId;
+import com.citabella.citabellaapi.entity.treatment.Treatment;
 import com.citabella.citabellaapi.repository.EmpleadoRepository;
 import com.citabella.citabellaapi.repository.EmpleadoServicioRepository;
 import com.citabella.citabellaapi.repository.ServicioRepository;
@@ -31,13 +31,13 @@ public class EmpleadoServicioServiceImpl implements EmpleadoServicioService {
             throw new IllegalArgumentException("El servicio ya está asignado al empleado");
         }
 
-        Empleado empleado = empleadoRepository.findById(idEmpleado).orElseThrow();
-        Servicio servicio = servicioRepository.findById(idServicio).orElseThrow();
+        Employee employee = empleadoRepository.findById(idEmpleado).orElseThrow();
+        Treatment treatment = servicioRepository.findById(idServicio).orElseThrow();
 
-        EmpleadoServicio es = new EmpleadoServicio();
-        es.setEmpleado(empleado);
-        es.setServicio(servicio);
-        es.setId(new EmpleadoServicioId(idEmpleado, idServicio));
+        EmployeeTreatment es = new EmployeeTreatment();
+        es.setEmployee(employee);
+        es.setTreatment(treatment);
+        es.setId(new EmployeeTreatmentId(idEmpleado, idServicio));
 
         empleadoServicioRepository.save(es);
     }

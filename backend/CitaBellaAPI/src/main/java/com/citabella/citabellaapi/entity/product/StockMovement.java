@@ -3,32 +3,31 @@ package com.citabella.citabellaapi.entity.product;
 import com.citabella.citabellaapi.entity.enums.ReferenceType;
 import com.citabella.citabellaapi.entity.enums.MovementType;
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "movimiento_stock")
-public class MovimientoStock {
+@Table(name = "stock_movement")
+public class StockMovement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idMovimiento;
+    private Integer id;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
-    private MovementType tipo;
+    private MovementType type;
 
     @Column(nullable = false)
-    private Integer cantidad;
+    private Integer quantity;
 
-    private String motivo;
+    private String reason;
 
-    private LocalDateTime fecha;
+    private LocalDateTime movementDate;
 
     @Enumerated(value = EnumType.STRING)
     private ReferenceType referenceType;
 
-    private Integer referenciaId;
+    private Integer referenceId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_stock", nullable = false)
@@ -36,8 +35,8 @@ public class MovimientoStock {
 
     @PrePersist
     private void prePersist() {
-        if (fecha == null) {
-            fecha = LocalDateTime.now();
+        if (movementDate == null) {
+            movementDate = LocalDateTime.now();
         }
     }
 

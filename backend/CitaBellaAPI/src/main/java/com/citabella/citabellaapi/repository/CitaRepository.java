@@ -1,6 +1,6 @@
 package com.citabella.citabellaapi.repository;
 
-import com.citabella.citabellaapi.entity.appointment.Cita;
+import com.citabella.citabellaapi.entity.appointment.Appointment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,19 +10,20 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
-public interface CitaRepository extends JpaRepository<Cita,Integer> {
+public interface CitaRepository extends JpaRepository<Appointment, Integer> {
 
-        //añadir campos para la nueva entidad peticion (countByEmpleadoAndFechaOverlapAndEstado(empleado, inicio, fin, ESTADO_CONFIRMADA))
+        //añadir campos para la nueva entidad peticion (countByEmpleadoAndFechaOverlapAndEstado(employee, inicio, fin, ESTADO_CONFIRMADA))
         @Query(""" 
-SELECT COUNT(c) > 0 FROM Cita c WHERE c.empleado.idEmpleado = :idEmpleado AND c.fechaInicio < :fechaFin AND c.fechaFin < :fechaInicio""")
+                SELECT COUNT(c) > 0 FROM Appointment c WHERE c.employee.id = :idEmpleado AND c.startAt < :fechaFin AND c.endAt < :fechaInicio""")
         boolean existeSolape(@Param("idEmpleado")Integer idEmpleado,
                              @Param("fechaInicio")LocalDateTime fechaInicio,
                              @Param("fechaFin")LocalDateTime fechaFin);
 
-        List<Cita> findByEmpleado_IdEmpleado(Integer idEmpleado);
-        List<Cita> findByCliente_IdCliente(Integer idCliente);
+        List<Appointment> findByEmpleado_IdEmpleado(Integer idEmpleado);
 
-        //metodo (dame todas las citas de este empleado entre hora A y hora B que no esten canceladas)
+        List<Appointment> findByCliente_IdCliente(Integer idCliente);
+
+        //metodo (dame todas las citas de este employee entre hora A y hora B que no esten canceladas)
 
 
 

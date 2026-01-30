@@ -1,46 +1,45 @@
 package com.citabella.citabellaapi.entity.notification;
 
-import com.citabella.citabellaapi.entity.client.Cliente;
+import com.citabella.citabellaapi.entity.client.Client;
 import com.citabella.citabellaapi.entity.enums.NotificationChannel;
 import com.citabella.citabellaapi.entity.enums.NotificationStatus;
 import com.citabella.citabellaapi.entity.enums.NotificationType;
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "notificacion")
-public class Notificacion {
+@Table(name = "notification")
+public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idNotificacion;
+    private Integer id;
 
     @Enumerated(value = EnumType.STRING)
-    private NotificationType tipo;
+    private NotificationType type;
 
     @Column(length = 100)
-    private String titulo;
+    private String title;
 
     @Column(columnDefinition = "TEXT")
-    private String mensaje;
+    private String message;
 
     @Enumerated(value = EnumType.STRING)
-    private NotificationChannel canal;
+    private NotificationChannel channel;
 
     @Enumerated(value = EnumType.STRING)
-    private NotificationStatus estado;
+    private NotificationStatus status;
 
-    private LocalDateTime fechaEnvio;
+    private LocalDateTime sentAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_cliente")
-    private Cliente cliente;
+    @JoinColumn(name = "id_client")
+    private Client client;
 
     @PrePersist
     private void prePersist() {
-        if (estado == null) {
-            estado = NotificationStatus.PENDING;
+        if (status == null) {
+            status = NotificationStatus.PENDING;
         }
     }
 

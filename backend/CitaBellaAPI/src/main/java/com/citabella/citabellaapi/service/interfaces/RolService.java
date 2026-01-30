@@ -1,7 +1,7 @@
 package com.citabella.citabellaapi.service.interfaces;
 
-import com.citabella.citabellaapi.entity.security.Rol;
+import com.citabella.citabellaapi.entity.security.Role;
 
 public interface RolService {
-    Rol obtenerPorNombre(String nombre);
+    Role obtenerPorNombre(String nombre);
 }

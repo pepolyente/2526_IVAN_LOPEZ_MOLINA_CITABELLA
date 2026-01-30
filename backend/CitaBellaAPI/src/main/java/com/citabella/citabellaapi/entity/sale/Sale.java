@@ -1,45 +1,44 @@
 package com.citabella.citabellaapi.entity.sale;
 
-import com.citabella.citabellaapi.entity.appointment.Cita;
-import com.citabella.citabellaapi.entity.client.Cliente;
-import com.citabella.citabellaapi.entity.employee.Empleado;
+import com.citabella.citabellaapi.entity.appointment.Appointment;
+import com.citabella.citabellaapi.entity.client.Client;
+import com.citabella.citabellaapi.entity.employee.Employee;
 import com.citabella.citabellaapi.entity.enums.PaymentMethod;
 import jakarta.persistence.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "venta")
-public class Venta {
+@Table(name = "sale")
+public class Sale {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idVenta;
+    private Integer id;
 
-    private LocalDateTime fecha;
+    private LocalDateTime soldAt;
 
-    private BigDecimal total;
+    private BigDecimal totalAmount;
 
     @Enumerated(value = EnumType.STRING)
     private PaymentMethod paymentMethod;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_cliente")
-    private Cliente cliente;
+    @JoinColumn(name = "id_client")
+    private Client client;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_empleado")
-    private Empleado empleado;
+    @JoinColumn(name = "id_employee")
+    private Employee employee;
 
     @OneToOne(optional = true)
-    @JoinColumn(name = "id_cita")
-    private Cita cita;
+    @JoinColumn(name = "id_appointment")
+    private Appointment appointment;
 
     @PrePersist
     private void prePersist() {
-        if (fecha == null) {
-            fecha = LocalDateTime.now();
+        if (soldAt == null) {
+            soldAt = LocalDateTime.now();
         }
         if (paymentMethod == null) {
             paymentMethod = PaymentMethod.CASH;

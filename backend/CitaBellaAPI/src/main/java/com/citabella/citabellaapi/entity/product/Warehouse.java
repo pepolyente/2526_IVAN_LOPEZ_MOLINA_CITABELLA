@@ -3,18 +3,18 @@ package com.citabella.citabellaapi.entity.product;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "almacen")
-public class Almacen {
+@Table(name = "warehouse")
+public class Warehouse {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idAlmacen;
+    private Integer id;
 
     @Column(nullable = false,length = 100)
-    private String nombre;
+    private String name;
 
     @Column(length = 150)
-    private String ubicacion;
+    private String location;
 
-    private Integer capacidad;
+    private Integer capacity;
 }

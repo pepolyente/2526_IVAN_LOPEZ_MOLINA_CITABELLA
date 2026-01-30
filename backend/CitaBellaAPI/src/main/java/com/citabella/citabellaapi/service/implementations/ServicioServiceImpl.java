@@ -1,6 +1,6 @@
 package com.citabella.citabellaapi.service.implementations;
 
-import com.citabella.citabellaapi.entity.treatment.Servicio;
+import com.citabella.citabellaapi.entity.treatment.Treatment;
 import com.citabella.citabellaapi.repository.ServicioRepository;
 import com.citabella.citabellaapi.service.interfaces.ServicioService;
 import jakarta.transaction.Transactional;
@@ -19,19 +19,19 @@ public class ServicioServiceImpl implements ServicioService {
     }
 
     @Override
-    public Servicio crear(Servicio servicio) {
-        return servicioRepository.save(servicio);
+    public Treatment crear(Treatment treatment) {
+        return servicioRepository.save(treatment);
     }
 
     @Override
-    public Servicio obtener(Integer id) {
+    public Treatment obtener(Integer id) {
         return servicioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
     }
 
     @Override
-    public List<Servicio> listarActivos() {
+    public List<Treatment> listarActivos() {
         return servicioRepository.findAll()
-                .stream().filter(Servicio::getActivo).toList();
+                .stream().filter(Treatment::getActive).toList();
     }
 }

@@ -5,33 +5,33 @@ import jakarta.persistence.*;
 @Entity
 @Table(
         name = "stock",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"id_almacen", "id_producto"})
+        uniqueConstraints = @UniqueConstraint(columnNames = {"id_warehouse", "id_product"})
 )
 public class Stock {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idStock;
+    private Integer id;
 
-    private Integer stockActual;
+    private Integer currentStock;
 
-    private Integer stockMinimo;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_almacen")
-    private Almacen almacen;
+    private Integer minimumStock;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_producto")
-    private Producto producto;
+    @JoinColumn(name = "id_warehouse")
+    private Warehouse warehouse;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_product")
+    private Product product;
 
     @PrePersist
     private void prePersist() {
-        if (stockActual == null) {
-            stockActual = 0;
+        if (currentStock == null) {
+            currentStock = 0;
         }
-        if (stockMinimo == null) {
-            stockMinimo = 0;
+        if (minimumStock == null) {
+            minimumStock = 0;
         }
     }
 

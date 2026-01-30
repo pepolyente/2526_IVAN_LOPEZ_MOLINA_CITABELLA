@@ -1,48 +1,47 @@
 package com.citabella.citabellaapi.entity.treatment;
 
 
-import com.citabella.citabellaapi.entity.appointment.Cita;
+import com.citabella.citabellaapi.entity.appointment.Appointment;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.util.List;
 
 @Entity
-@Table(name = "servicio")
+@Table(name = "treatment")
 @Getter
 @Setter
 @NoArgsConstructor
-public class Servicio {
+public class Treatment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idServicio;
+    private Integer id;
 
     @Column(nullable = false,length = 100)
-    private String nombre;
+    private String name;
 
     @Column(columnDefinition = "TEXT")
-    private String descripcion;
-    //minutos
-    @Column(nullable = false)
-    private Integer duracionMin;
-
-    private Integer duracionMax;
+    private String description;
 
     @Column(nullable = false)
-    private BigDecimal precio;
+    private Integer minimumDuration;
 
-    private Boolean activo;
+    private Integer maximumDuration;
 
-    @ManyToMany(mappedBy = "servicios")
-    private List<Cita> citas;
+    @Column(nullable = false)
+    private BigDecimal price;
+
+    private Boolean active;
+
+    @ManyToMany(mappedBy = "treatments")
+    private List<Appointment> appointments;
 
     @PrePersist
     private void prePersist() {
-        if (activo == null) activo = true;
+        if (active == null) active = true;
     }
 
 }

@@ -2,7 +2,7 @@ package com.citabella.citabellaapi.service.implementations;
 
 import com.citabella.citabellaapi.dto.employee.EmpleadoRequest;
 import com.citabella.citabellaapi.dto.employee.EmpleadoResponse;
-import com.citabella.citabellaapi.entity.employee.Empleado;
+import com.citabella.citabellaapi.entity.employee.Employee;
 import com.citabella.citabellaapi.repository.EmpleadoRepository;
 import com.citabella.citabellaapi.service.interfaces.EmpleadoService;
 import lombok.RequiredArgsConstructor;
@@ -26,20 +26,20 @@ public class EmpleadoServiceImpl implements EmpleadoService {
             throw new IllegalArgumentException("Ya existe un empleado con ese nombre");
         }
 
-        Empleado empleado = new Empleado();
-        empleado.setNombre(request.nombre());
+        Employee employee = new Employee();
+        employee.setName(request.nombre());
 
 
-        Empleado guardado = empleadoRepository.save(empleado);
+        Employee guardado = empleadoRepository.save(employee);
         return mapToResponse(guardado);
     }
 
     @Override
     public EmpleadoResponse obtenerPorId(Integer id) {
-        Empleado empleado = empleadoRepository.findById(id)
+        Employee employee = empleadoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
 
-        return mapToResponse(empleado);
+        return mapToResponse(employee);
     }
 
     @Override
@@ -50,20 +50,20 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     @Override
     public EmpleadoResponse desactivar(Integer id) {
-        Empleado empleado = empleadoRepository.findById(id)
+        Employee employee = empleadoRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Empleado no encontrado"));
-        empleado.setActivo(false);
-        Empleado actualizado = empleadoRepository.save(empleado);
+        employee.setActive(false);
+        Employee actualizado = empleadoRepository.save(employee);
 
         return mapToResponse(actualizado);
     }
 
-    private EmpleadoResponse mapToResponse(Empleado empleado) {
+    private EmpleadoResponse mapToResponse(Employee employee) {
         return new EmpleadoResponse(
-                empleado.getIdEmpleado(),
-                empleado.getNombre(),
-                empleado.getPuesto(),
-                empleado.getActivo()
+                employee.getId(),
+                employee.getName(),
+                employee.getPosition(),
+                employee.getActive()
         );
     }
 
