@@ -1,32 +1,110 @@
-# ===== Java / Maven =====
-*.class
-*.jar
-*.war
-*.ear
-target/
-**/target/
+# ==================================================
+# OS
+# ==================================================
+.DS_Store
+Thumbs.db
+desktop.ini
 
-# ===== Logs =====
-*.log
-
-# ===== IDEs =====
+# ==================================================
+# IntelliJ IDEA
+# ==================================================
 .idea/
 *.iml
-.vscode/
+*.iws
+*.ipr
+
+# Eclipse / legacy tooling (por si acaso)
 .project
 .classpath
 .settings/
 
-# ===== OS =====
-.DS_Store
-Thumbs.db
+# Editor temp files
+*.swp
+*.swo
+*.bak
 
-# ===== Env files =====
+# ==================================================
+# Logs
+# ==================================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ==================================================
+# Environment / Secrets
+# ==================================================
 .env
 .env.*
-
 !.env.example
 
-# ===== Docker =====
-**/.docker/
+# ==================================================
+# Node / Angular
+# ==================================================
+node_modules/
+dist/
+.angular/
+.cache/
+tmp/
+out-tsc/
+coverage/
+.sass-cache/
+__screenshots__/
+.history/
 
+# Angular generated local env files
+**/environment*.local.ts
+
+# ==================================================
+# Java / Maven / Gradle / Spring Boot
+# ==================================================
+*.class
+*.jar
+*.war
+*.ear
+
+target/
+**/target/
+
+.gradle/
+build/
+
+# Maven Wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+# ==================================================
+# Flutter / Dart
+# ==================================================
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+build/
+
+android/.gradle/
+android/local.properties
+
+ios/Pods/
+ios/.symlinks/
+ios/Flutter/ephemeral/
+
+# ==================================================
+# Docker
+# ==================================================
+docker-compose.override.yml
+*.env.docker
+
+# ==================================================
+# Nginx
+# ==================================================
+nginx/logs/
+nginx/cache/
+
+# ==================================================
+# Git
+# ==================================================
+*.orig
+*.rej
