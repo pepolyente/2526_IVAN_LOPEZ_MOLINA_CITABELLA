@@ -1,21 +1,21 @@
 package com.citabella.citabellaapi.service.implementations;
 
 import com.citabella.citabellaapi.entity.security.Role;
-import com.citabella.citabellaapi.repository.RolRepository;
+import com.citabella.citabellaapi.repository.RoleRepository;
 import com.citabella.citabellaapi.service.interfaces.RolService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RolServiceImpl implements RolService {
 
-    private final RolRepository rolRepository;
+    private final RoleRepository roleRepository;
 
-    public RolServiceImpl(RolRepository rolRepository) {
-        this.rolRepository = rolRepository;
+    public RolServiceImpl(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
     @Override
     public Role obtenerPorNombre(String nombre) {
-        return rolRepository.findByNombre(nombre).orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        return roleRepository.findByName(nombre).orElseThrow(() -> new RuntimeException("Rol no encontrado"));
     }
 }

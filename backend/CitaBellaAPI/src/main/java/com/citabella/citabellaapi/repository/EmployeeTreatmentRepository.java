@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EmpleadoServicioRepository extends JpaRepository<EmployeeTreatment, EmployeeTreatmentId> {
+public interface EmployeeTreatmentRepository extends JpaRepository<EmployeeTreatment, EmployeeTreatmentId> {
 
-    boolean existsById_IdEmpleadoAndId_IdServicio(Integer idEmpleado, Integer idServicio);
+    boolean existsById_employeeIdAndId_treatmentId(Integer employeeId, Integer treatmentId);
     /*List<EmpleadoServicio> findByEmpleado_IdEmpleado(Integer idEmpleado);*/
 }
 

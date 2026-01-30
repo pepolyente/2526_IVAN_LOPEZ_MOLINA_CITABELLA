@@ -5,9 +5,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ClienteRepository extends JpaRepository<Client, Integer> {
+public interface ClientRepository extends JpaRepository<Client, Integer> {
 
-    boolean existsByTelefono(String telefono);
+    boolean existsByPhoneNumber(String username);
 
-    boolean existsByUsuario_IdUsuario(Integer idUsuario);
+    boolean existsByUser_Id(Integer id);
 }

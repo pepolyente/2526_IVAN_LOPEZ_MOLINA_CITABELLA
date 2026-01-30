@@ -4,9 +4,9 @@ import com.citabella.citabellaapi.dto.user.UsuarioRequest;
 import com.citabella.citabellaapi.dto.user.UsuarioResponse;
 import com.citabella.citabellaapi.entity.security.Role;
 import com.citabella.citabellaapi.entity.security.User;
-import com.citabella.citabellaapi.repository.ClienteRepository;
-import com.citabella.citabellaapi.repository.RolRepository;
-import com.citabella.citabellaapi.repository.UsuarioRepository;
+import com.citabella.citabellaapi.repository.ClientRepository;
+import com.citabella.citabellaapi.repository.RoleRepository;
+import com.citabella.citabellaapi.repository.UserRepository;
 import com.citabella.citabellaapi.service.interfaces.UsuarioService;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
@@ -18,29 +18,29 @@ import org.springframework.stereotype.Service;
 @Transactional
 public class UsuarioServiceImpl implements UsuarioService {
 
-    private final UsuarioRepository usuarioRepository;
-    private final RolRepository rolRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final ClienteRepository clienteRepository;
+    private final ClientRepository clientRepository;
 
-    public UsuarioServiceImpl(UsuarioRepository usuarioRepository, RolRepository rolRepository, PasswordEncoder passwordEncoder,ClienteRepository clienteRepository) {
-        this.usuarioRepository = usuarioRepository;
-        this.rolRepository = rolRepository;
+    public UsuarioServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, ClientRepository clientRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
-        this.clienteRepository = clienteRepository;
+        this.clientRepository = clientRepository;
     }
 
     @Override
     public UsuarioResponse crearUsuario(UsuarioRequest request) {
 
-        if(usuarioRepository.existsByEmail(request.email())) {
+        if(userRepository.existsByEmail(request.email())) {
             throw new IllegalArgumentException("Email ya registrado");
         }
-        if(usuarioRepository.existsByNombreUsuario(request.nombreUsuario())) {
+        if(userRepository.existsByUsername(request.nombreUsuario())) {
             throw new IllegalArgumentException("Nombre de usuario ya existe");
         }
 
-        Role role = rolRepository.findByNombre("CLIENTE_PENDIENTE")
+        Role role = roleRepository.findByName("CLIENTE_PENDIENTE")
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
         User user = new User();
@@ -49,20 +49,20 @@ public class UsuarioServiceImpl implements UsuarioService {
         user.setPasswordHash(passwordEncoder.encode(request.password()));
         user.setRole(role);
 
-        User creado = usuarioRepository.save(user);
+        User creado = userRepository.save(user);
         return mapToResponse(creado);
     }
 
     @Override
     public UsuarioResponse obtenerPorId(Integer id) {
-        User user = usuarioRepository.findById(id)
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         return mapToResponse(user);
     }
 
     @Override
     public UsuarioResponse obtenerPorEmail(String email) {
-        User user = usuarioRepository.findByEmail(email)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         return mapToResponse(user);
     }
@@ -81,18 +81,18 @@ public class UsuarioServiceImpl implements UsuarioService {
 
     @Override
     public void cambiarRol(Integer idUsuario, String nombreRol) {
-        User user = usuarioRepository.findById(idUsuario)
+        User user = userRepository.findById(idUsuario)
                 .orElseThrow(()-> new RuntimeException("Usuario no encontrado"));
-        Role role = rolRepository.findByNombre(nombreRol)
+        Role role = roleRepository.findByName(nombreRol)
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
         user.setRole(role);
-        usuarioRepository.save(user);
+        userRepository.save(user);
     }
 
     @Override
     public boolean tieneCliente(Integer idUsuario) {
-        return clienteRepository.existsByUsuario_IdUsuario(idUsuario);
+        return clientRepository.existsByUser_Id(idUsuario);
     }
 
 

@@ -1,7 +1,6 @@
 package com.citabella.citabellaapi.entity.employee;
 
 import com.citabella.citabellaapi.entity.appointment.Appointment;
-import com.citabella.citabellaapi.entity.enums.EmployeePosition;
 import com.citabella.citabellaapi.entity.security.User;
 import com.citabella.citabellaapi.entity.sale.Sale;
 import jakarta.persistence.*;

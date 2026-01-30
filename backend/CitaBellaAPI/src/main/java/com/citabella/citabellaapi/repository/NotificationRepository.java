@@ -1,9 +1,9 @@
 package com.citabella.citabellaapi.repository;
 
-import com.citabella.citabellaapi.entity.sale.SaleProductDetail;
+import com.citabella.citabellaapi.entity.notification.Notification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface DetalleVentaProductoRepository extends JpaRepository<SaleProductDetail, Integer> {
+public interface NotificationRepository extends JpaRepository<Notification, Integer> {
 }

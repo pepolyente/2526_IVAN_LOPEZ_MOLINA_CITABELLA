@@ -1,9 +1,9 @@
 package com.citabella.citabellaapi.repository;
 
-import com.citabella.citabellaapi.entity.client.DeviceToken;
+import com.citabella.citabellaapi.entity.security.AuditLog;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TokenDispositivoRepository extends JpaRepository<DeviceToken, Integer> {
+public interface AuditLogRepository extends JpaRepository<AuditLog, Integer> {
 }

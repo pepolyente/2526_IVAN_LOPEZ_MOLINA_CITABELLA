@@ -3,7 +3,7 @@ package com.citabella.citabellaapi.service.implementations;
 import com.citabella.citabellaapi.dto.employee.EmpleadoRequest;
 import com.citabella.citabellaapi.dto.employee.EmpleadoResponse;
 import com.citabella.citabellaapi.entity.employee.Employee;
-import com.citabella.citabellaapi.repository.EmpleadoRepository;
+import com.citabella.citabellaapi.repository.EmployeeRepository;
 import com.citabella.citabellaapi.service.interfaces.EmpleadoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmpleadoServiceImpl implements EmpleadoService {
 
-    private final EmpleadoRepository empleadoRepository;
+    private final EmployeeRepository employeeRepository;
 
     @Override
     public EmpleadoResponse crear(EmpleadoRequest request) {
@@ -22,7 +22,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         if (request.nombre() == null || request.nombre().isBlank()) {
             throw new IllegalArgumentException("El nombre es obligatorio");
         }
-        if (empleadoRepository.existsByNombre(request.nombre())){
+        if (employeeRepository.existsByName(request.nombre())){
             throw new IllegalArgumentException("Ya existe un empleado con ese nombre");
         }
 
@@ -30,13 +30,13 @@ public class EmpleadoServiceImpl implements EmpleadoService {
         employee.setName(request.nombre());
 
 
-        Employee guardado = empleadoRepository.save(employee);
+        Employee guardado = employeeRepository.save(employee);
         return mapToResponse(guardado);
     }
 
     @Override
     public EmpleadoResponse obtenerPorId(Integer id) {
-        Employee employee = empleadoRepository.findById(id)
+        Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
 
         return mapToResponse(employee);
@@ -44,16 +44,16 @@ public class EmpleadoServiceImpl implements EmpleadoService {
 
     @Override
     public List<EmpleadoResponse> listar() {
-        return empleadoRepository.findAll().stream()
+        return employeeRepository.findAll().stream()
                 .map(this::mapToResponse).toList();
     }
 
     @Override
     public EmpleadoResponse desactivar(Integer id) {
-        Employee employee = empleadoRepository.findById(id)
+        Employee employee = employeeRepository.findById(id)
                 .orElseThrow(()-> new RuntimeException("Empleado no encontrado"));
         employee.setActive(false);
-        Employee actualizado = empleadoRepository.save(employee);
+        Employee actualizado = employeeRepository.save(employee);
 
         return mapToResponse(actualizado);
     }

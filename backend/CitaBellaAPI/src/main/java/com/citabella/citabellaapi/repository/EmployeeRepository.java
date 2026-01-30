@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface EmpleadoRepository extends JpaRepository<Employee, Integer> {
-    boolean existsByNombre(String nombre);
+public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
+    boolean existsByName(String name);
 }

@@ -7,6 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface StockRepository extends JpaRepository<Stock, Integer> {
-    //revisar método
-    Stock getStockByProducto(Product product);
+    Stock getStockByProduct(Product product);
 }

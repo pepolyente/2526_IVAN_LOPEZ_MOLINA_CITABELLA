@@ -21,11 +21,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CitaServiceImpl implements CitaService {
 
-    private final CitaRepository citaRepository;
-    private final ClienteRepository clienteRepository;
-    private final EmpleadoRepository empleadoRepository;
-    private final ServicioRepository servicioRepository;
-    private final EmpleadoServicioRepository empleadoServicioRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final ClientRepository clientRepository;
+    private final EmployeeRepository employeeRepository;
+    private final TreatmentRepository treatmentRepository;
+    private final EmployeeTreatmentRepository employeeTreatmentRepository;
 
 
     @Override
@@ -39,16 +39,16 @@ public class CitaServiceImpl implements CitaService {
             throw new IllegalArgumentException("La fecha fin debe ser posterior a la fecha inicio");
         }
 
-        Client client = clienteRepository.findById(request.idCliente())
+        Client client = clientRepository.findById(request.idCliente())
                 .orElseThrow(() -> new IllegalArgumentException("El cliente no existe"));
 
-        Employee employee = empleadoRepository.findById(request.idEmpleado())
+        Employee employee = employeeRepository.findById(request.idEmpleado())
                 .orElseThrow(() -> new IllegalArgumentException("El empleado no existe"));
 
-        Treatment treatment = servicioRepository.findById(request.idServicio())
+        Treatment treatment = treatmentRepository.findById(request.idServicio())
                 .orElseThrow(() -> new IllegalArgumentException("El servicio no existe"));
 
-        boolean haySolape = citaRepository.existeSolape(
+        boolean haySolape = appointmentRepository.has_overlap(
                 employee.getId(),
                 request.fechaInicio(),
                 request.fechaFin()
@@ -66,7 +66,7 @@ public class CitaServiceImpl implements CitaService {
         appointment.setEndAt(request.fechaFin());
         appointment.setNotes(request.notas());
 
-        citaRepository.save(appointment);
+        appointmentRepository.save(appointment);
 
         return new CitaResponse(
                 appointment.getId(),
@@ -86,12 +86,12 @@ public class CitaServiceImpl implements CitaService {
 
     @Override
     public List<Appointment> listarPorEmpleado(Integer idEmpleado) {
-        return citaRepository.findByEmpleado_IdEmpleado(idEmpleado);
+        return appointmentRepository.findByEmployee_Id(idEmpleado);
     }
 
     @Override
     public List<Appointment> listarPorCliente(Integer idCliente) {
-        return citaRepository.findByCliente_IdCliente(idCliente);
+        return appointmentRepository.findByClient_Id(idCliente);
     }
 
     @Override

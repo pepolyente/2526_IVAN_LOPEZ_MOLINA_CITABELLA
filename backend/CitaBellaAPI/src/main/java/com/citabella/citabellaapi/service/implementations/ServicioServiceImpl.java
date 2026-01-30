@@ -1,7 +1,7 @@
 package com.citabella.citabellaapi.service.implementations;
 
 import com.citabella.citabellaapi.entity.treatment.Treatment;
-import com.citabella.citabellaapi.repository.ServicioRepository;
+import com.citabella.citabellaapi.repository.TreatmentRepository;
 import com.citabella.citabellaapi.service.interfaces.ServicioService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -12,26 +12,26 @@ import java.util.List;
 @Transactional
 public class ServicioServiceImpl implements ServicioService {
 
-    private final ServicioRepository servicioRepository;
+    private final TreatmentRepository treatmentRepository;
 
-    public ServicioServiceImpl(ServicioRepository servicioRepository) {
-        this.servicioRepository = servicioRepository;
+    public ServicioServiceImpl(TreatmentRepository treatmentRepository) {
+        this.treatmentRepository = treatmentRepository;
     }
 
     @Override
     public Treatment crear(Treatment treatment) {
-        return servicioRepository.save(treatment);
+        return treatmentRepository.save(treatment);
     }
 
     @Override
     public Treatment obtener(Integer id) {
-        return servicioRepository.findById(id)
+        return treatmentRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
     }
 
     @Override
     public List<Treatment> listarActivos() {
-        return servicioRepository.findAll()
+        return treatmentRepository.findAll()
                 .stream().filter(Treatment::getActive).toList();
     }
 }

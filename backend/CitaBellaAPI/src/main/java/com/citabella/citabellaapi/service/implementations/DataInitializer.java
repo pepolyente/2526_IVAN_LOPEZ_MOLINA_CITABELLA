@@ -1,17 +1,17 @@
 package com.citabella.citabellaapi.service.implementations;
 
 import com.citabella.citabellaapi.entity.security.Role;
-import com.citabella.citabellaapi.repository.RolRepository;
+import com.citabella.citabellaapi.repository.RoleRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataInitializer {
 
-    private final RolRepository rolRepository;
+    private final RoleRepository roleRepository;
 
-    public DataInitializer(RolRepository rolRepository) {
-        this.rolRepository = rolRepository;
+    public DataInitializer(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
     @PostConstruct
@@ -24,11 +24,11 @@ public class DataInitializer {
     }
 
     private void crearRolSiNoExiste(String nombre, String descripcion) {
-        if (rolRepository.findByNombre(nombre).isEmpty()) {
+        if (roleRepository.findByName(nombre).isEmpty()) {
             Role role = new Role();
             role.setName(nombre);
             role.setDescription(descripcion);
-            rolRepository.save(role);
+            roleRepository.save(role);
         }
     }
 }
