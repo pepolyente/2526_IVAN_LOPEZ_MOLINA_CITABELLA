@@ -11,18 +11,17 @@ import java.util.List;
 @Repository
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
 
-        //añadir campos para la nueva entidad peticion (countByEmpleadoAndFechaOverlapAndEstado(employee, inicio, fin, ESTADO_CONFIRMADA))
         @Query(""" 
                 SELECT COUNT(c) > 0 FROM Appointment c WHERE c.employee.id = :id AND c.startAt < :endAt AND c.endAt < :startAt""")
-        boolean has_overlap(@Param("id")Integer id,
-                            @Param("startAt")LocalDateTime startAt,
-                            @Param("endAt")LocalDateTime fechaFin);
+        boolean hasOverlap(@Param("id") Integer id,
+                           @Param("startAt") LocalDateTime startAt,
+                           @Param("endAt") LocalDateTime fechaFin);
 
         List<Appointment> findByEmployee_Id(Integer id);
 
         List<Appointment> findByClient_Id(Integer id);
 
-        //metodo (dame todas las citas de este employee entre hora A y hora B que no esten canceladas)
+        //TODO (findAllWhere between Hour A and B not canceled from Employee)
 
 
 

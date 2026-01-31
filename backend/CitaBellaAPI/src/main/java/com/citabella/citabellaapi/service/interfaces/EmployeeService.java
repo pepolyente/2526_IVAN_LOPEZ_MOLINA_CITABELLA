@@ -13,5 +13,4 @@ public interface EmployeeService {
     List<EmployeeResponse> findAll();
 
     EmployeeResponse deactivate(Integer employeeId);
-    /*List<Employee> findAllActive();*/
 }

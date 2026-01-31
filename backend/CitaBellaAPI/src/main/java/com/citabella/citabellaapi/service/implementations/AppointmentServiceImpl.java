@@ -48,7 +48,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         Treatment treatment = treatmentRepository.findById(request.treatmentId())
                 .orElseThrow(() -> new IllegalArgumentException("Treatment not found"));
 
-        boolean hasOverlap = appointmentRepository.has_overlap(
+        boolean hasOverlap = appointmentRepository.hasOverlap(
                 employee.getId(),
                 request.startAt(),
                 request.endAt()

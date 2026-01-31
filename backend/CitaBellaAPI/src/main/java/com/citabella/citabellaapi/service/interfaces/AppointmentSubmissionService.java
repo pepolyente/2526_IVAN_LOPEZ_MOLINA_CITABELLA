@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.service.interfaces;
 
-public interface AppointmentSuggestionService {
+public interface AppointmentSubmissionService {
 }

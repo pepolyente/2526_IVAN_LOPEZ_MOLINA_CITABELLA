@@ -34,25 +34,4 @@ public class EmployeeController {
         return ResponseEntity.ok(employeeService.findAll());
     }
 
-
-    /*
-    @PostMapping
-    public EmpleadoResponse crear(@RequestBody EmpleadoRequest req) {
-        Empleado e = empleadoService.crear(req.name(), req.position());
-        return new EmpleadoResponse(e.getIdEmpleado(), e.getNombre(), e.getPuesto(), e.getActivo());
-    }
-
-    @GetMapping
-    public List<EmpleadoResponse> listar() {
-        return empleadoService.listarActivos().stream()
-                .map(e -> new EmpleadoResponse(e.getIdEmpleado(), e.getNombre(), e.getPuesto(), e.getActivo()))
-                .toList();
-    }
-
-    @GetMapping("/{id}")
-    public EmpleadoResponse obtener(@PathVariable Integer id) {
-        Empleado e = empleadoService.obtenerPorId(id);
-        return new EmpleadoResponse(e.getIdEmpleado(), e.getNombre(), e.getPuesto(), e.getActivo());
-    }
-    */
 }

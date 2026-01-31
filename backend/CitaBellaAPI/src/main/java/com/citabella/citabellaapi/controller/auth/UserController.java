@@ -18,23 +18,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    //@GetMapping("/me")
-    /*public UsuarioResponse me() {
-
-        Usuario usuario = usuarioService.obtenerUsuarioAutenticado();
-
-        boolean tieneCliente = usuarioService.tieneCliente(usuario.getIdUsuario());
-
-        return new UsuarioResponse(
-                usuario.getIdUsuario(),
-                usuario.getNombreUsuario(),
-                usuario.getEmail(),
-                usuario.getRol().getNombre(),
-                tieneCliente
-        );
-    }
-    */
-
     @PostMapping
     public ResponseEntity<UserResponse> create(@RequestBody @Valid UserRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(request));

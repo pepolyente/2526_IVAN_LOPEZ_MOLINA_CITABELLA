@@ -67,10 +67,4 @@ public class EmployeeServiceImpl implements EmployeeService {
         );
     }
 
-    /*
-    @Override
-    public List<Empleado> listarActivos() {
-        return empleadoRepository.findByActivoTrue();
-    }
-    */
 }

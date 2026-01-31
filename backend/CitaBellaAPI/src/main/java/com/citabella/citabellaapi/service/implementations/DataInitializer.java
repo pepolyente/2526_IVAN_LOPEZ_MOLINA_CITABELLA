@@ -16,7 +16,7 @@ public class DataInitializer {
 
     @PostConstruct
     public void init() {
-
+        //TODO revise logic
         createRoleIfNotExist("ADMIN", "System administrator");
         createRoleIfNotExist("EMPLOYEE", "Employee of the company");
         createRoleIfNotExist("PENDING_CLIENT", "User without client assigned");

@@ -5,7 +5,6 @@ public record UserResponse(
         String username,
         String email,
         String role
-        //TIPO PERFIL ??
-        //OPTIONAL PERFILID
+        //TODO PROFILE TYPE ?? OPTIONAL PROFILE ID
 ) {
 }

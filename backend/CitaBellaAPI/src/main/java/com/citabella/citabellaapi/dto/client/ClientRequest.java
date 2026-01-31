@@ -7,6 +7,6 @@ import java.time.LocalDate;
 public record ClientRequest(
         String name,
         String phoneNumber,
-        Gender gender,//String
+        Gender gender,
         LocalDate birthday
 ) {}

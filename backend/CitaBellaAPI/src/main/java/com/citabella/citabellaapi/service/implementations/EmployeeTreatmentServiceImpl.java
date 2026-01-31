@@ -42,8 +42,4 @@ public class EmployeeTreatmentServiceImpl implements EmployeeTreatmentService {
         employeeTreatmentRepository.save(employeeTreatment);
     }
 
-    /*@Override
-    public List<EmpleadoServicio> listarPorEmpleado(Integer employeeId) {
-        return repo.findByEmpleado_IdEmpleado(employeeId);
-    }*/
 }

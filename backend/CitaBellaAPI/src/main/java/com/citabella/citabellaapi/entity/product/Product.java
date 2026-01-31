@@ -28,7 +28,7 @@ public class Product {
     @Column(length = 100)
     private String supplier;
 
-    private Boolean alertPriority;
+    private Boolean isCritical;
 
     private Boolean active;
 
@@ -39,8 +39,8 @@ public class Product {
         if (usageType == null) {
             usageType = UsageType.BOTH;
         }
-        if (alertPriority == null) {
-            alertPriority = false;
+        if (isCritical == null) {
+            isCritical = false;
         }
         if (active == null) {
             active = true;
