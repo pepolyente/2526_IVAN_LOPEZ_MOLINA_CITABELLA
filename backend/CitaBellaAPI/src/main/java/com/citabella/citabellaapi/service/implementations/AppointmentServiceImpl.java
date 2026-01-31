@@ -32,23 +32,23 @@ public class AppointmentServiceImpl implements AppointmentService {
     public CitaResponse create(CrearCitaRequest request) {
 
         if (request.fechaInicio() == null || request.fechaFin() == null) {
-            throw new IllegalArgumentException("Las fechas son obligatorias");
+            throw new IllegalArgumentException("Start and end dates are required");
         }
 
         if (!request.fechaFin().isAfter(request.fechaInicio())) {
-            throw new IllegalArgumentException("La fecha fin debe ser posterior a la fecha inicio");
+            throw new IllegalArgumentException("End date must be after start date");
         }
 
         Client client = clientRepository.findById(request.idCliente())
-                .orElseThrow(() -> new IllegalArgumentException("El cliente no existe"));
+                .orElseThrow(() -> new IllegalArgumentException("Client not found"));
 
         Employee employee = employeeRepository.findById(request.idEmpleado())
-                .orElseThrow(() -> new IllegalArgumentException("El empleado no existe"));
+                .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
 
         Treatment treatment = treatmentRepository.findById(request.idServicio())
-                .orElseThrow(() -> new IllegalArgumentException("El servicio no existe"));
+                .orElseThrow(() -> new IllegalArgumentException("Treatment not found"));
 
-        boolean haySolape = appointmentRepository.has_overlap(
+        boolean hasOverlap = appointmentRepository.has_overlap(
                 employee.getId(),
                 request.fechaInicio(),
                 request.fechaFin()
@@ -58,8 +58,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setClient(client);
         appointment.setEmployee(employee);
 
-        //CAMBIAR A SET
-        //cita.setServicio(servicio);
+        // TODO: change to Set<Treatment>
 
 
         appointment.setStartAt(request.fechaInicio());
@@ -70,7 +69,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         return new CitaResponse(
                 appointment.getId(),
-                haySolape
+                hasOverlap
         );
     }
 

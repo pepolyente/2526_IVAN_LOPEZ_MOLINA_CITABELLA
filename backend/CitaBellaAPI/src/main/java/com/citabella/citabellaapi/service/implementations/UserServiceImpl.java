@@ -34,14 +34,14 @@ public class UserServiceImpl implements UserService {
     public UsuarioResponse create(UsuarioRequest request) {
 
         if(userRepository.existsByEmail(request.email())) {
-            throw new IllegalArgumentException("Email ya registrado");
+            throw new IllegalArgumentException("Email already registered");
         }
         if(userRepository.existsByUsername(request.nombreUsuario())) {
-            throw new IllegalArgumentException("Nombre de usuario ya existe");
+            throw new IllegalArgumentException("Username already exists");
         }
 
-        Role role = roleRepository.findByName("CLIENTE_PENDIENTE")
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+        Role role = roleRepository.findByName("PENDING_CLIENT")
+                .orElseThrow(() -> new RuntimeException("Role no found"));
 
         User user = new User();
         user.setUsername(request.nombreUsuario());

@@ -26,7 +26,7 @@ public class TreatmentServiceImpl implements TreatmentService {
     @Override
     public Treatment getById(Integer id) {
         return treatmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Servicio no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Treatment not found"));
     }
 
     @Override

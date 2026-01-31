@@ -26,7 +26,7 @@ public class ClientServiceImpl implements ClientService {
     public ClienteResponse createFull(ClienteRequest request) {
 
         if (clientRepository.existsByPhoneNumber(request.telefono())) {
-            throw new IllegalArgumentException("Teléfono ya registrado");
+            throw new IllegalArgumentException("Phone number already registered");
         }
 
         Client client = new Client();
@@ -35,14 +35,14 @@ public class ClientServiceImpl implements ClientService {
         client.setGender(request.gender());
         client.setBirthday(request.fechaNacimiento());
 
-        Client creado = clientRepository.save(client);
-        return mapToResponse(creado);
+        Client createdClient = clientRepository.save(client);
+        return mapToResponse(createdClient);
     }
 
     @Override
     public ClienteResponse getById(Integer id) {
         Client client = clientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Client not found"));
         return mapToResponse(client);
     }
 
@@ -55,52 +55,52 @@ public class ClientServiceImpl implements ClientService {
     @Override
     public ClienteResponse assignUser(Integer clientId, Integer userId) {
         Client client = clientRepository.findById(clientId)
-                .orElseThrow(()-> new RuntimeException("Cliente no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Client not found"));
         if (client.getUser() != null) {
-            throw new IllegalStateException("El cliente ya tiene un usuario asignado");
+            throw new IllegalStateException("Client already has a user assigned");
         }
         if (clientRepository.existsByUser_Id(userId)) {
-            throw new IllegalStateException("El usuario ya está asignado a otro cliente");
+            throw new IllegalStateException("User is already assigned to another client");
         }
 
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         client.setUser(user);
 
-        Client cambiado = clientRepository.save(client);
-        return mapToResponse(cambiado);
+        Client changedClient = clientRepository.save(client);
+        return mapToResponse(changedClient);
     }
 
     @Override
     public ClienteResponse unassignUser(Integer clientId) {
         Client client = clientRepository.findById(clientId)
-                .orElseThrow(()-> new RuntimeException("Cliente no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Client not found"));
         if (client.getUser() == null) {
-            throw new IllegalStateException("El cliente no tiene usuario asignado");
+            throw new IllegalStateException("Client does not have a user assigned");
         }
         client.setUser(null);
 
-        Client cambiado = clientRepository.save(client);
+        Client updatedClient = clientRepository.save(client);
 
-        return mapToResponse(cambiado);
+        return mapToResponse(updatedClient);
     }
 
     @Override
     public ClienteResponse createBasic(String name, String phoneNumber) {
         if (phoneNumber == null || phoneNumber.isBlank()) {
-            throw new IllegalArgumentException("El teléfono es obligatorio");
+            throw new IllegalArgumentException("Phone number is mandatory");
         }
         if (clientRepository.existsByPhoneNumber(phoneNumber)) {
-            throw new IllegalArgumentException("Teléfono ya registrado");
+            throw new IllegalArgumentException("Phone number already registered");
         }
         Client client = new Client();
         client.setName(name);
         client.setPhoneNumber(phoneNumber);
 
-        Client creado = clientRepository.save(client);
+        Client createdClient = clientRepository.save(client);
 
-        return mapToResponse(creado);
+        return mapToResponse(createdClient);
     }
 
 

@@ -20,24 +20,24 @@ public class EmployeeServiceImpl implements EmployeeService {
     public EmpleadoResponse create(EmpleadoRequest request) {
 
         if (request.nombre() == null || request.nombre().isBlank()) {
-            throw new IllegalArgumentException("El nombre es obligatorio");
+            throw new IllegalArgumentException("Name is mandatory");
         }
         if (employeeRepository.existsByName(request.nombre())){
-            throw new IllegalArgumentException("Ya existe un empleado con ese nombre");
+            throw new IllegalArgumentException("Employee's name already registered");
         }
 
         Employee employee = new Employee();
         employee.setName(request.nombre());
 
 
-        Employee guardado = employeeRepository.save(employee);
-        return mapToResponse(guardado);
+        Employee savedEmployee = employeeRepository.save(employee);
+        return mapToResponse(savedEmployee);
     }
 
     @Override
     public EmpleadoResponse getById(Integer id) {
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
 
         return mapToResponse(employee);
     }
@@ -51,11 +51,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmpleadoResponse deactivate(Integer employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(()-> new RuntimeException("Empleado no encontrado"));
+                .orElseThrow(() -> new RuntimeException("Employee not found"));
         employee.setActive(false);
-        Employee actualizado = employeeRepository.save(employee);
+        Employee updatedEmployee = employeeRepository.save(employee);
 
-        return mapToResponse(actualizado);
+        return mapToResponse(updatedEmployee);
     }
 
     private EmpleadoResponse mapToResponse(Employee employee) {

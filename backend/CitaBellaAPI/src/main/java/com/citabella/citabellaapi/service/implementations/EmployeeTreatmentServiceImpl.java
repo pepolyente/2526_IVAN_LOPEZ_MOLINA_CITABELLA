@@ -28,18 +28,18 @@ public class EmployeeTreatmentServiceImpl implements EmployeeTreatmentService {
 
         if (employeeTreatmentRepository
                 .existsById_employeeIdAndId_treatmentId(employeeId, treatmentId)) {
-            throw new IllegalArgumentException("El servicio ya está asignado al empleado");
+            throw new IllegalArgumentException("Treatment already assigned to employee");
         }
 
         Employee employee = employeeRepository.findById(employeeId).orElseThrow();
         Treatment treatment = treatmentRepository.findById(treatmentId).orElseThrow();
 
-        EmployeeTreatment es = new EmployeeTreatment();
-        es.setEmployee(employee);
-        es.setTreatment(treatment);
-        es.setId(new EmployeeTreatmentId(employeeId, treatmentId));
+        EmployeeTreatment employeeTreatment = new EmployeeTreatment();
+        employeeTreatment.setEmployee(employee);
+        employeeTreatment.setTreatment(treatment);
+        employeeTreatment.setId(new EmployeeTreatmentId(employeeId, treatmentId));
 
-        employeeTreatmentRepository.save(es);
+        employeeTreatmentRepository.save(employeeTreatment);
     }
 
     /*@Override

@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.service.implementations;
 
-public class PeticionServiceImpl {
+public class AuditLogServiceImpl {
 }

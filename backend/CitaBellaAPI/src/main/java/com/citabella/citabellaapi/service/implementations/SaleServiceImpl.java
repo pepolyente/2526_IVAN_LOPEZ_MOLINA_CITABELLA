@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.service.implementations;
 
-public class AuditoriaServiceImpl {
+public class SaleServiceImpl {
 }

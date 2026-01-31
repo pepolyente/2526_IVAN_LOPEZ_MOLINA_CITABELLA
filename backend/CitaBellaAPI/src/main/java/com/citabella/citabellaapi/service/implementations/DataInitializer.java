@@ -17,17 +17,17 @@ public class DataInitializer {
     @PostConstruct
     public void init() {
 
-        crearRolSiNoExiste("ADMIN", "Administrador del sistema");
-        crearRolSiNoExiste("EMPLEADO", "Empleado del negocio");
-        crearRolSiNoExiste("CLIENTE_PENDIENTE", "Usuario sin cliente asignado");
-        crearRolSiNoExiste("CLIENTE", "Cliente verificado");
+        createRoleIfNotExist("ADMIN", "System administrator");
+        createRoleIfNotExist("EMPLOYEE", "Employee of the company");
+        createRoleIfNotExist("PENDING_CLIENT", "User without client assigned");
+        createRoleIfNotExist("CLIENT", "Verified client");
     }
 
-    private void crearRolSiNoExiste(String nombre, String descripcion) {
-        if (roleRepository.findByName(nombre).isEmpty()) {
+    private void createRoleIfNotExist(String name, String description) {
+        if (roleRepository.findByName(name).isEmpty()) {
             Role role = new Role();
-            role.setName(nombre);
-            role.setDescription(descripcion);
+            role.setName(name);
+            role.setDescription(description);
             roleRepository.save(role);
         }
     }
