@@ -9,7 +9,7 @@ import com.citabella.citabellaapi.entity.treatment.Treatment;
 import com.citabella.citabellaapi.entity.enums.AppointmentStatus;
 import com.citabella.citabellaapi.entity.sale.Sale;
 import com.citabella.citabellaapi.repository.*;
-import com.citabella.citabellaapi.service.interfaces.CitaService;
+import com.citabella.citabellaapi.service.interfaces.AppointmentService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class CitaServiceImpl implements CitaService {
+public class AppointmentServiceImpl implements AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final ClientRepository clientRepository;
@@ -29,7 +29,7 @@ public class CitaServiceImpl implements CitaService {
 
 
     @Override
-    public CitaResponse crear(CrearCitaRequest request) {
+    public CitaResponse create(CrearCitaRequest request) {
 
         if (request.fechaInicio() == null || request.fechaFin() == null) {
             throw new IllegalArgumentException("Las fechas son obligatorias");
@@ -75,37 +75,37 @@ public class CitaServiceImpl implements CitaService {
     }
 
     @Override
-    public CitaResponse cancelarCita(CrearCitaRequest request) {
+    public CitaResponse cancel(CrearCitaRequest request) {
         return null;
     }
 
     @Override
-    public CitaResponse finalizarCita(Integer idCita) {
+    public CitaResponse closeAppointment(Integer clientId) {
         return null;
     }
 
     @Override
-    public List<Appointment> listarPorEmpleado(Integer idEmpleado) {
-        return appointmentRepository.findByEmployee_Id(idEmpleado);
+    public List<Appointment> getAllByEmployeeId(Integer employeeId) {
+        return appointmentRepository.findByEmployee_Id(employeeId);
     }
 
     @Override
-    public List<Appointment> listarPorCliente(Integer idCliente) {
-        return appointmentRepository.findByClient_Id(idCliente);
+    public List<Appointment> getAllByClientId(Integer clientId) {
+        return appointmentRepository.findByClient_Id(clientId);
     }
 
     @Override
-    public void validarCambioDeEstado(AppointmentStatus appointmentStatusAnterior, AppointmentStatus appointmentStatusNuevo) {
+    public void validateStatusChange(AppointmentStatus currentStatus, AppointmentStatus nextStatus) {
 
     }
 
     @Override
-    public boolean detectarSolape() {
+    public boolean hasOverlap() {
         return false;
     }
 
     @Override
-    public Sale cerrarCita() {
+    public Sale checkout() {
         return null;
     }
 }

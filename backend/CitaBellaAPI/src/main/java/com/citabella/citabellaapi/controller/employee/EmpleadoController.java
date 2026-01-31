@@ -2,7 +2,7 @@ package com.citabella.citabellaapi.controller.employee;
 
 import com.citabella.citabellaapi.dto.employee.EmpleadoRequest;
 import com.citabella.citabellaapi.dto.employee.EmpleadoResponse;
-import com.citabella.citabellaapi.service.interfaces.EmpleadoService;
+import com.citabella.citabellaapi.service.interfaces.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,22 +16,22 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmpleadoController {
 
-    private final EmpleadoService empleadoService;
+    private final EmployeeService employeeService;
 
     @PostMapping
     public ResponseEntity<EmpleadoResponse> crear(@RequestBody EmpleadoRequest request) {
-        EmpleadoResponse response = empleadoService.crear(request);
+        EmpleadoResponse response = employeeService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<EmpleadoResponse> obtener(@PathVariable Integer id) {
-        return ResponseEntity.ok(empleadoService.obtenerPorId(id));
+        return ResponseEntity.ok(employeeService.getById(id));
     }
 
     @GetMapping
     public ResponseEntity<List<EmpleadoResponse>> listar() {
-        return ResponseEntity.ok(empleadoService.listar());
+        return ResponseEntity.ok(employeeService.findAll());
     }
 
 

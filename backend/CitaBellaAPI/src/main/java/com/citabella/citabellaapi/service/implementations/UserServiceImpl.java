@@ -7,7 +7,7 @@ import com.citabella.citabellaapi.entity.security.User;
 import com.citabella.citabellaapi.repository.ClientRepository;
 import com.citabella.citabellaapi.repository.RoleRepository;
 import com.citabella.citabellaapi.repository.UserRepository;
-import com.citabella.citabellaapi.service.interfaces.UsuarioService;
+import com.citabella.citabellaapi.service.interfaces.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
-public class UsuarioServiceImpl implements UsuarioService {
+public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
     private final ClientRepository clientRepository;
 
-    public UsuarioServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, ClientRepository clientRepository) {
+    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder, ClientRepository clientRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
@@ -31,7 +31,7 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public UsuarioResponse crearUsuario(UsuarioRequest request) {
+    public UsuarioResponse create(UsuarioRequest request) {
 
         if(userRepository.existsByEmail(request.email())) {
             throw new IllegalArgumentException("Email ya registrado");
@@ -54,21 +54,21 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public UsuarioResponse obtenerPorId(Integer id) {
+    public UsuarioResponse getById(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         return mapToResponse(user);
     }
 
     @Override
-    public UsuarioResponse obtenerPorEmail(String email) {
+    public UsuarioResponse getByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         return mapToResponse(user);
     }
 
     @Override
-    public UsuarioResponse obtenerUsuarioAutenticado() {
+    public UsuarioResponse getAuthenticated() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null || !auth.isAuthenticated()) {
@@ -76,14 +76,14 @@ public class UsuarioServiceImpl implements UsuarioService {
         }
 
         String email = auth.getName();
-        return obtenerPorEmail(email);
+        return getByEmail(email);
     }
 
     @Override
-    public void cambiarRol(Integer idUsuario, String nombreRol) {
-        User user = userRepository.findById(idUsuario)
+    public void swapRole(Integer userId, String roleName) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(()-> new RuntimeException("Usuario no encontrado"));
-        Role role = roleRepository.findByName(nombreRol)
+        Role role = roleRepository.findByName(roleName)
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
         user.setRole(role);
@@ -91,8 +91,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public boolean tieneCliente(Integer idUsuario) {
-        return clientRepository.existsByUser_Id(idUsuario);
+    public boolean hasClient(Integer userId) {
+        return clientRepository.existsByUser_Id(userId);
     }
 
 

@@ -4,7 +4,7 @@ import com.citabella.citabellaapi.dto.employee.EmpleadoRequest;
 import com.citabella.citabellaapi.dto.employee.EmpleadoResponse;
 import com.citabella.citabellaapi.entity.employee.Employee;
 import com.citabella.citabellaapi.repository.EmployeeRepository;
-import com.citabella.citabellaapi.service.interfaces.EmpleadoService;
+import com.citabella.citabellaapi.service.interfaces.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,12 +12,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class EmpleadoServiceImpl implements EmpleadoService {
+public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
 
     @Override
-    public EmpleadoResponse crear(EmpleadoRequest request) {
+    public EmpleadoResponse create(EmpleadoRequest request) {
 
         if (request.nombre() == null || request.nombre().isBlank()) {
             throw new IllegalArgumentException("El nombre es obligatorio");
@@ -35,7 +35,7 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     }
 
     @Override
-    public EmpleadoResponse obtenerPorId(Integer id) {
+    public EmpleadoResponse getById(Integer id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Empleado no encontrado"));
 
@@ -43,14 +43,14 @@ public class EmpleadoServiceImpl implements EmpleadoService {
     }
 
     @Override
-    public List<EmpleadoResponse> listar() {
+    public List<EmpleadoResponse> findAll() {
         return employeeRepository.findAll().stream()
                 .map(this::mapToResponse).toList();
     }
 
     @Override
-    public EmpleadoResponse desactivar(Integer id) {
-        Employee employee = employeeRepository.findById(id)
+    public EmpleadoResponse deactivate(Integer employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(()-> new RuntimeException("Empleado no encontrado"));
         employee.setActive(false);
         Employee actualizado = employeeRepository.save(employee);

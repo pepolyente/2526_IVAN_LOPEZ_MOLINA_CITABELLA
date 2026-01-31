@@ -7,7 +7,7 @@ import com.citabella.citabellaapi.entity.treatment.Treatment;
 import com.citabella.citabellaapi.repository.EmployeeRepository;
 import com.citabella.citabellaapi.repository.EmployeeTreatmentRepository;
 import com.citabella.citabellaapi.repository.TreatmentRepository;
-import com.citabella.citabellaapi.service.interfaces.EmpleadoServicioService;
+import com.citabella.citabellaapi.service.interfaces.EmployeeTreatmentService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Transactional
 @RequiredArgsConstructor
-public class EmpleadoServicioServiceImpl implements EmpleadoServicioService {
+public class EmployeeTreatmentServiceImpl implements EmployeeTreatmentService {
 
     private final EmployeeRepository employeeRepository;
     private final TreatmentRepository treatmentRepository;
@@ -24,20 +24,20 @@ public class EmpleadoServicioServiceImpl implements EmpleadoServicioService {
 
 
     @Override
-    public void asignar(Integer idEmpleado, Integer idServicio) {
+    public void assign(Integer employeeId, Integer treatmentId) {
 
         if (employeeTreatmentRepository
-                .existsById_employeeIdAndId_treatmentId(idEmpleado, idServicio)) {
+                .existsById_employeeIdAndId_treatmentId(employeeId, treatmentId)) {
             throw new IllegalArgumentException("El servicio ya está asignado al empleado");
         }
 
-        Employee employee = employeeRepository.findById(idEmpleado).orElseThrow();
-        Treatment treatment = treatmentRepository.findById(idServicio).orElseThrow();
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow();
+        Treatment treatment = treatmentRepository.findById(treatmentId).orElseThrow();
 
         EmployeeTreatment es = new EmployeeTreatment();
         es.setEmployee(employee);
         es.setTreatment(treatment);
-        es.setId(new EmployeeTreatmentId(idEmpleado, idServicio));
+        es.setId(new EmployeeTreatmentId(employeeId, treatmentId));
 
         employeeTreatmentRepository.save(es);
     }

@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.service.interfaces;
 
-public interface NotificacionService {
+public interface AuditLogService {
 }
