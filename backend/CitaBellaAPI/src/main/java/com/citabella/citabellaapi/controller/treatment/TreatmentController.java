@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.controller.treatment;
 
-public class ServicioController {
+public class TreatmentController {
 }

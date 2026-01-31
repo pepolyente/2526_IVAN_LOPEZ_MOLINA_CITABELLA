@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.controller.employee;
 
-public class EmpleadoServicioController {
+public class EmployeeTreatmentController {
 }

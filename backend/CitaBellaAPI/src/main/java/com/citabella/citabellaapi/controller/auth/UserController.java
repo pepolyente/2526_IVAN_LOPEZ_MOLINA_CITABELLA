@@ -9,12 +9,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/usuarios")
-public class UsuarioController {
+@RequestMapping("/api/users")
+public class UserController {
 
     private final UserService userService;
 
-    public UsuarioController(UserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -36,7 +36,7 @@ public class UsuarioController {
     */
 
     @PostMapping
-    public ResponseEntity<UserResponse> crear(@RequestBody @Valid UserRequest request) {
+    public ResponseEntity<UserResponse> create(@RequestBody @Valid UserRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(request));
     }
 }

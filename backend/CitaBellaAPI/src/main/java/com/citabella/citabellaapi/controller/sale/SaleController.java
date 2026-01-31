@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.controller.sale;
 
-public class VentaController {
+public class SaleController {
 }

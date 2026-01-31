@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/citas")
+@RequestMapping("api/appointments")
 @RequiredArgsConstructor
-public class CitaController {
+public class AppointmentController {
 
     private final AppointmentService appointmentService;
 
     @PostMapping
-    public ResponseEntity<AppointmentResponse> crear(@RequestBody CreateAppointmentRequest request) {
+    public ResponseEntity<AppointmentResponse> create(@RequestBody CreateAppointmentRequest request) {
         AppointmentResponse response = appointmentService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

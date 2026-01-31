@@ -8,22 +8,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/clientes")
-public class ClienteController {
+@RequestMapping("/api/clients")
+public class ClientController {
 
     private final ClientService clientService;
 
-    public ClienteController(ClientService clientService) {
+    public ClientController(ClientService clientService) {
         this.clientService = clientService;
     }
 
     @PostMapping
-    public ResponseEntity<ClientResponse> crear(@RequestBody ClientRequest request) {
+    public ResponseEntity<ClientResponse> create(@RequestBody ClientRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(clientService.createFull(request));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ClientResponse> obtener(@PathVariable Integer id) {
+    public ResponseEntity<ClientResponse> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(clientService.getById(id));
     }
 }

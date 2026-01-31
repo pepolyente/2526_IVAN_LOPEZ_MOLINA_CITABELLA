@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.controller.notification;
 
-public class NotificacionController {
+public class NotificationController {
 }

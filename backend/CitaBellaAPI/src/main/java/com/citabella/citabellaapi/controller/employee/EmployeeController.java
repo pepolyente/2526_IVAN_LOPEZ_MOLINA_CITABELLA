@@ -12,25 +12,25 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/empleados")
+@RequestMapping("/api/employees")
 @RequiredArgsConstructor
-public class EmpleadoController {
+public class EmployeeController {
 
     private final EmployeeService employeeService;
 
     @PostMapping
-    public ResponseEntity<EmployeeResponse> crear(@RequestBody EmployeeRequest request) {
+    public ResponseEntity<EmployeeResponse> create(@RequestBody EmployeeRequest request) {
         EmployeeResponse response = employeeService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmployeeResponse> obtener(@PathVariable Integer id) {
+    public ResponseEntity<EmployeeResponse> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(employeeService.getById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<EmployeeResponse>> listar() {
+    public ResponseEntity<List<EmployeeResponse>> findAll() {
         return ResponseEntity.ok(employeeService.findAll());
     }
 
