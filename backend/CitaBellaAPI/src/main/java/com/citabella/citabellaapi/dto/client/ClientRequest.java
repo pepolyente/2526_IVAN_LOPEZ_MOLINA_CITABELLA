@@ -4,9 +4,9 @@ import com.citabella.citabellaapi.entity.enums.Gender;
 
 import java.time.LocalDate;
 
-public record ClienteRequest(
-        String nombre,
-        String telefono,
+public record ClientRequest(
+        String name,
+        String phoneNumber,
         Gender gender,//String
-        LocalDate fechaNacimiento
+        LocalDate birthday
 ) {}

@@ -1,17 +1,17 @@
 package com.citabella.citabellaapi.service.interfaces;
 
-import com.citabella.citabellaapi.dto.employee.EmpleadoRequest;
-import com.citabella.citabellaapi.dto.employee.EmpleadoResponse;
+import com.citabella.citabellaapi.dto.employee.EmployeeRequest;
+import com.citabella.citabellaapi.dto.employee.EmployeeResponse;
 
 import java.util.List;
 
 public interface EmployeeService {
-    EmpleadoResponse create(EmpleadoRequest request);
+    EmployeeResponse create(EmployeeRequest request);
 
-    EmpleadoResponse getById(Integer id);
+    EmployeeResponse getById(Integer id);
 
-    List<EmpleadoResponse> findAll();
+    List<EmployeeResponse> findAll();
 
-    EmpleadoResponse deactivate(Integer employeeId);
+    EmployeeResponse deactivate(Integer employeeId);
     /*List<Employee> findAllActive();*/
 }

@@ -1,20 +1,20 @@
 package com.citabella.citabellaapi.service.interfaces;
 
-import com.citabella.citabellaapi.dto.client.ClienteRequest;
-import com.citabella.citabellaapi.dto.client.ClienteResponse;
+import com.citabella.citabellaapi.dto.client.ClientRequest;
+import com.citabella.citabellaapi.dto.client.ClientResponse;
 
 import java.util.List;
 
 public interface ClientService {
-    ClienteResponse createFull(ClienteRequest request);
+    ClientResponse createFull(ClientRequest request);
 
-    ClienteResponse getById(Integer id);
+    ClientResponse getById(Integer id);
 
-    List<ClienteResponse> findAll();
+    List<ClientResponse> findAll();
 
-    ClienteResponse assignUser(Integer clientId, Integer userId);
+    ClientResponse assignUser(Integer clientId, Integer userId);
 
-    ClienteResponse unassignUser(Integer clientId);
+    ClientResponse unassignUser(Integer clientId);
 
-    ClienteResponse createBasic(String name, String phoneNumber);
+    ClientResponse createBasic(String name, String phoneNumber);
 }

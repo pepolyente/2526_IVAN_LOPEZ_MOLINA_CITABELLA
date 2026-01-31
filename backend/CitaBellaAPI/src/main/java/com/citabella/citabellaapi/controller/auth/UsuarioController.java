@@ -1,7 +1,7 @@
 package com.citabella.citabellaapi.controller.auth;
 
-import com.citabella.citabellaapi.dto.user.UsuarioRequest;
-import com.citabella.citabellaapi.dto.user.UsuarioResponse;
+import com.citabella.citabellaapi.dto.user.UserRequest;
+import com.citabella.citabellaapi.dto.user.UserResponse;
 import com.citabella.citabellaapi.service.interfaces.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -36,7 +36,7 @@ public class UsuarioController {
     */
 
     @PostMapping
-    public ResponseEntity<UsuarioResponse> crear(@RequestBody @Valid UsuarioRequest request) {
+    public ResponseEntity<UserResponse> crear(@RequestBody @Valid UserRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(request));
     }
 }

@@ -1,7 +1,7 @@
 package com.citabella.citabellaapi.service.interfaces;
 
-import com.citabella.citabellaapi.dto.appointment.CitaResponse;
-import com.citabella.citabellaapi.dto.appointment.CrearCitaRequest;
+import com.citabella.citabellaapi.dto.appointment.AppointmentResponse;
+import com.citabella.citabellaapi.dto.appointment.CreateAppointmentRequest;
 import com.citabella.citabellaapi.entity.appointment.Appointment;
 import com.citabella.citabellaapi.entity.enums.AppointmentStatus;
 import com.citabella.citabellaapi.entity.sale.Sale;
@@ -9,11 +9,11 @@ import com.citabella.citabellaapi.entity.sale.Sale;
 import java.util.List;
 
 public interface AppointmentService {
-    CitaResponse create(CrearCitaRequest request);
+    AppointmentResponse create(CreateAppointmentRequest request);
 
-    CitaResponse cancel(CrearCitaRequest request);
+    AppointmentResponse cancel(CreateAppointmentRequest request);
 
-    CitaResponse closeAppointment(Integer clientId);
+    AppointmentResponse closeAppointment(Integer clientId);
 
     List<Appointment> getAllByEmployeeId(Integer employeeId);
 

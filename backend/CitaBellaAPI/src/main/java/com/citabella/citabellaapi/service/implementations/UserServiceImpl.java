@@ -1,7 +1,7 @@
 package com.citabella.citabellaapi.service.implementations;
 
-import com.citabella.citabellaapi.dto.user.UsuarioRequest;
-import com.citabella.citabellaapi.dto.user.UsuarioResponse;
+import com.citabella.citabellaapi.dto.user.UserRequest;
+import com.citabella.citabellaapi.dto.user.UserResponse;
 import com.citabella.citabellaapi.entity.security.Role;
 import com.citabella.citabellaapi.entity.security.User;
 import com.citabella.citabellaapi.repository.ClientRepository;
@@ -31,12 +31,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UsuarioResponse create(UsuarioRequest request) {
+    public UserResponse create(UserRequest request) {
 
         if(userRepository.existsByEmail(request.email())) {
             throw new IllegalArgumentException("Email already registered");
         }
-        if(userRepository.existsByUsername(request.nombreUsuario())) {
+        if (userRepository.existsByUsername(request.username())) {
             throw new IllegalArgumentException("Username already exists");
         }
 
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("Role no found"));
 
         User user = new User();
-        user.setUsername(request.nombreUsuario());
+        user.setUsername(request.username());
         user.setEmail(request.email());
         user.setPasswordHash(passwordEncoder.encode(request.password()));
         user.setRole(role);
@@ -54,21 +54,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UsuarioResponse getById(Integer id) {
+    public UserResponse getById(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         return mapToResponse(user);
     }
 
     @Override
-    public UsuarioResponse getByEmail(String email) {
+    public UserResponse getByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         return mapToResponse(user);
     }
 
     @Override
-    public UsuarioResponse getAuthenticated() {
+    public UserResponse getAuthenticated() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null || !auth.isAuthenticated()) {
@@ -96,8 +96,8 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    private UsuarioResponse mapToResponse(User user) {
-        return new UsuarioResponse(
+    private UserResponse mapToResponse(User user) {
+        return new UserResponse(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),

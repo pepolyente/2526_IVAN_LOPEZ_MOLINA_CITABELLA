@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.dto.employee;
 
-public record EmpleadoServicioRequest() {
+public record EmployeeTreatmentRequest() {
 }

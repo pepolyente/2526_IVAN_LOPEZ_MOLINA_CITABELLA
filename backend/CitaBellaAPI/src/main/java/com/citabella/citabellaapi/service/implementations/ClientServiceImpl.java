@@ -1,7 +1,7 @@
 package com.citabella.citabellaapi.service.implementations;
 
-import com.citabella.citabellaapi.dto.client.ClienteRequest;
-import com.citabella.citabellaapi.dto.client.ClienteResponse;
+import com.citabella.citabellaapi.dto.client.ClientRequest;
+import com.citabella.citabellaapi.dto.client.ClientResponse;
 import com.citabella.citabellaapi.entity.client.Client;
 import com.citabella.citabellaapi.entity.security.User;
 import com.citabella.citabellaapi.repository.ClientRepository;
@@ -23,37 +23,37 @@ public class ClientServiceImpl implements ClientService {
 
 
     @Override
-    public ClienteResponse createFull(ClienteRequest request) {
+    public ClientResponse createFull(ClientRequest request) {
 
-        if (clientRepository.existsByPhoneNumber(request.telefono())) {
+        if (clientRepository.existsByPhoneNumber(request.phoneNumber())) {
             throw new IllegalArgumentException("Phone number already registered");
         }
 
         Client client = new Client();
-        client.setName(request.nombre());
-        client.setPhoneNumber(request.telefono());
+        client.setName(request.name());
+        client.setPhoneNumber(request.phoneNumber());
         client.setGender(request.gender());
-        client.setBirthday(request.fechaNacimiento());
+        client.setBirthday(request.birthday());
 
         Client createdClient = clientRepository.save(client);
         return mapToResponse(createdClient);
     }
 
     @Override
-    public ClienteResponse getById(Integer id) {
+    public ClientResponse getById(Integer id) {
         Client client = clientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Client not found"));
         return mapToResponse(client);
     }
 
     @Override
-    public List<ClienteResponse> findAll() {
+    public List<ClientResponse> findAll() {
         return clientRepository.findAll().stream()
                 .map(this::mapToResponse).toList();
     }
 
     @Override
-    public ClienteResponse assignUser(Integer clientId, Integer userId) {
+    public ClientResponse assignUser(Integer clientId, Integer userId) {
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new RuntimeException("Client not found"));
         if (client.getUser() != null) {
@@ -73,7 +73,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClienteResponse unassignUser(Integer clientId) {
+    public ClientResponse unassignUser(Integer clientId) {
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new RuntimeException("Client not found"));
         if (client.getUser() == null) {
@@ -87,7 +87,7 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public ClienteResponse createBasic(String name, String phoneNumber) {
+    public ClientResponse createBasic(String name, String phoneNumber) {
         if (phoneNumber == null || phoneNumber.isBlank()) {
             throw new IllegalArgumentException("Phone number is mandatory");
         }
@@ -104,8 +104,8 @@ public class ClientServiceImpl implements ClientService {
     }
 
 
-    private ClienteResponse mapToResponse(Client client) {
-        return new ClienteResponse(
+    private ClientResponse mapToResponse(Client client) {
+        return new ClientResponse(
                 client.getId(),
                 client.getName(),
                 client.getPhoneNumber(),

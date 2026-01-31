@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.dto.treatment;
 
-public record PrecioServicioDTO() {
+public record TreatmentPriceDTO() {
 }

@@ -1,7 +1,7 @@
 package com.citabella.citabellaapi.controller.employee;
 
-import com.citabella.citabellaapi.dto.employee.EmpleadoRequest;
-import com.citabella.citabellaapi.dto.employee.EmpleadoResponse;
+import com.citabella.citabellaapi.dto.employee.EmployeeRequest;
+import com.citabella.citabellaapi.dto.employee.EmployeeResponse;
 import com.citabella.citabellaapi.service.interfaces.EmployeeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,18 +19,18 @@ public class EmpleadoController {
     private final EmployeeService employeeService;
 
     @PostMapping
-    public ResponseEntity<EmpleadoResponse> crear(@RequestBody EmpleadoRequest request) {
-        EmpleadoResponse response = employeeService.create(request);
+    public ResponseEntity<EmployeeResponse> crear(@RequestBody EmployeeRequest request) {
+        EmployeeResponse response = employeeService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EmpleadoResponse> obtener(@PathVariable Integer id) {
+    public ResponseEntity<EmployeeResponse> obtener(@PathVariable Integer id) {
         return ResponseEntity.ok(employeeService.getById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<EmpleadoResponse>> listar() {
+    public ResponseEntity<List<EmployeeResponse>> listar() {
         return ResponseEntity.ok(employeeService.findAll());
     }
 
@@ -38,7 +38,7 @@ public class EmpleadoController {
     /*
     @PostMapping
     public EmpleadoResponse crear(@RequestBody EmpleadoRequest req) {
-        Empleado e = empleadoService.crear(req.nombre(), req.puesto());
+        Empleado e = empleadoService.crear(req.name(), req.position());
         return new EmpleadoResponse(e.getIdEmpleado(), e.getNombre(), e.getPuesto(), e.getActivo());
     }
 

@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.dto.appointment;
 
-public record CitaDetalleResponse() {
+public record RescheduleAppointmentRequest() {
 }

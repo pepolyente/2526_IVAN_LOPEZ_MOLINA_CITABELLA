@@ -1,17 +1,17 @@
 package com.citabella.citabellaapi.service.interfaces;
 
-import com.citabella.citabellaapi.dto.user.UsuarioRequest;
-import com.citabella.citabellaapi.dto.user.UsuarioResponse;
+import com.citabella.citabellaapi.dto.user.UserRequest;
+import com.citabella.citabellaapi.dto.user.UserResponse;
 
 public interface UserService {
 
-    UsuarioResponse create(UsuarioRequest request);
+    UserResponse create(UserRequest request);
 
-    UsuarioResponse getById(Integer id);
+    UserResponse getById(Integer id);
 
-    UsuarioResponse getByEmail(String email);
+    UserResponse getByEmail(String email);
 
-    UsuarioResponse getAuthenticated();
+    UserResponse getAuthenticated();
 
     boolean hasClient(Integer userId);
 

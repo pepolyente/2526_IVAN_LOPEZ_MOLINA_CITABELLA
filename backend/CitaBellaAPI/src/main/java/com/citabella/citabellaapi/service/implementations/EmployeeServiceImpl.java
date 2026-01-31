@@ -1,7 +1,7 @@
 package com.citabella.citabellaapi.service.implementations;
 
-import com.citabella.citabellaapi.dto.employee.EmpleadoRequest;
-import com.citabella.citabellaapi.dto.employee.EmpleadoResponse;
+import com.citabella.citabellaapi.dto.employee.EmployeeRequest;
+import com.citabella.citabellaapi.dto.employee.EmployeeResponse;
 import com.citabella.citabellaapi.entity.employee.Employee;
 import com.citabella.citabellaapi.repository.EmployeeRepository;
 import com.citabella.citabellaapi.service.interfaces.EmployeeService;
@@ -17,17 +17,17 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final EmployeeRepository employeeRepository;
 
     @Override
-    public EmpleadoResponse create(EmpleadoRequest request) {
+    public EmployeeResponse create(EmployeeRequest request) {
 
-        if (request.nombre() == null || request.nombre().isBlank()) {
+        if (request.name() == null || request.name().isBlank()) {
             throw new IllegalArgumentException("Name is mandatory");
         }
-        if (employeeRepository.existsByName(request.nombre())){
+        if (employeeRepository.existsByName(request.name())) {
             throw new IllegalArgumentException("Employee's name already registered");
         }
 
         Employee employee = new Employee();
-        employee.setName(request.nombre());
+        employee.setName(request.name());
 
 
         Employee savedEmployee = employeeRepository.save(employee);
@@ -35,7 +35,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public EmpleadoResponse getById(Integer id) {
+    public EmployeeResponse getById(Integer id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
 
@@ -43,13 +43,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmpleadoResponse> findAll() {
+    public List<EmployeeResponse> findAll() {
         return employeeRepository.findAll().stream()
                 .map(this::mapToResponse).toList();
     }
 
     @Override
-    public EmpleadoResponse deactivate(Integer employeeId) {
+    public EmployeeResponse deactivate(Integer employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
                 .orElseThrow(() -> new RuntimeException("Employee not found"));
         employee.setActive(false);
@@ -58,8 +58,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         return mapToResponse(updatedEmployee);
     }
 
-    private EmpleadoResponse mapToResponse(Employee employee) {
-        return new EmpleadoResponse(
+    private EmployeeResponse mapToResponse(Employee employee) {
+        return new EmployeeResponse(
                 employee.getId(),
                 employee.getName(),
                 employee.getPosition(),

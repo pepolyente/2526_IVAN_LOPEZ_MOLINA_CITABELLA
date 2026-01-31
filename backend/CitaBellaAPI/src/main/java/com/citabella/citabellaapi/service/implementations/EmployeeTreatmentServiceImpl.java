@@ -43,7 +43,7 @@ public class EmployeeTreatmentServiceImpl implements EmployeeTreatmentService {
     }
 
     /*@Override
-    public List<EmpleadoServicio> listarPorEmpleado(Integer idEmpleado) {
-        return repo.findByEmpleado_IdEmpleado(idEmpleado);
+    public List<EmpleadoServicio> listarPorEmpleado(Integer employeeId) {
+        return repo.findByEmpleado_IdEmpleado(employeeId);
     }*/
 }

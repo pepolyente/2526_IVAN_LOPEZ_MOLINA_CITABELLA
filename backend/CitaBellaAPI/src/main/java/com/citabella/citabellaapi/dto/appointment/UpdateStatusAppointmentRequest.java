@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.dto.appointment;
 
-public record CambiarEstadoCitaRequest() {
+public record UpdateStatusAppointmentRequest() {
 }

@@ -1,10 +1,10 @@
 package com.citabella.citabellaapi.dto.user;
 
-public record UsuarioResponse(
-        Integer idUsuario,
-        String nombreUsuario,
+public record UserResponse(
+        Integer id,
+        String username,
         String email,
-        String rol
+        String role
         //TIPO PERFIL ??
         //OPTIONAL PERFILID
 ) {

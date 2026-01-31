@@ -1,4 +1,4 @@
 package com.citabella.citabellaapi.dto.sale;
 
-public record VentaRequest() {
+public record SaleProductDetailRequest() {
 }

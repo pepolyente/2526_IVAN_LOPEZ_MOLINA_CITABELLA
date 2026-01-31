@@ -1,7 +1,7 @@
 package com.citabella.citabellaapi.service.implementations;
 
-import com.citabella.citabellaapi.dto.appointment.CitaResponse;
-import com.citabella.citabellaapi.dto.appointment.CrearCitaRequest;
+import com.citabella.citabellaapi.dto.appointment.AppointmentResponse;
+import com.citabella.citabellaapi.dto.appointment.CreateAppointmentRequest;
 import com.citabella.citabellaapi.entity.appointment.Appointment;
 import com.citabella.citabellaapi.entity.client.Client;
 import com.citabella.citabellaapi.entity.employee.Employee;
@@ -29,29 +29,29 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 
     @Override
-    public CitaResponse create(CrearCitaRequest request) {
+    public AppointmentResponse create(CreateAppointmentRequest request) {
 
-        if (request.fechaInicio() == null || request.fechaFin() == null) {
+        if (request.startAt() == null || request.endAt() == null) {
             throw new IllegalArgumentException("Start and end dates are required");
         }
 
-        if (!request.fechaFin().isAfter(request.fechaInicio())) {
+        if (!request.endAt().isAfter(request.startAt())) {
             throw new IllegalArgumentException("End date must be after start date");
         }
 
-        Client client = clientRepository.findById(request.idCliente())
+        Client client = clientRepository.findById(request.clientId())
                 .orElseThrow(() -> new IllegalArgumentException("Client not found"));
 
-        Employee employee = employeeRepository.findById(request.idEmpleado())
+        Employee employee = employeeRepository.findById(request.employeeId())
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
 
-        Treatment treatment = treatmentRepository.findById(request.idServicio())
+        Treatment treatment = treatmentRepository.findById(request.treatmentId())
                 .orElseThrow(() -> new IllegalArgumentException("Treatment not found"));
 
         boolean hasOverlap = appointmentRepository.has_overlap(
                 employee.getId(),
-                request.fechaInicio(),
-                request.fechaFin()
+                request.startAt(),
+                request.endAt()
         );
 
         Appointment appointment = new Appointment();
@@ -61,25 +61,25 @@ public class AppointmentServiceImpl implements AppointmentService {
         // TODO: change to Set<Treatment>
 
 
-        appointment.setStartAt(request.fechaInicio());
-        appointment.setEndAt(request.fechaFin());
-        appointment.setNotes(request.notas());
+        appointment.setStartAt(request.startAt());
+        appointment.setEndAt(request.endAt());
+        appointment.setNotes(request.notes());
 
         appointmentRepository.save(appointment);
 
-        return new CitaResponse(
+        return new AppointmentResponse(
                 appointment.getId(),
                 hasOverlap
         );
     }
 
     @Override
-    public CitaResponse cancel(CrearCitaRequest request) {
+    public AppointmentResponse cancel(CreateAppointmentRequest request) {
         return null;
     }
 
     @Override
-    public CitaResponse closeAppointment(Integer clientId) {
+    public AppointmentResponse closeAppointment(Integer clientId) {
         return null;
     }
 

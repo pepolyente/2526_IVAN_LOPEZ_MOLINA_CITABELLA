@@ -1,7 +1,7 @@
 package com.citabella.citabellaapi.controller.appointment;
 
-import com.citabella.citabellaapi.dto.appointment.CitaResponse;
-import com.citabella.citabellaapi.dto.appointment.CrearCitaRequest;
+import com.citabella.citabellaapi.dto.appointment.AppointmentResponse;
+import com.citabella.citabellaapi.dto.appointment.CreateAppointmentRequest;
 import com.citabella.citabellaapi.service.interfaces.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,8 +19,8 @@ public class CitaController {
     private final AppointmentService appointmentService;
 
     @PostMapping
-    public ResponseEntity<CitaResponse> crear(@RequestBody CrearCitaRequest request) {
-        CitaResponse response = appointmentService.create(request);
+    public ResponseEntity<AppointmentResponse> crear(@RequestBody CreateAppointmentRequest request) {
+        AppointmentResponse response = appointmentService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
