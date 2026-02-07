@@ -15,7 +15,19 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
-@Table(name = "appointment_submission")
+@Table(
+        name = "appointment_submission",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uc_submission_client_employee_appointment",
+                        columnNames = {
+                                "id_client",
+                                "id_employee",
+                                "id_appointment"
+                        }
+                )
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -44,15 +56,15 @@ public class AppointmentSubmission {
             inverseJoinColumns = @JoinColumn(name = "id_treatment"))
     private Set<Treatment> requestedTreatments;
 
-    @OneToOne
-    @JoinColumn(name = "id_client")
+    @OneToOne(optional = false)
+    @JoinColumn(name = "id_client", nullable = false)
     private Client client;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "id_employee")
+    @JoinColumn(name = "id_employee", nullable = false)
     private Employee employee;
 
-    @ManyToOne(optional = true)
+    @ManyToOne
     @JoinColumn(name = "id_appointment")
     private Appointment appointment;
 
