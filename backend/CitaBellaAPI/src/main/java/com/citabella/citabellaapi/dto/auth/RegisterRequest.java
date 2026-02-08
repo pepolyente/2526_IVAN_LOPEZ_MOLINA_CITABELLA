@@ -1,7 +1,8 @@
 package com.citabella.citabellaapi.dto.auth;
 
-public record LoginRequest(
+public record RegisterRequest(
         String username,
-        String password
+        String password,
+        String email
 ) {
 }

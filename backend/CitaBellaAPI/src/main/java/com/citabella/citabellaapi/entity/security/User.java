@@ -38,8 +38,8 @@ public class User {
 
     private LocalDateTime createdAt;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_role")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_role", unique = false)
     private Role role;
 
     @OneToOne(mappedBy = "user")
