@@ -30,10 +30,10 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         User user = userRepository.findByUsername(request.username())
-                .orElseThrow(() -> new BadRequestException("Credenciales inválidas"));
+                .orElseThrow(() -> new BadRequestException("Invalid credentials"));
 
         if (!passwordEncoder.matches(request.password(), user.getPasswordHash())) {
-            throw new BadRequestException("Credenciales inválidas");
+            throw new BadRequestException("Invalid credentials");
         }
 
         String token = jwtUtil.generateToken(user);
@@ -55,7 +55,7 @@ public class AuthController {
             throw new BadRequestException("Email already exists");
         }
 
-        Role role = roleRepository.findByName("NOTHING")
+        Role role = roleRepository.findByName("NONE")
                 .orElseThrow(() -> new BadRequestException(""));
 
         User user = new User();

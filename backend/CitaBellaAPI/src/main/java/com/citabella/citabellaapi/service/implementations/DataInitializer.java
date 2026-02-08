@@ -23,7 +23,7 @@ public class DataInitializer {
         //TODO revise logic
         createRoleIfNotExist("ADMIN", "System administrator");
         createRoleIfNotExist("EMPLOYEE", "Employee of the company");
-        createRoleIfNotExist("NOTHING", "User without anything assigned");
+        createRoleIfNotExist("NONE", "User without anything assigned");
         createRoleIfNotExist("CLIENT", "Verified client");
         createUserIfNotExist("CitaBella", "admin@citabella.com", "citabella123");
         createUserIfNotExist("Desconocido", "desconocido@opa.com", "hola123");

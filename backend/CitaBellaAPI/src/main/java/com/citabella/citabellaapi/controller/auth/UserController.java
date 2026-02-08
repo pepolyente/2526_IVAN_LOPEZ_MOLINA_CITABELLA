@@ -18,6 +18,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    //todo delete method create(), already done on AuthController
     @PostMapping
     public ResponseEntity<UserResponse> create(@RequestBody @Valid UserRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(request));
