@@ -13,4 +13,6 @@ public interface EmployeeService {
     List<EmployeeResponse> findAll();
 
     EmployeeResponse deactivate(Integer employeeId);
+
+    void linkUserAccount(Integer employeeId, Integer userId);
 }

@@ -3,6 +3,8 @@ package com.citabella.citabellaapi.service.interfaces;
 import com.citabella.citabellaapi.dto.user.UserRequest;
 import com.citabella.citabellaapi.dto.user.UserResponse;
 
+import java.util.List;
+
 public interface UserService {
 
     UserResponse create(UserRequest request);
@@ -16,4 +18,6 @@ public interface UserService {
     boolean hasClient(Integer userId);
 
     void swapRole(Integer userId, String roleName);
+
+    List<UserResponse> getAll();
 }

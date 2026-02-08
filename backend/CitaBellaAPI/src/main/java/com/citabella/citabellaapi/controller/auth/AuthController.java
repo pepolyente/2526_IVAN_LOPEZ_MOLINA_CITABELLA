@@ -13,6 +13,7 @@ import com.citabella.citabellaapi.repository.RoleRepository;
 import com.citabella.citabellaapi.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -55,7 +56,7 @@ public class AuthController {
             throw new BadRequestException("Email already exists");
         }
 
-        Role role = roleRepository.findByName("NONE")
+        Role role = roleRepository.findByName("USER")
                 .orElseThrow(() -> new BadRequestException(""));
 
         User user = new User();
@@ -71,10 +72,11 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserInfoResponse> getCurrentUser() {
-        User user = (User) SecurityContextHolder.getContext()
-                .getAuthentication()
-                .getPrincipal();
+    public ResponseEntity<UserInfoResponse> getCurrentUser(Authentication authentication) {
+        String username = authentication.getName();
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow();
 
         return ResponseEntity.ok(new UserInfoResponse(
                 user.getId(),

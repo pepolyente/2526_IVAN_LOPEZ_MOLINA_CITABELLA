@@ -17,4 +17,8 @@ public interface ClientService {
     ClientResponse unassignUser(Integer clientId);
 
     ClientResponse createBasic(String name, String phoneNumber);
+
+    void linkUserAccount(Integer clientId, Integer userId);
+
+    void unlinkUserAccount(Integer clientId);
 }

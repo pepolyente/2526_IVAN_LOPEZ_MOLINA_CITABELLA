@@ -4,6 +4,8 @@ import com.citabella.citabellaapi.dto.user.UserRequest;
 import com.citabella.citabellaapi.dto.user.UserResponse;
 import com.citabella.citabellaapi.entity.security.Role;
 import com.citabella.citabellaapi.entity.security.User;
+import com.citabella.citabellaapi.exception.BadRequestException;
+import com.citabella.citabellaapi.exception.ResourceNotFoundException;
 import com.citabella.citabellaapi.repository.ClientRepository;
 import com.citabella.citabellaapi.repository.RoleRepository;
 import com.citabella.citabellaapi.repository.UserRepository;
@@ -13,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -34,14 +38,14 @@ public class UserServiceImpl implements UserService {
     public UserResponse create(UserRequest request) {
 
         if(userRepository.existsByEmail(request.email())) {
-            throw new IllegalArgumentException("Email already registered");
+            throw new BadRequestException("Email already registered");
         }
         if (userRepository.existsByUsername(request.username())) {
-            throw new IllegalArgumentException("Username already exists");
+            throw new BadRequestException("Username already exists");
         }
 
         Role role = roleRepository.findByName("PENDING_CLIENT")
-                .orElseThrow(() -> new RuntimeException("Role no found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Role no found"));
 
         User user = new User();
         user.setUsername(request.username());
@@ -56,14 +60,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse getById(Integer id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
         return mapToResponse(user);
     }
 
     @Override
     public UserResponse getByEmail(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
         return mapToResponse(user);
     }
 
@@ -72,7 +76,7 @@ public class UserServiceImpl implements UserService {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (auth == null || !auth.isAuthenticated()) {
-            throw new RuntimeException("Usuario no autenticado");
+            throw new BadRequestException("Usuario no autenticado");
         }
 
         String email = auth.getName();
@@ -82,12 +86,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public void swapRole(Integer userId, String roleName) {
         User user = userRepository.findById(userId)
-                .orElseThrow(()-> new RuntimeException("Usuario no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
         Role role = roleRepository.findByName(roleName)
-                .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
+                .orElseThrow(() -> new ResourceNotFoundException("Rol no encontrado"));
 
         user.setRole(role);
         userRepository.save(user);
+    }
+
+    @Override
+    public List<UserResponse> getAll() {
+        return List.of();
     }
 
     @Override

@@ -6,6 +6,7 @@ import com.citabella.citabellaapi.service.interfaces.AppointmentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,7 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @PostMapping
     public ResponseEntity<AppointmentResponse> create(@RequestBody CreateAppointmentRequest request) {
         AppointmentResponse response = appointmentService.create(request);

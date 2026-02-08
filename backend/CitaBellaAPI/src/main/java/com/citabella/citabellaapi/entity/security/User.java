@@ -77,6 +77,16 @@ public class User {
         this.employee = employee;
     }
 
+    public void unassignProfile() {
+        this.profileType = ProfileType.NONE;
+        this.client = null;
+        this.employee = null;
+    }
+
+    public boolean hasProfile() {
+        return profileType != ProfileType.NONE;
+    }
+
     public boolean isClient() {
         return profileType == ProfileType.CLIENT;
     }

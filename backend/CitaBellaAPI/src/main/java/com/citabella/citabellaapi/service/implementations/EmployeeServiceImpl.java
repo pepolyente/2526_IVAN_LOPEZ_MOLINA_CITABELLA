@@ -3,8 +3,17 @@ package com.citabella.citabellaapi.service.implementations;
 import com.citabella.citabellaapi.dto.employee.EmployeeRequest;
 import com.citabella.citabellaapi.dto.employee.EmployeeResponse;
 import com.citabella.citabellaapi.entity.employee.Employee;
+import com.citabella.citabellaapi.entity.enums.AccountStatus;
+import com.citabella.citabellaapi.entity.enums.ProfileType;
+import com.citabella.citabellaapi.entity.security.Role;
+import com.citabella.citabellaapi.entity.security.User;
+import com.citabella.citabellaapi.exception.BadRequestException;
+import com.citabella.citabellaapi.exception.ResourceNotFoundException;
 import com.citabella.citabellaapi.repository.EmployeeRepository;
+import com.citabella.citabellaapi.repository.RoleRepository;
+import com.citabella.citabellaapi.repository.UserRepository;
 import com.citabella.citabellaapi.service.interfaces.EmployeeService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,15 +24,17 @@ import java.util.List;
 public class EmployeeServiceImpl implements EmployeeService {
 
     private final EmployeeRepository employeeRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Override
     public EmployeeResponse create(EmployeeRequest request) {
 
         if (request.name() == null || request.name().isBlank()) {
-            throw new IllegalArgumentException("Name is mandatory");
+            throw new BadRequestException("Name is mandatory");
         }
         if (employeeRepository.existsByName(request.name())) {
-            throw new IllegalArgumentException("Employee's name already registered");
+            throw new BadRequestException("Employee's name already registered");
         }
 
         Employee employee = new Employee();
@@ -37,7 +48,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeResponse getById(Integer id) {
         Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
 
         return mapToResponse(employee);
     }
@@ -51,11 +62,38 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public EmployeeResponse deactivate(Integer employeeId) {
         Employee employee = employeeRepository.findById(employeeId)
-                .orElseThrow(() -> new RuntimeException("Employee not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
         employee.setActive(false);
         Employee updatedEmployee = employeeRepository.save(employee);
 
         return mapToResponse(updatedEmployee);
+    }
+
+    @Transactional
+    public void linkUserAccount(Integer employeeId, Integer userId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        if (employee.getUser() != null) {
+            throw new BadRequestException("Employee already linked to another user");
+        }
+        try {
+            user.assignEmployee(employee);
+        } catch (IllegalStateException e) {
+            throw new BadRequestException("User already has a profile assigned");
+        }
+
+        employee.setUser(user);
+        employeeRepository.save(employee);
+
+        Role employeeRole = roleRepository.findByName("EMPLOYEE")
+                .orElseThrow(() -> new BadRequestException("EMPLOYEE role not found"));
+        user.setRole(employeeRole);
+        user.setAccountStatus(AccountStatus.ACTIVE);
+        userRepository.save(user);
     }
 
     private EmployeeResponse mapToResponse(Employee employee) {
