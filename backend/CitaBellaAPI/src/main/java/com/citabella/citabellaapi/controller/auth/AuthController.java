@@ -11,16 +11,19 @@ import com.citabella.citabellaapi.entity.security.User;
 import com.citabella.citabellaapi.exception.BadRequestException;
 import com.citabella.citabellaapi.repository.RoleRepository;
 import com.citabella.citabellaapi.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@Tag(name = "Authentication")
 public class AuthController {
 
     private final UserRepository userRepository;
@@ -28,6 +31,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
+    @Operation(summary = "User login")
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
         User user = userRepository.findByUsername(request.username())
@@ -46,6 +50,7 @@ public class AuthController {
         ));
     }
 
+    @Operation(summary = "User register")
     @PostMapping("/register")
     public ResponseEntity<Void> register(@RequestBody RegisterRequest request) {
         if (userRepository.existsByUsername(request.username())) {
@@ -71,6 +76,7 @@ public class AuthController {
         return ResponseEntity.ok().build();
     }
 
+    @Operation(summary = "Get current user", security = @SecurityRequirement(name = "bearerAuth"))
     @GetMapping("/me")
     public ResponseEntity<UserInfoResponse> getCurrentUser(Authentication authentication) {
         String username = authentication.getName();

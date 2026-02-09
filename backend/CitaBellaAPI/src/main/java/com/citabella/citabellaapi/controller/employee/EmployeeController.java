@@ -1,8 +1,11 @@
 package com.citabella.citabellaapi.controller.employee;
 
+import com.citabella.citabellaapi.docs.ApiSecurityDocs;
 import com.citabella.citabellaapi.dto.employee.EmployeeRequest;
 import com.citabella.citabellaapi.dto.employee.EmployeeResponse;
 import com.citabella.citabellaapi.service.interfaces.EmployeeService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
+@Tag(name = "Employees")
 @RestController
 @RequestMapping("/api/employees")
 @RequiredArgsConstructor
@@ -19,6 +22,9 @@ public class EmployeeController {
 
     private final EmployeeService employeeService;
 
+    @Operation(
+            summary = "Create employee",
+            description = ApiSecurityDocs.ADMIN)
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<EmployeeResponse> create(@RequestBody EmployeeRequest request) {
@@ -26,22 +32,33 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @Operation(
+            summary = "Get employee by ID",
+            description = ApiSecurityDocs.ADMIN)
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<EmployeeResponse> getById(@PathVariable Integer id) {
         return ResponseEntity.ok(employeeService.getById(id));
     }
 
+    @Operation(
+            summary = "Get all employees",
+            description = ApiSecurityDocs.ADMIN)
+    @PreAuthorize("hasRoles('ADMIN','EMPLOYEE')")
     @GetMapping
     public ResponseEntity<List<EmployeeResponse>> findAll() {
         return ResponseEntity.ok(employeeService.findAll());
     }
 
+    @Operation(
+            summary = "Link user account to a employee",
+            description = ApiSecurityDocs.ADMIN +
+                    """
+                            \nThis operation assigns a user to a employee and changes the user's role to EMPLOYEE and changes the account status to ACTIVE
+                            """)
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{employeeId}/link-user/{userId}")
-    public ResponseEntity<Void> linkUserToEmployee(
-            @PathVariable Integer employeeId,
-            @PathVariable Integer userId) {
+    public ResponseEntity<Void> linkUserToEmployee(@PathVariable Integer employeeId, @PathVariable Integer userId) {
         employeeService.linkUserAccount(employeeId, userId);
         return ResponseEntity.ok().build();
     }
