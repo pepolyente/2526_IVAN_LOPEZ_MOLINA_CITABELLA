@@ -4,6 +4,7 @@ import com.citabella.citabellaapi.entity.appointment.Appointment;
 import com.citabella.citabellaapi.entity.client.Client;
 import com.citabella.citabellaapi.entity.employee.Employee;
 import com.citabella.citabellaapi.entity.enums.PaymentMethod;
+import com.citabella.citabellaapi.entity.enums.SaleState;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -22,6 +23,8 @@ public class Sale {
 
     @Enumerated(value = EnumType.STRING)
     private PaymentMethod paymentMethod;
+
+    private SaleState state;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_client")

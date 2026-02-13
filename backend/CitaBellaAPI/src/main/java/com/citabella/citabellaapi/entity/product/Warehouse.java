@@ -17,4 +17,6 @@ public class Warehouse {
     private String location;
 
     private Integer capacity;
+
+    private boolean active;
 }

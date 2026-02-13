@@ -37,6 +37,8 @@ public class Client {
     @JoinColumn(name = "id_user", unique = true)
     private User user;
 
+    private boolean active;
+
     @OneToMany(mappedBy = "client")
     private List<Appointment> appointments;
 
