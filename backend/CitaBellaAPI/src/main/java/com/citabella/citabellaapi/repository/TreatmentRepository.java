@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TreatmentRepository extends JpaRepository<Treatment, Integer> {
-
+    boolean existsTreatmentByName(String name);
 }

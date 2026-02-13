@@ -25,7 +25,7 @@ public class EmployeeController {
     @Operation(
             summary = "Create employee",
             description = ApiSecurityDocs.ADMIN)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
     @PostMapping
     public ResponseEntity<EmployeeResponse> create(@RequestBody EmployeeRequest request) {
         EmployeeResponse response = employeeService.create(request);
@@ -44,7 +44,7 @@ public class EmployeeController {
     @Operation(
             summary = "Get all employees",
             description = ApiSecurityDocs.ADMIN)
-    @PreAuthorize("hasRoles('ADMIN','EMPLOYEE')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<EmployeeResponse>> findAll() {
         return ResponseEntity.ok(employeeService.findAll());
