@@ -39,6 +39,7 @@ public class Client {
 
     private boolean active;
 
+
     @OneToMany(mappedBy = "client")
     private List<Appointment> appointments;
 
