@@ -62,7 +62,7 @@ public class User {
     }
 
     public void assignClient(Client client) {
-        if (profileType != ProfileType.NONE) {
+        if (hasProfile()) {
             throw new IllegalStateException("Profile already assigned");
         }
         this.profileType = ProfileType.CLIENT;
@@ -70,7 +70,7 @@ public class User {
     }
 
     public void assignEmployee(Employee employee) {
-        if (profileType != ProfileType.NONE) {
+        if (hasProfile()) {
             throw new IllegalStateException("Profile already assigned");
         }
         this.profileType = ProfileType.EMPLOYEE;
