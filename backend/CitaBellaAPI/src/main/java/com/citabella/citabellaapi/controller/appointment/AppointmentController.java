@@ -5,6 +5,7 @@ import com.citabella.citabellaapi.dto.appointment.CreateAppointmentRequest;
 import com.citabella.citabellaapi.service.interfaces.AppointmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class AppointmentController {
             description = "Requires authentication. Allowed roles: ADMIN, EMPLOYEE")
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @PostMapping
-    public ResponseEntity<AppointmentResponse> create(@RequestBody CreateAppointmentRequest request) {
+    public ResponseEntity<AppointmentResponse> create(@Valid @RequestBody CreateAppointmentRequest request) {
         AppointmentResponse response = appointmentService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }

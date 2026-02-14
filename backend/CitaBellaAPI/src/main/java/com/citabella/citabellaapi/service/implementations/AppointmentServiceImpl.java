@@ -2,19 +2,25 @@ package com.citabella.citabellaapi.service.implementations;
 
 import com.citabella.citabellaapi.dto.appointment.AppointmentResponse;
 import com.citabella.citabellaapi.dto.appointment.CreateAppointmentRequest;
+import com.citabella.citabellaapi.dto.client.ClientResponse;
+import com.citabella.citabellaapi.dto.employee.EmployeeResponse;
+import com.citabella.citabellaapi.dto.treatment.TreatmentResponse;
 import com.citabella.citabellaapi.entity.appointment.Appointment;
 import com.citabella.citabellaapi.entity.client.Client;
 import com.citabella.citabellaapi.entity.employee.Employee;
 import com.citabella.citabellaapi.entity.treatment.Treatment;
 import com.citabella.citabellaapi.entity.enums.AppointmentStatus;
 import com.citabella.citabellaapi.entity.sale.Sale;
+import com.citabella.citabellaapi.exception.BadRequestException;
 import com.citabella.citabellaapi.repository.*;
 import com.citabella.citabellaapi.service.interfaces.AppointmentService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -41,12 +47,24 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         Client client = clientRepository.findById(request.clientId())
                 .orElseThrow(() -> new IllegalArgumentException("Client not found"));
+//        if (!client.isActive()){
+//            throw new BadRequestException("Client not active");
+//        }
 
         Employee employee = employeeRepository.findById(request.employeeId())
                 .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
 
-        Treatment treatment = treatmentRepository.findById(request.treatmentId())
-                .orElseThrow(() -> new IllegalArgumentException("Treatment not found"));
+        if (!employee.getActive()) {
+            throw new BadRequestException("Employee not active");
+        }
+
+        Set<Treatment> treatments = new HashSet<>();
+        for (int i : request.treatmentsIds()) {
+            Treatment treatment = treatmentRepository.findById(i)
+                    .orElseThrow(() -> new IllegalArgumentException("Treatment not found"));
+            treatments.add(treatment);
+        }
+
 
         boolean hasOverlap = appointmentRepository.hasOverlap(
                 employee.getId(),
@@ -55,21 +73,53 @@ public class AppointmentServiceImpl implements AppointmentService {
         );
 
         Appointment appointment = new Appointment();
+
+        appointment.setHasOverlap(hasOverlap);
         appointment.setClient(client);
         appointment.setEmployee(employee);
-
-        // TODO: change to Set<Treatment>
-
+        appointment.setTreatments(treatments);
+        if (!request.notes().isBlank()) {
+            appointment.setNotes(request.notes());
+        }
 
         appointment.setStartAt(request.startAt());
         appointment.setEndAt(request.endAt());
         appointment.setNotes(request.notes());
 
         appointmentRepository.save(appointment);
+        Set<TreatmentResponse> treatmentResponses = new HashSet<>();
+        for (Treatment treatment : treatments) {
+            treatmentResponses.add(new TreatmentResponse(
+                    treatment.getId(),
+                    treatment.getName(),
+                    treatment.getMinimumDuration(),
+                    treatment.getPrice(),
+                    treatment.getActive()
+            ));
+        }
 
         return new AppointmentResponse(
                 appointment.getId(),
-                hasOverlap
+                appointment.getStartAt(),
+                appointment.getEndAt(),
+                appointment.getStatus(),
+                appointment.getNotes(),
+                hasOverlap,
+                new ClientResponse(
+                        client.getId(),
+                        client.getName(),
+                        client.getPhoneNumber(),
+                        client.getGender()
+                ),
+                new EmployeeResponse(
+                        employee.getId(),
+                        employee.getName(),
+                        employee.getPosition(),
+                        employee.getActive()
+                ),
+                treatmentResponses
+
+
         );
     }
 
