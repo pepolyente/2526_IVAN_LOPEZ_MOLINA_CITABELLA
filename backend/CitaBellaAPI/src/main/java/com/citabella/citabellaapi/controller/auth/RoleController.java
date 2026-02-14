@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 @Tag(name = "Role", description = "Role managment")
 @AllArgsConstructor
 @RestController
@@ -38,6 +39,5 @@ public class RoleController {
         );
         return ResponseEntity.ok(response);
     }
-
 
 }
