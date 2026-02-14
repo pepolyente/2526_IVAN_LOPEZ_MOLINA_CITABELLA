@@ -2,10 +2,17 @@ package com.citabella.citabellaapi.entity.client;
 
 import com.citabella.citabellaapi.entity.enums.DeviceType;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "device_token")
+@NoArgsConstructor
+@Getter
+@Setter
 public class DeviceToken {
 
     @Id

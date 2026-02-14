@@ -1,7 +1,13 @@
 package com.citabella.citabellaapi.entity.product;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Setter
+@Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "warehouse")
 public class Warehouse {

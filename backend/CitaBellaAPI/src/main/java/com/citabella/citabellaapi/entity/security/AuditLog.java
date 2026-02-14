@@ -2,8 +2,15 @@ package com.citabella.citabellaapi.entity.security;
 
 import com.citabella.citabellaapi.entity.enums.AuditAction;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "audit_log")
 public class AuditLog {

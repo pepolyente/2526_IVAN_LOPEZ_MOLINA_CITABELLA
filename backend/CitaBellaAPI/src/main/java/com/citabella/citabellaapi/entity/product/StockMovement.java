@@ -3,8 +3,15 @@ package com.citabella.citabellaapi.entity.product;
 import com.citabella.citabellaapi.entity.enums.ReferenceType;
 import com.citabella.citabellaapi.entity.enums.MovementType;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "stock_movement")
 public class StockMovement {

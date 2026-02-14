@@ -2,8 +2,15 @@ package com.citabella.citabellaapi.entity.product;
 
 import com.citabella.citabellaapi.entity.enums.UsageType;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 
+@Setter
+@Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "product")
 public class Product {

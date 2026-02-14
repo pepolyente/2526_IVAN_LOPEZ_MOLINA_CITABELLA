@@ -5,10 +5,17 @@ import com.citabella.citabellaapi.entity.enums.NotificationChannel;
 import com.citabella.citabellaapi.entity.enums.NotificationStatus;
 import com.citabella.citabellaapi.entity.enums.NotificationType;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "notification")
+@NoArgsConstructor
+@Getter
+@Setter
 public class Notification {
 
     @Id

@@ -6,9 +6,16 @@ import com.citabella.citabellaapi.entity.employee.Employee;
 import com.citabella.citabellaapi.entity.enums.PaymentMethod;
 import com.citabella.citabellaapi.entity.enums.SaleState;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Setter
+@Getter
+@NoArgsConstructor
 @Entity
 @Table(name = "sale")
 public class Sale {
