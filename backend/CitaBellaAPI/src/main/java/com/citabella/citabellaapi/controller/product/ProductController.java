@@ -27,7 +27,7 @@ public class ProductController {
 
     @Operation(
             summary = "Get prodcut by ID",
-            description = ApiSecurityDocs.ADMIN_EMPLOYEE_CLIENT)
+            description = ApiSecurityDocs.ADMIN_EMPLOYEE)
     @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
     @GetMapping("/{id}")
     public ResponseEntity<ProductPrivateResponse> getById(@PathVariable Integer id) {
@@ -36,7 +36,7 @@ public class ProductController {
 
     @Operation(
             summary = "Get all active products",
-            description = ApiSecurityDocs.ADMIN_EMPLOYEE_CLIENT)
+            description = ApiSecurityDocs.ANYONE)
     @GetMapping
     public ResponseEntity<List<ProductPublicResponse>> findAllActive() {
         List<ProductPublicResponse> response = productService.findAllActive();
