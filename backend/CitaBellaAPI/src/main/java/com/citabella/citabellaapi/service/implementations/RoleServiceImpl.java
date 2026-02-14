@@ -14,8 +14,16 @@ public class RoleServiceImpl implements RoleService {
         this.roleRepository = roleRepository;
     }
 
+    /**
+     * Method used for JWT ROLE TOKEN, don't confuse it with controller logic
+     * --------------------------------------------------------------------------------------------------------
+     *
+     * @param name
+     * @return Role name
+     */
     @Override
     public Role getByName(String name) {
         return roleRepository.findByName(name).orElseThrow(() -> new RuntimeException("Role not found"));
     }
+
 }
