@@ -16,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -154,6 +155,21 @@ public class ClientServiceImpl implements ClientService {
                 .orElseThrow(() -> new BadRequestException("NONE role not found")));
         user.setAccountStatus(AccountStatus.PENDING);
         userRepository.save(user);
+    }
+
+    @Override
+    public List<ClientResponse> findAllActive() {
+        List<Client> clients = clientRepository.findAllByActive(true);
+        List<ClientResponse> clientResponses = new ArrayList<>();
+        for (Client client : clients) {
+            clientResponses.add(new ClientResponse(
+                    client.getId(),
+                    client.getName(),
+                    client.getPhoneNumber(),
+                    client.getGender()
+            ));
+        }
+        return clientResponses;
     }
 
     private ClientResponse mapToResponse(Client client) {

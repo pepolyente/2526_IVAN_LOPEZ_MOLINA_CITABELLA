@@ -1,5 +1,6 @@
 package com.citabella.citabellaapi.service.interfaces;
 
+import com.citabella.citabellaapi.dto.auth.UserInfoResponse;
 import com.citabella.citabellaapi.dto.user.UserRequest;
 import com.citabella.citabellaapi.dto.user.UserResponse;
 
@@ -17,7 +18,8 @@ public interface UserService {
 
     boolean hasClient(Integer userId);
 
-    void swapRole(Integer userId, String roleName);
+    UserInfoResponse swapRole(Integer userId, String roleName);
 
     List<UserResponse> getAll();
+
 }

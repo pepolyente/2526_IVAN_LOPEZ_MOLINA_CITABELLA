@@ -21,4 +21,6 @@ public interface ClientService {
     void linkUserAccount(Integer clientId, Integer userId);
 
     void unlinkUserAccount(Integer clientId);
+
+    List<ClientResponse> findAllActive();
 }

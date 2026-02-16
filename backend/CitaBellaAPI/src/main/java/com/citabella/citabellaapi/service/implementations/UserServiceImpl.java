@@ -1,5 +1,6 @@
 package com.citabella.citabellaapi.service.implementations;
 
+import com.citabella.citabellaapi.dto.auth.UserInfoResponse;
 import com.citabella.citabellaapi.dto.user.UserRequest;
 import com.citabella.citabellaapi.dto.user.UserResponse;
 import com.citabella.citabellaapi.entity.security.Role;
@@ -84,7 +85,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void swapRole(Integer userId, String roleName) {
+    public UserInfoResponse swapRole(Integer userId, String roleName) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
         Role role = roleRepository.findByName(roleName)
@@ -92,6 +93,12 @@ public class UserServiceImpl implements UserService {
 
         user.setRole(role);
         userRepository.save(user);
+        return new UserInfoResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole().getName()
+        );
     }
 
     @Override

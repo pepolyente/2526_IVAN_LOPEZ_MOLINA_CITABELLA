@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "Clients")
 @AllArgsConstructor
 @RestController
@@ -65,6 +67,16 @@ public class ClientController {
     public ResponseEntity<Void> unlinkUserFromClient(@PathVariable Integer clientId) {
         clientService.unlinkUserAccount(clientId);
         return ResponseEntity.ok().build();
+    }
+
+    @Operation(
+            summary = "Get all clients active",
+            description = ApiSecurityDocs.ADMIN_EMPLOYEE
+    )
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
+    @GetMapping
+    public ResponseEntity<List<ClientResponse>> getAllActive() {
+        return ResponseEntity.ok(clientService.findAllActive());
     }
 
 }
