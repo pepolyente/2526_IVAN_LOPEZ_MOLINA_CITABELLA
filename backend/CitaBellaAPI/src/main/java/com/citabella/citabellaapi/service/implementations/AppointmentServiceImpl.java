@@ -12,6 +12,7 @@ import com.citabella.citabellaapi.entity.treatment.Treatment;
 import com.citabella.citabellaapi.entity.enums.AppointmentStatus;
 import com.citabella.citabellaapi.entity.sale.Sale;
 import com.citabella.citabellaapi.exception.BadRequestException;
+import com.citabella.citabellaapi.mappers.AppointmentMapper;
 import com.citabella.citabellaapi.repository.*;
 import com.citabella.citabellaapi.service.interfaces.AppointmentService;
 import jakarta.transaction.Transactional;
@@ -121,6 +122,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 
         );
+    }
+
+    @Override
+    public List<AppointmentResponse> findAll() {
+        return appointmentRepository.findAll()
+                .stream()
+                .map(AppointmentMapper::toResponse)
+                .toList();
     }
 
     @Override

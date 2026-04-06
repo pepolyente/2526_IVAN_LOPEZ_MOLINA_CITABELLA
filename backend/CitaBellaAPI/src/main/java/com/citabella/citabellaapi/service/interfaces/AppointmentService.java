@@ -9,6 +9,8 @@ import com.citabella.citabellaapi.entity.sale.Sale;
 import java.util.List;
 
 public interface AppointmentService {
+    List<AppointmentResponse> findAll();
+
     AppointmentResponse create(CreateAppointmentRequest request);
 
     AppointmentResponse cancel(CreateAppointmentRequest request);
