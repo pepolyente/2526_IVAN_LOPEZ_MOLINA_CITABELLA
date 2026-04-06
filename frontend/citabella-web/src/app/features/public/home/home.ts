@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { TreatmentService } from '../../../core/services/treatment.service';
 import { ProductService } from '../../../core/services/product.service';
 import { TreatmentResponse } from '../../../shared/models/treatment.model';
 import { ProductPublicResponse } from '../../../shared/models/product.model';
+import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -13,14 +14,23 @@ import { ProductPublicResponse } from '../../../shared/models/product.model';
 export class Home implements OnInit {
   treatments: TreatmentResponse[] = [];
   products: ProductPublicResponse[] = [];
+  readonly placeholder = 'https://placehold.co/300x200?text=CitaBella';
 
   constructor(
     private treatmentService: TreatmentService,
-    private productService: ProductService
+    private productService: ProductService,
+    public auth: AuthService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.treatmentService.getAll().subscribe(data => (this.treatments = data.slice(0, 3)));
-    this.productService.getAllActive().subscribe(data => (this.products = data.slice(0, 4)));
+    this.treatmentService.getAll().subscribe({
+      next: data => { this.treatments = data.slice(0, 3); this.changeDetectorRef.detectChanges(); },
+      error: () => { this.treatments = []; this.changeDetectorRef.detectChanges(); }
+    });
+    this.productService.getAllActive().subscribe({
+      next: data => { this.products = data.slice(0, 4); this.changeDetectorRef.detectChanges(); },
+      error: () => { this.products = []; this.changeDetectorRef.detectChanges(); }
+    });
   }
 }
