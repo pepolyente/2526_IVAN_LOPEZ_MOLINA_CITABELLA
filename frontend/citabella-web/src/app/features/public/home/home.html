@@ -1,0 +1,31 @@
+<section class="hero">
+  <h1>Bienvenida a CitaBella</h1>
+  <p>Tu centro de belleza de confianza</p>
+  <a routerLink="/login" class="btn-hero">Reserva tu cita</a>
+</section>
+
+<section class="section">
+  <h2 class="section-title">Nuestros servicios</h2>
+  <div class="cards-grid">
+    @for (treatment of treatments; track treatment.id) {
+      <div class="card">
+        <h3>{{ treatment.name }}</h3>
+        <p>Desde {{ treatment.minimumDuration }} min · {{ treatment.price | currency:'EUR' }}</p>
+      </div>
+    }
+  </div>
+  <a routerLink="/servicios" class="link-more">Ver todos los servicios →</a>
+</section>
+
+<section class="section section-alt">
+  <h2 class="section-title">Productos destacados</h2>
+  <div class="cards-grid">
+    @for (product of products; track product.id) {
+      <div class="card">
+        <h3>{{ product.name }}</h3>
+        <p>{{ product.category }} · {{ product.salePrice | currency:'EUR' }}</p>
+      </div>
+    }
+  </div>
+  <a routerLink="/productos" class="link-more">Ver todos los productos →</a>
+</section>

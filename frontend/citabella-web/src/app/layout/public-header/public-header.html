@@ -1,0 +1,18 @@
+<header class="pub-header">
+  <div class="pub-brand">
+    <span class="pub-logo"><img src="../../../../public/logo.jpg"></span>
+    <span class="pub-title">CitaBella</span>
+  </div>
+  <nav class="pub-nav">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Inicio</a>
+    <a routerLink="/servicios" routerLinkActive="active">Servicios</a>
+    <a routerLink="/productos" routerLinkActive="active">Productos</a>
+  </nav>
+  <div class="pub-actions">
+    @if (!auth.isLogged()) {
+      <a routerLink="/login" class="btn-outline">Iniciar sesión</a>
+    } @else {
+      <button class="btn-primary" (click)="goToPanel()">Mi panel</button>
+    }
+  </div>
+</header>

@@ -1,4 +1,35 @@
-<h2>Listado de citas</h2>
+<div class="page-header">
+  <h2>Agenda de citas</h2>
+  <button class="btn-primary" (click)="newAppointment()">+ Nueva cita</button>
+</div>
 
-<p>Aquí irán las citas</p>
-
+@if (loading) {
+  <p>Cargando...</p>
+} @else if (appointments.length === 0) {
+  <p class="empty-state">No hay citas registradas aún.</p>
+} @else {
+  <table class="simple-table">
+    <thead>
+    <tr>
+      <th>Inicio</th>
+      <th>Fin</th>
+      <th>Cliente</th>
+      <th>Empleado</th>
+      <th>Estado</th>
+      <th>Solape</th>
+    </tr>
+    </thead>
+    <tbody>
+      @for (appointment of appointments; track appointment.id) {
+        <tr>
+          <td>{{ appointment.startAt | date:'dd/MM/yy HH:mm' }}</td>
+          <td>{{ appointment.endAt   | date:'HH:mm' }}</td>
+          <td>{{ appointment.client.name }}</td>
+          <td>{{ appointment.employee.name }}</td>
+          <td><span class="badge badge-{{appointment.status | lowercase}}">{{ appointment.status }}</span></td>
+          <td>{{ appointment.hasOverlap ? '⚠️' : '' }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+}

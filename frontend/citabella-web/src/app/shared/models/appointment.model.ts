@@ -1,9 +1,32 @@
-export interface Appointment {
-  //todo cambiar en base a AppointmentResponse de SpringBoot
-  id: number;
-  date: string;
-  clientName: string;
-  serviceName: string;
-  status: string;
+import { ClientResponse } from './client.model';
+import { EmployeeResponse } from './employee.model';
+import { TreatmentResponse } from './treatment.model';
+
+export type AppointmentStatus =
+  | 'PENDING'
+  | 'CONFIRMED'
+  | 'IN_PROGRESS'
+  | 'CANCELLED'
+  | 'COMPLETED'
+  | 'NO_SHOW';
+
+export interface CreateAppointmentRequest {
+  clientId?: number;
+  employeeId?: number;
+  treatmentsIds: number[];
+  startAt?: string;          // ISO 8601: "2025-04-01T10:00:00"
+  endAt?: string;
+  notes?: string;
 }
 
+export interface AppointmentResponse {
+  id: number;
+  startAt: string;
+  endAt: string;
+  status: AppointmentStatus;
+  notes?: string;
+  hasOverlap: boolean;
+  client: ClientResponse;
+  employee: EmployeeResponse;
+  treatments: TreatmentResponse[];
+}

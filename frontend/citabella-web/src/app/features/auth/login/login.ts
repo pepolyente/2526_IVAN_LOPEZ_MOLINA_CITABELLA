@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { Auth } from '../../../core/services/auth';
 import { Router } from '@angular/router';
-import { LoginRequest } from '../../../shared/models/login-request.model';
+import { AuthService } from '../../../core/services/auth.service';
+import { LoginRequest } from '../../../shared/models/auth.model';
 
 @Component({
   selector: 'app-login',
@@ -13,23 +13,25 @@ export class Login {
 
   data: LoginRequest = {
     username: '',
-    password: ''
+    password: '',
   };
 
-  constructor(
-    private auth: Auth,
-    private router: Router
-  ) {}
+  loading = false;
+  error   = '';
+
+  constructor(private auth: AuthService, private router: Router) {}
 
   submit(): void {
+    this.loading = true;
+    this.error   = '';
     this.auth.login(this.data).subscribe({
-      next: res => {
-        this.auth.saveToken(res.token);
-        this.router.navigate(['/appointments']);
+      next: () => {
+        this.router.navigate(['/panel/appointments']);
       },
       error: () => {
-        alert('Credenciales incorrectas');
-      }
+        this.error   = 'Usuario o contraseña incorrectos';
+        this.loading = false;
+      },
     });
   }
 }

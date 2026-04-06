@@ -6,6 +6,7 @@ import { App } from './app';
 import {SharedModule} from './shared/shared-module';
 import {LayoutModule} from './layout/layout-module';
 import { CoreModule } from './core/core-module';
+import {provideHttpClient, withInterceptorsFromDi} from '@angular/common/http';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { CoreModule } from './core/core-module';
   ],
   providers: [
     provideBrowserGlobalErrorListeners(),
+    provideHttpClient(withInterceptorsFromDi())
   ],
   bootstrap: [App]
 })

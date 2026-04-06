@@ -1,18 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SimpleTable } from './components/simple-table/simple-table';
 
 
 
 @NgModule({
-  declarations: [
-    SimpleTable
-  ],
+  declarations: [],
   imports: [
     CommonModule
   ],
-  exports: [
-    SimpleTable
-  ]
+  exports: []
 })
 export class SharedModule { }
