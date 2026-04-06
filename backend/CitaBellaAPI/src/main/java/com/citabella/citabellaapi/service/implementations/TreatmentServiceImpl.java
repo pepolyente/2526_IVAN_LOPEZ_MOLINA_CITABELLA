@@ -5,13 +5,13 @@ import com.citabella.citabellaapi.dto.treatment.TreatmentResponse;
 import com.citabella.citabellaapi.entity.treatment.Treatment;
 import com.citabella.citabellaapi.exception.BadRequestException;
 import com.citabella.citabellaapi.exception.ResourceNotFoundException;
+import com.citabella.citabellaapi.mappers.TreatmentMapper;
 import com.citabella.citabellaapi.repository.TreatmentRepository;
 import com.citabella.citabellaapi.service.interfaces.TreatmentService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -49,18 +49,11 @@ public class TreatmentServiceImpl implements TreatmentService {
 
     @Override
     public List<TreatmentResponse> findAllActive() {
-
-        List<TreatmentResponse> response = new ArrayList<>();
-                List<Treatment> treatments = treatmentRepository.findAll()
-                .stream().filter(Treatment::getActive).toList();
-                if ( treatments.isEmpty()){
-                    throw new ResourceNotFoundException("Treatments not found");
-                }
-        for (Treatment treatment : treatments){
-            response.add(mapToResponse(treatment));
-        }
-
-        return response;
+        return treatmentRepository
+                .findAll()
+                .stream()
+                .filter(Treatment::getActive)
+                .map(TreatmentMapper::toResponse).toList();
     }
 
     private TreatmentResponse mapToResponse(Treatment treatment) {

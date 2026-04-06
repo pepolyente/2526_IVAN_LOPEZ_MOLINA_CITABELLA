@@ -45,8 +45,7 @@ public class TreatmentController {
 
     @Operation(
             summary = "Get all treatments",
-            description = ApiSecurityDocs.ADMIN_EMPLOYEE_CLIENT)
-    @PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE','CLIENT')")
+            description = ApiSecurityDocs.ANYONE)
     @GetMapping
     public ResponseEntity<List<TreatmentResponse>> findAll() {
         return ResponseEntity.ok(treatmentService.findAllActive());
