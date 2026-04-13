@@ -14,7 +14,7 @@ import { AuthService } from '../../../core/services/auth.service';
 export class Home implements OnInit {
   treatments: TreatmentResponse[] = [];
   products: ProductPublicResponse[] = [];
-  readonly placeholder = 'https://placehold.co/300x200?text=CitaBella';
+  readonly placeholder = '/images/citabella.jpg';
 
   constructor(
     private treatmentService: TreatmentService,

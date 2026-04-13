@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
+import {ThemeService} from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-public-header',
@@ -9,7 +10,7 @@ import { Router } from '@angular/router';
   styleUrl: './public-header.css',
 })
 export class PublicHeader {
-  constructor(public auth: AuthService, private router: Router) {}
+  constructor(public auth: AuthService, private router: Router,public theme: ThemeService) {}
 
   goToPanel(): void {
     const role = this.auth.getRole();

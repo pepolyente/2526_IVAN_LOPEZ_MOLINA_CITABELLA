@@ -1,9 +1,12 @@
 <header class="pub-header">
   <div class="pub-brand">
-    <span class="pub-logo"><img src="../../../../public/logo.jpg"></span>
+    <span class="pub-logo"><img [alt]="auth" src="/images/logoRedondo.png"></span>
     <span class="pub-title">CitaBella</span>
   </div>
   <nav class="pub-nav">
+    <button class="btn-outline" (click)="theme.toggle()">
+      {{ theme.isDark() ? '☀️ Claro' : '🌙 Oscuro' }}
+    </button>
     <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Inicio</a>
     <a routerLink="/servicios" routerLinkActive="active">Servicios</a>
     <a routerLink="/productos" routerLinkActive="active">Productos</a>

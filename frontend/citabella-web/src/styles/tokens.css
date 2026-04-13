@@ -1,0 +1,212 @@
+/* ============================================================
+   CitaBella — Design Tokens
+   src/styles/tokens.css
+
+   • Por defecto:       Light Navy  (#0A0F1E + #E4F0F6)
+   • Modo oscuro auto:  Dark Gold   (#111111 + #C8A96E)
+     (se activa solo si el SO del usuario tiene modo oscuro)
+   • Modo forzado:      Añade la clase .theme-dark o .theme-light
+     al <html> para sobreescribir la preferencia del sistema.
+   ============================================================ */
+
+
+/* ─────────────────────────────────────────────────────────────
+   LIGHT NAVY  — tema base (modo claro)
+───────────────────────────────────────────────────────────── */
+:root {
+
+  --color-primary:        #0A0F1E;
+  --color-primary-dark:   #060B14;
+  --color-primary-light:  #C8DDE8;
+  --color-primary-alpha:  rgba(10, 15, 30, 0.06);
+  --color-primary-focus:  rgba(10, 15, 30, 0.14);
+
+  --color-brand:          #0A0F1E;
+
+  --color-bg:             #E4F0F6;
+  --color-surface:        #FFFFFF;
+  --color-surface-alt:    #F0F7FA;
+  --color-surface-hover:  #EAF4F8;
+  --color-section-alt:    #D8EBF4;
+
+  --color-text:           #0A0F1E;
+  --color-text-muted:     #52697A;
+  --color-text-inverted:  #E4F0F6;
+  --color-text-nav:       rgba(228, 240, 246, 0.75);
+
+  --color-border:          #B8D4E2;
+  --color-border-inverted: rgba(228, 240, 246, 0.30);
+
+  --color-nav-hover-bg:   rgba(228, 240, 246, 0.15);
+
+  --color-danger:   #DC2626;
+  --color-success:  #16A34A;
+  --color-warning:  #D97706;
+
+  --badge-pending-bg:       #FEF3C7;
+  --badge-pending-text:     #92400E;
+  --badge-confirmed-bg:     #D1FAE5;
+  --badge-confirmed-text:   #065F46;
+  --badge-in-progress-bg:   #DBEAFE;
+  --badge-in-progress-text: #1E40AF;
+  --badge-cancelled-bg:     #FEE2E2;
+  --badge-cancelled-text:   #991B1B;
+  --badge-completed-bg:     #D4EEF8;
+  --badge-completed-text:   #0A0F1E;
+  --badge-no-show-bg:       #E4F0F6;
+  --badge-no-show-text:     #374151;
+
+  --gradient-hero: linear-gradient(135deg, #0A0F1E 0%, #1A3A5C 100%);
+
+  --header-height:  64px;
+  --radius:         8px;
+  --radius-sm:      4px;
+  --radius-full:    99px;
+  --shadow:         0 1px 3px rgba(10, 15, 30, 0.10);
+  --shadow-header:  0 2px 4px rgba(10, 15, 30, 0.20);
+  --shadow-card-lg: 0 20px 40px rgba(10, 15, 30, 0.18);
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   DARK GOLD  — se activa automáticamente si el SO usa modo oscuro
+───────────────────────────────────────────────────────────── */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary:        #C8A96E;
+    --color-primary-dark:   #B8914A;
+    --color-primary-light:  #2C1F08;
+    --color-primary-alpha:  rgba(200, 169, 110, 0.08);
+    --color-primary-focus:  rgba(200, 169, 110, 0.22);
+
+    --color-brand:          #111111;
+
+    --color-bg:             #0D0D0D;
+    --color-surface:        #1A1A1A;
+    --color-surface-alt:    #222222;
+    --color-surface-hover:  #242424;
+    --color-section-alt:    #161616;
+
+    --color-text:           #F0EAD6;
+    --color-text-muted:     #8A8076;
+    --color-text-inverted:  #111111;
+    --color-text-nav:       rgba(240, 234, 214, 0.65);
+
+    --color-border:          #2E2E2E;
+    --color-border-inverted: rgba(200, 169, 110, 0.30);
+
+    --color-nav-hover-bg:   rgba(200, 169, 110, 0.10);
+
+    --color-danger:   #F87171;
+    --color-success:  #4ADE80;
+    --color-warning:  #FBBF24;
+
+    --badge-pending-bg:       #2D1F00;
+    --badge-pending-text:     #D4A853;
+    --badge-confirmed-bg:     #0A2A1A;
+    --badge-confirmed-text:   #4ADE80;
+    --badge-in-progress-bg:   #0A1A2D;
+    --badge-in-progress-text: #60A5FA;
+    --badge-cancelled-bg:     #2A0A0A;
+    --badge-cancelled-text:   #F87171;
+    --badge-completed-bg:     #1E1025;
+    --badge-completed-text:   #C4B5FD;
+    --badge-no-show-bg:       #1E1E1E;
+    --badge-no-show-text:     #9CA3AF;
+
+    --gradient-hero: linear-gradient(135deg, #0A0A0A 0%, #1C1208 60%, #C8A96E 100%);
+
+    --shadow:         0 1px 3px rgba(0, 0, 0, 0.4);
+    --shadow-header:  0 2px 6px rgba(0, 0, 0, 0.6);
+    --shadow-card-lg: 0 20px 40px rgba(0, 0, 0, 0.5);
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────
+   FORZADO MANUAL — sobreescribe la preferencia del sistema.
+   Añade la clase al elemento <html> desde JS.
+
+   Modo oscuro forzado:  document.documentElement.classList.add('theme-dark')
+   Modo claro forzado:   document.documentElement.classList.add('theme-light')
+   Volver a automático:  document.documentElement.classList.remove('theme-dark','theme-light')
+───────────────────────────────────────────────────────────── */
+html.theme-light {
+  --color-primary:        #0A0F1E;
+  --color-primary-dark:   #060B14;
+  --color-primary-light:  #C8DDE8;
+  --color-primary-alpha:  rgba(10, 15, 30, 0.06);
+  --color-primary-focus:  rgba(10, 15, 30, 0.14);
+  --color-brand:          #0A0F1E;
+  --color-bg:             #E4F0F6;
+  --color-surface:        #FFFFFF;
+  --color-surface-alt:    #F0F7FA;
+  --color-surface-hover:  #EAF4F8;
+  --color-section-alt:    #D8EBF4;
+  --color-text:           #0A0F1E;
+  --color-text-muted:     #52697A;
+  --color-text-inverted:  #E4F0F6;
+  --color-text-nav:       rgba(228, 240, 246, 0.75);
+  --color-border:          #B8D4E2;
+  --color-border-inverted: rgba(228, 240, 246, 0.30);
+  --color-nav-hover-bg:   rgba(228, 240, 246, 0.15);
+  --color-danger:   #DC2626;
+  --color-success:  #16A34A;
+  --color-warning:  #D97706;
+  --badge-pending-bg:       #FEF3C7;
+  --badge-pending-text:     #92400E;
+  --badge-confirmed-bg:     #D1FAE5;
+  --badge-confirmed-text:   #065F46;
+  --badge-in-progress-bg:   #DBEAFE;
+  --badge-in-progress-text: #1E40AF;
+  --badge-cancelled-bg:     #FEE2E2;
+  --badge-cancelled-text:   #991B1B;
+  --badge-completed-bg:     #D4EEF8;
+  --badge-completed-text:   #0A0F1E;
+  --badge-no-show-bg:       #E4F0F6;
+  --badge-no-show-text:     #374151;
+  --gradient-hero: linear-gradient(135deg, #0A0F1E 0%, #1A3A5C 100%);
+  --shadow:         0 1px 3px rgba(10, 15, 30, 0.10);
+  --shadow-header:  0 2px 4px rgba(10, 15, 30, 0.20);
+  --shadow-card-lg: 0 20px 40px rgba(10, 15, 30, 0.18);
+}
+
+html.theme-dark {
+  --color-primary:        #C8A96E;
+  --color-primary-dark:   #B8914A;
+  --color-primary-light:  #2C1F08;
+  --color-primary-alpha:  rgba(200, 169, 110, 0.08);
+  --color-primary-focus:  rgba(200, 169, 110, 0.22);
+  --color-brand:          #111111;
+  --color-bg:             #0D0D0D;
+  --color-surface:        #1A1A1A;
+  --color-surface-alt:    #222222;
+  --color-surface-hover:  #242424;
+  --color-section-alt:    #161616;
+  --color-text:           #F0EAD6;
+  --color-text-muted:     #8A8076;
+  --color-text-inverted:  #111111;
+  --color-text-nav:       rgba(240, 234, 214, 0.65);
+  --color-border:          #2E2E2E;
+  --color-border-inverted: rgba(200, 169, 110, 0.30);
+  --color-nav-hover-bg:   rgba(200, 169, 110, 0.10);
+  --color-danger:   #F87171;
+  --color-success:  #4ADE80;
+  --color-warning:  #FBBF24;
+  --badge-pending-bg:       #2D1F00;
+  --badge-pending-text:     #D4A853;
+  --badge-confirmed-bg:     #0A2A1A;
+  --badge-confirmed-text:   #4ADE80;
+  --badge-in-progress-bg:   #0A1A2D;
+  --badge-in-progress-text: #60A5FA;
+  --badge-cancelled-bg:     #2A0A0A;
+  --badge-cancelled-text:   #F87171;
+  --badge-completed-bg:     #1E1025;
+  --badge-completed-text:   #C4B5FD;
+  --badge-no-show-bg:       #1E1E1E;
+  --badge-no-show-text:     #9CA3AF;
+  --gradient-hero: linear-gradient(135deg, #0A0A0A 0%, #1C1208 60%, #C8A96E 100%);
+  --shadow:         0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-header:  0 2px 6px rgba(0, 0, 0, 0.6);
+  --shadow-card-lg: 0 20px 40px rgba(0, 0, 0, 0.5);
+}

@@ -5,12 +5,12 @@
   height: var(--header-height);
   width: 100%;
   padding: 0 24px;
-  background-color: #1e1b4b;
-  color: white;
+  background-color: var(--color-brand);
+  color: var(--color-text-inverted);
   display: flex;
   align-items: center;
   gap: 24px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  box-shadow: var(--shadow-header);
 }
 
 .header-brand {
@@ -36,7 +36,7 @@
 }
 
 .header-nav a {
-  color: rgba(255,255,255,0.75);
+  color: var(--color-text-nav);
   text-decoration: none;
   font-size: 14px;
   padding: 4px 8px;
@@ -46,14 +46,14 @@
 
 .header-nav a.active,
 .header-nav a:hover {
-  color: white;
-  background-color: rgba(255,255,255,0.1);
+  color: var(--color-text-inverted);
+  background-color: var(--color-brand);
 }
 
 .btn-logout {
   background: transparent;
-  border: 1px solid rgba(255,255,255,0.3);
-  color: white;
+  border: 1px solid var(--color-border-inverted);
+  color: var(--color-text-inverted);
   padding: 6px 14px;
   border-radius: var(--radius);
   cursor: pointer;
@@ -62,5 +62,5 @@
 }
 
 .btn-logout:hover {
-  background: rgba(255,255,255,0.1);
+  background-color: var(--color-nav-hover-bg);
 }
