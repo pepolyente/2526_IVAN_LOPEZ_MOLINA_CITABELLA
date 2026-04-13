@@ -41,8 +41,9 @@ public class DataInitializer {
         createRoleIfNotExist("USER", "User without anything assigned");
         createRoleIfNotExist("CLIENT", "Verified client");
 
-        createUserIfNotExist("CitaBella", "admin@citabella.com", "citabella123", "ADMIN");
+        createUserIfNotExist("Admin", "admin@citabella.com", "citabella123", "ADMIN");
         createUserIfNotExist("Desconocido", "desconocido@opa.com", "hola123", "USER");
+        createUserIfNotExist("Cliente", "cliente@buenagente.com", "cliente1231", "CLIENT");
 
         createClientIfNotExist("Ivan", "694474441", LocalDate.of(2003, 1, 9), Gender.MALE);
         createClientIfNotExist("Angela", "12391239", LocalDate.of(2008, 3, 25), Gender.FEMALE);

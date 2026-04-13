@@ -8,6 +8,7 @@ import com.citabella.citabellaapi.entity.security.Role;
 import com.citabella.citabellaapi.entity.security.User;
 import com.citabella.citabellaapi.exception.BadRequestException;
 import com.citabella.citabellaapi.exception.ResourceNotFoundException;
+import com.citabella.citabellaapi.mappers.ClientMapper;
 import com.citabella.citabellaapi.repository.ClientRepository;
 import com.citabella.citabellaapi.repository.RoleRepository;
 import com.citabella.citabellaapi.repository.UserRepository;
@@ -159,17 +160,10 @@ public class ClientServiceImpl implements ClientService {
 
     @Override
     public List<ClientResponse> findAllActive() {
-        List<Client> clients = clientRepository.findAllByActive(true);
-        List<ClientResponse> clientResponses = new ArrayList<>();
-        for (Client client : clients) {
-            clientResponses.add(new ClientResponse(
-                    client.getId(),
-                    client.getName(),
-                    client.getPhoneNumber(),
-                    client.getGender()
-            ));
-        }
-        return clientResponses;
+        return clientRepository.findAllByActive(true)
+                .stream()
+                .map(ClientMapper::toResponse)
+                .toList();
     }
 
     private ClientResponse mapToResponse(Client client) {

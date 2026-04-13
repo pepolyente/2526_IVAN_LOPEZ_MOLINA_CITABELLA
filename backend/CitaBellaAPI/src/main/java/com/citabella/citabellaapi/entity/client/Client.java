@@ -37,7 +37,7 @@ public class Client {
     @JoinColumn(name = "id_user", unique = true)
     private User user;
 
-    private boolean active;
+    private Boolean active;
 
 
     @OneToMany(mappedBy = "client")
@@ -45,4 +45,11 @@ public class Client {
 
     @OneToMany(mappedBy = "client")
     private List<Sale> sales;
+
+    @PrePersist
+    private void prePersist() {
+        if (active == null) {
+            active = true;
+        }
+    }
 }

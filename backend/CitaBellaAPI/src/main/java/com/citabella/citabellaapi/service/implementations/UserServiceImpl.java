@@ -7,6 +7,7 @@ import com.citabella.citabellaapi.entity.security.Role;
 import com.citabella.citabellaapi.entity.security.User;
 import com.citabella.citabellaapi.exception.BadRequestException;
 import com.citabella.citabellaapi.exception.ResourceNotFoundException;
+import com.citabella.citabellaapi.mappers.UserMapper;
 import com.citabella.citabellaapi.repository.ClientRepository;
 import com.citabella.citabellaapi.repository.RoleRepository;
 import com.citabella.citabellaapi.repository.UserRepository;
@@ -103,7 +104,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserResponse> getAll() {
-        return List.of();
+        return userRepository.findAll().stream().map(UserMapper::toResponse).toList();
     }
 
     @Override
