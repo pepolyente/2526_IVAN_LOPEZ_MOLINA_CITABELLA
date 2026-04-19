@@ -67,7 +67,7 @@ public class EmployeeController {
             summary = "Deactivate employee",
             description = ApiSecurityDocs.ADMIN +
                     """
-                            \nThis operation deactivates employee and changes the user's role to EMPLOYEE and changes the account status to ACTIVE
+                            \nThis operation changes the account status to DEACTIVATED
                             """)
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{employeeId}/deactivate/")
@@ -79,7 +79,7 @@ public class EmployeeController {
     @Operation(
             summary = "Activate employee",
             description = ApiSecurityDocs.ADMIN +
-                    "This operation activates employee ")
+                    "This operation changes the account status to ACTIVE")
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{employeeId}/activate/")
     public ResponseEntity<EmployeeResponse> activate(@PathVariable Integer employeeId) {

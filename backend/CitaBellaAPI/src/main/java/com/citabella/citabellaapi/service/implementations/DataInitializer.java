@@ -94,6 +94,9 @@ public class DataInitializer {
     }
 
     private void createTreatment(String name, String description, Integer minimumDuration, BigDecimal price) {
+        if (treatmentRepository.existsTreatmentByName(name)) {
+            return;
+        }
         Treatment treatment = new Treatment();
         treatment.setName(name);
         treatment.setDescription(description);
