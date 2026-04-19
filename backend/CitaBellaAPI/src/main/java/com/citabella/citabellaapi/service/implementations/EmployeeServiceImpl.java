@@ -15,10 +15,12 @@ import com.citabella.citabellaapi.repository.UserRepository;
 import com.citabella.citabellaapi.service.interfaces.EmployeeService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class EmployeeServiceImpl implements EmployeeService {
@@ -94,6 +96,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         user.setRole(employeeRole);
         user.setAccountStatus(AccountStatus.ACTIVE);
         userRepository.save(user);
+    }
+
+    @Override
+    public EmployeeResponse activate(Integer employeeId) {
+        Employee employee = employeeRepository.findById(employeeId)
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
+        employee.setActive(true);
+        Employee updatedEmployee = employeeRepository.save(employee);
+
+        return mapToResponse(updatedEmployee);
     }
 
     private EmployeeResponse mapToResponse(Employee employee) {

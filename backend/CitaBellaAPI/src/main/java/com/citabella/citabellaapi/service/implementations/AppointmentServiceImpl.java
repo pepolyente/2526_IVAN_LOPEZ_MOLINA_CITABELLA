@@ -16,12 +16,13 @@ import com.citabella.citabellaapi.repository.*;
 import com.citabella.citabellaapi.service.interfaces.AppointmentService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
 
 @Service
 @Transactional
@@ -120,11 +121,9 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<AppointmentResponse> findAll() {
-        return appointmentRepository.findAll()
-                .stream()
-                .map(AppointmentMapper::toResponse)
-                .toList();
+    public Page<AppointmentResponse> findAll(Pageable pageable) {
+        return appointmentRepository.findAll(pageable)
+                .map(AppointmentMapper::toResponse);
     }
 
     @Override

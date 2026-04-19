@@ -7,11 +7,13 @@ import com.citabella.citabellaapi.entity.appointment.Appointment;
 import com.citabella.citabellaapi.entity.enums.AppointmentStatus;
 import com.citabella.citabellaapi.entity.sale.Sale;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface AppointmentService {
-    List<AppointmentResponse> findAll();
+    Page<AppointmentResponse> findAll(Pageable pageable);
 
     AppointmentResponse create(CreateAppointmentRequest request);
 

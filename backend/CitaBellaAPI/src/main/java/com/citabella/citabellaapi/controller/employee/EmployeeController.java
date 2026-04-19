@@ -62,4 +62,29 @@ public class EmployeeController {
         employeeService.linkUserAccount(employeeId, userId);
         return ResponseEntity.ok().build();
     }
+
+    @Operation(
+            summary = "Deactivate employee",
+            description = ApiSecurityDocs.ADMIN +
+                    """
+                            \nThis operation deactivates employee and changes the user's role to EMPLOYEE and changes the account status to ACTIVE
+                            """)
+    @PreAuthorize("hasRole('ADMIN')")
+    @DeleteMapping("/{employeeId}/deactivate/")
+    public ResponseEntity<EmployeeResponse> deactivate(@PathVariable Integer employeeId) {
+
+        return ResponseEntity.ok().body(employeeService.deactivate(employeeId));
+    }
+
+    @Operation(
+            summary = "Activate employee",
+            description = ApiSecurityDocs.ADMIN +
+                    "This operation activates employee ")
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{employeeId}/activate/")
+    public ResponseEntity<EmployeeResponse> activate(@PathVariable Integer employeeId) {
+        return ResponseEntity.ok().body(employeeService.activate(employeeId));
+    }
+
+
 }
