@@ -1,17 +1,9 @@
 /* ============================================================
    CitaBella — Design Tokens
-   src/styles/tokens.css
-
-   • Por defecto:       Light Navy  (#0A0F1E + #E4F0F6)
-   • Modo oscuro auto:  Dark Gold   (#111111 + #C8A96E)
-     (se activa solo si el SO del usuario tiene modo oscuro)
-   • Modo forzado:      Añade la clase .theme-dark o .theme-light
-     al <html> para sobreescribir la preferencia del sistema.
-   ============================================================ */
-
+*/
 
 /* ─────────────────────────────────────────────────────────────
-   LIGHT NAVY  — tema base (modo claro)
+   LIGHT NAVY  — Base theme
 ───────────────────────────────────────────────────────────── */
 :root {
 
@@ -69,7 +61,7 @@
 
 
 /* ─────────────────────────────────────────────────────────────
-   DARK GOLD  — se activa automáticamente si el SO usa modo oscuro
+   DARK GOLD  — SO auto activation
 ───────────────────────────────────────────────────────────── */
 @media (prefers-color-scheme: dark) {
   :root {
@@ -78,6 +70,7 @@
     --color-primary-light:  #2C1F08;
     --color-primary-alpha:  rgba(200, 169, 110, 0.08);
     --color-primary-focus:  rgba(200, 169, 110, 0.22);
+    --color-primary-transparent: rgba(0, 0, 0, 0.55);
 
     --color-brand:          #111111;
 
@@ -122,21 +115,13 @@
   }
 }
 
-
-/* ─────────────────────────────────────────────────────────────
-   FORZADO MANUAL — sobreescribe la preferencia del sistema.
-   Añade la clase al elemento <html> desde JS.
-
-   Modo oscuro forzado:  document.documentElement.classList.add('theme-dark')
-   Modo claro forzado:   document.documentElement.classList.add('theme-light')
-   Volver a automático:  document.documentElement.classList.remove('theme-dark','theme-light')
-───────────────────────────────────────────────────────────── */
 html.theme-light {
   --color-primary:        #0A0F1E;
   --color-primary-dark:   #060B14;
   --color-primary-light:  #C8DDE8;
   --color-primary-alpha:  rgba(10, 15, 30, 0.06);
   --color-primary-focus:  rgba(10, 15, 30, 0.14);
+  --color-primary-transparent: rgba(255, 255, 255, 0.55);
   --color-brand:          #0A0F1E;
   --color-bg:             #E4F0F6;
   --color-surface:        #FFFFFF;
@@ -177,6 +162,7 @@ html.theme-dark {
   --color-primary-light:  #2C1F08;
   --color-primary-alpha:  rgba(200, 169, 110, 0.08);
   --color-primary-focus:  rgba(200, 169, 110, 0.22);
+  --color-primary-transparent: rgba(0, 0, 0, 0.55);
   --color-brand:          #111111;
   --color-bg:             #0D0D0D;
   --color-surface:        #1A1A1A;

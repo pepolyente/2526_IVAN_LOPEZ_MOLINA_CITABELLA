@@ -35,7 +35,7 @@ import { ProductPublicResponse } from '../../../shared/models/product.model';
 export class ProductsPage implements OnInit {
   products: ProductPublicResponse[] = [];
   loading = true;
-  readonly placeholder = 'https://placehold.co/300x200?text=CitaBella';
+  readonly placeholder = '/images/citabella.jpg';
 
   constructor(private svc: ProductService, private changeDetectorRef: ChangeDetectorRef) {}
 
