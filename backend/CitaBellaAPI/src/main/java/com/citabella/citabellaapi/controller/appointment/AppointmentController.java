@@ -40,7 +40,7 @@ public class AppointmentController {
     }
 
     @Operation(
-            summary = "Create appointment",
+            summary = "Update appointment",
             description = "Requires authentication. Allowed roles: ADMIN, EMPLOYEE")
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @PutMapping("/update")
