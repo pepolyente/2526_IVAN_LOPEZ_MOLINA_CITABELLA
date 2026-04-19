@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import { AppointmentService } from '../../../core/services/appointment.service';
 import { AppointmentResponse } from '../../../shared/models/appointment.model';
@@ -16,7 +16,8 @@ export class AppointmentList implements OnInit {
 
   constructor(
     private svc: AppointmentService,
-    private router: Router
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -24,9 +25,11 @@ export class AppointmentList implements OnInit {
       next: data => {
         this.appointments = data;
         this.loading = false;
+        this.changeDetectorRef.detectChanges();
       },
       error: () => {
         this.loading = false;
+        this.changeDetectorRef.detectChanges();
       }
     });
   }
