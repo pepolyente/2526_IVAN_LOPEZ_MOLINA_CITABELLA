@@ -54,7 +54,7 @@ public class Appointment {
             name = "appointment_treatment",
             joinColumns = @JoinColumn(name = "id_appointment"),
             inverseJoinColumns = @JoinColumn(name = "id_treatment"))
-    private Set<Treatment> treatments = new HashSet<>();
+    private List<Treatment> treatments = new ArrayList<>();
 
     @OneToMany(mappedBy = "appointment")
     private List<AppointmentSubmission> submissions = new ArrayList<>();

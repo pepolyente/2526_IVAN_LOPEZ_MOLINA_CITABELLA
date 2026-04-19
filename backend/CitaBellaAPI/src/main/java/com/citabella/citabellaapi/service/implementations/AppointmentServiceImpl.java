@@ -1,7 +1,6 @@
 package com.citabella.citabellaapi.service.implementations;
 
-import com.citabella.citabellaapi.dto.appointment.AppointmentResponse;
-import com.citabella.citabellaapi.dto.appointment.CreateAppointmentRequest;
+import com.citabella.citabellaapi.dto.appointment.*;
 import com.citabella.citabellaapi.dto.client.ClientResponse;
 import com.citabella.citabellaapi.dto.employee.EmployeeResponse;
 import com.citabella.citabellaapi.dto.treatment.TreatmentResponse;
@@ -11,7 +10,7 @@ import com.citabella.citabellaapi.entity.employee.Employee;
 import com.citabella.citabellaapi.entity.treatment.Treatment;
 import com.citabella.citabellaapi.entity.enums.AppointmentStatus;
 import com.citabella.citabellaapi.entity.sale.Sale;
-import com.citabella.citabellaapi.exception.BadRequestException;
+import com.citabella.citabellaapi.exception.*;
 import com.citabella.citabellaapi.mappers.AppointmentMapper;
 import com.citabella.citabellaapi.repository.*;
 import com.citabella.citabellaapi.service.interfaces.AppointmentService;
@@ -19,6 +18,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -59,12 +59,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new BadRequestException("Employee not active");
         }
 
-        Set<Treatment> treatments = new HashSet<>();
-        for (int i : request.treatmentsIds()) {
-            Treatment treatment = treatmentRepository.findById(i)
-                    .orElseThrow(() -> new IllegalArgumentException("Treatment not found"));
-            treatments.add(treatment);
-        }
+        List<Treatment> treatments = treatmentRepository.findAllById(request.treatmentsIds());
 
 
         boolean hasOverlap = appointmentRepository.hasOverlap(
@@ -88,7 +83,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         appointment.setNotes(request.notes());
 
         appointmentRepository.save(appointment);
-        Set<TreatmentResponse> treatmentResponses = new HashSet<>();
+        List<TreatmentResponse> treatmentResponses = new ArrayList<>();
         for (Treatment treatment : treatments) {
             treatmentResponses.add(new TreatmentResponse(
                     treatment.getId(),
@@ -166,4 +161,31 @@ public class AppointmentServiceImpl implements AppointmentService {
     public Sale checkout() {
         return null;
     }
+
+    @Override
+    public AppointmentResponse update(RescheduleAppointmentRequest request) {
+        if (request.startAt() == null || request.endAt() == null) {
+            throw new BadRequestException("Start and end dates are required");
+        }
+
+        if (!request.endAt().isAfter(request.startAt())) {
+            throw new BadRequestException("End date must be after start date");
+        }
+        Appointment appointment = appointmentRepository.findById(request.id())
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found"));
+        Employee employee = employeeRepository.findById(request.employeeId())
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
+        List<Treatment> treatments = treatmentRepository.findAllById(request.treatmentsIds());
+
+        appointment.setEmployee(employee);
+        appointment.setTreatments(treatments);
+        appointment.setStartAt(request.startAt());
+        appointment.setEndAt(request.endAt());
+        appointment.setNotes(request.notes());
+        Appointment updatedAppointment = appointmentRepository.save(appointment);
+
+        return AppointmentMapper.toResponse(updatedAppointment);
+    }
+
+
 }

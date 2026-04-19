@@ -19,7 +19,7 @@ public class AppointmentMapper {
                 appointment.getHasOverlap(),
                 ClientMapper.toResponse(appointment.getClient()),
                 EmployeeMapper.toResponse(appointment.getEmployee()),
-                TreatmentMapper.toResponseSet(appointment.getTreatments())
+                TreatmentMapper.toResponseList(appointment.getTreatments())
         );
     }
 

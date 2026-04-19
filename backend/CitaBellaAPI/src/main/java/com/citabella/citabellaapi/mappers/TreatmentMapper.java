@@ -3,6 +3,7 @@ package com.citabella.citabellaapi.mappers;
 import com.citabella.citabellaapi.dto.treatment.TreatmentResponse;
 import com.citabella.citabellaapi.entity.treatment.Treatment;
 
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,5 +27,13 @@ public class TreatmentMapper {
         return treatments.stream()
                 .map(TreatmentMapper::toResponse)
                 .collect(Collectors.toSet());
+    }
+
+    public static List<TreatmentResponse> toResponseList(List<Treatment> treatments) {
+        if (treatments == null) return List.of();
+
+        return treatments.stream()
+                .map(TreatmentMapper::toResponse)
+                .collect(Collectors.toList());
     }
 }

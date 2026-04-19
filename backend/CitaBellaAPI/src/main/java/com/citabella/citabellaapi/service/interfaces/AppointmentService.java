@@ -2,9 +2,11 @@ package com.citabella.citabellaapi.service.interfaces;
 
 import com.citabella.citabellaapi.dto.appointment.AppointmentResponse;
 import com.citabella.citabellaapi.dto.appointment.CreateAppointmentRequest;
+import com.citabella.citabellaapi.dto.appointment.RescheduleAppointmentRequest;
 import com.citabella.citabellaapi.entity.appointment.Appointment;
 import com.citabella.citabellaapi.entity.enums.AppointmentStatus;
 import com.citabella.citabellaapi.entity.sale.Sale;
+import jakarta.validation.Valid;
 
 import java.util.List;
 
@@ -27,4 +29,5 @@ public interface AppointmentService {
 
     Sale checkout();
 
+    AppointmentResponse update(@Valid RescheduleAppointmentRequest request);
 }

@@ -6,7 +6,7 @@ import com.citabella.citabellaapi.dto.treatment.TreatmentResponse;
 import com.citabella.citabellaapi.entity.enums.AppointmentStatus;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 public record AppointmentResponse(
         Integer id,
@@ -17,6 +17,6 @@ public record AppointmentResponse(
         boolean hasOverlap,
         ClientResponse client,
         EmployeeResponse employee,
-        Set<TreatmentResponse> treatments
+        List<TreatmentResponse> treatments
 ) {
 }
