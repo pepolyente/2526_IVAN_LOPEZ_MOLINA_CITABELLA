@@ -12,7 +12,7 @@ import java.util.List;
 public interface AppointmentRepository extends JpaRepository<Appointment, Integer> {
 
         @Query(""" 
-                SELECT COUNT(c) > 0 FROM Appointment c WHERE c.employee.id = :id AND c.startAt < :endAt AND c.endAt < :startAt""")
+                SELECT COUNT(c) > 0 FROM Appointment c WHERE c.employee.id = :id AND c.startAt < :endAt AND c.endAt > :startAt""")
         boolean hasOverlap(@Param("id") Integer id,
                            @Param("startAt") LocalDateTime startAt,
                            @Param("endAt") LocalDateTime fechaFin);

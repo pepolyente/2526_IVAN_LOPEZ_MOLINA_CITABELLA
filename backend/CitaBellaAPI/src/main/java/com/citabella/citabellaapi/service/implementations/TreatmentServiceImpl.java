@@ -29,7 +29,7 @@ public class TreatmentServiceImpl implements TreatmentService {
             throw new BadRequestException("Treatment's name already exists");
         }
         treatment.setName(request.name());
-        treatment.setDescription(request.name());
+        treatment.setDescription(request.description());
         treatment.setMinimumDuration(request.minimumDuration());
         if (request.maximumDuration() != null){
             treatment.setMaximumDuration(request.maximumDuration());
