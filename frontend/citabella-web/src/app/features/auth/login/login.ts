@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {ChangeDetectorRef, Component} from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { LoginRequest } from '../../../shared/models/auth.model';
@@ -19,7 +19,10 @@ export class Login {
   loading = false;
   error   = '';
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(
+    private auth: AuthService,
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef) {}
 
   submit(): void {
     this.loading = true;
@@ -30,7 +33,9 @@ export class Login {
       },
       error: () => {
         this.error   = 'Usuario o contraseña incorrectos';
+        alert(this.error);
         this.loading = false;
+        this.changeDetectorRef.detectChanges();
       },
     });
   }
