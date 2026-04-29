@@ -35,33 +35,44 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final TreatmentRepository treatmentRepository;
     private final EmployeeTreatmentRepository employeeTreatmentRepository;
 
+    @Override
+    public Page<AppointmentResponse> findAll(Pageable pageable, AppointmentStatus status) {
+        if (status != null) {
+            return appointmentRepository.findAllByStatus(status, pageable)
+                    .map(AppointmentMapper::toResponse);
+        }
+        return appointmentRepository.findAll(pageable)
+                .map(AppointmentMapper::toResponse);
+    }
+
+    @Override
+    public AppointmentResponse getById(Integer id) {
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found"));
+        return AppointmentMapper.toResponse(appointment);
+    }
 
     @Override
     public AppointmentResponse create(CreateAppointmentRequest request) {
 
         if (request.startAt() == null || request.endAt() == null) {
-            throw new IllegalArgumentException("Start and end dates are required");
+            throw new BadRequestException("Start and end dates are required");
         }
-
         if (!request.endAt().isAfter(request.startAt())) {
-            throw new IllegalArgumentException("End date must be after start date");
+            throw new BadRequestException("End date must be after start date");
         }
 
         Client client = clientRepository.findById(request.clientId())
-                .orElseThrow(() -> new IllegalArgumentException("Client not found"));
-//        if (!client.isActive()){
-//            throw new BadRequestException("Client not active");
-//        }
+                .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
 
         Employee employee = employeeRepository.findById(request.employeeId())
-                .orElseThrow(() -> new IllegalArgumentException("Employee not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
 
         if (!employee.getActive()) {
             throw new BadRequestException("Employee not active");
         }
 
         List<Treatment> treatments = treatmentRepository.findAllById(request.treatmentsIds());
-
 
         boolean hasOverlap = appointmentRepository.hasOverlap(
                 employee.getId(),
@@ -70,70 +81,87 @@ public class AppointmentServiceImpl implements AppointmentService {
         );
 
         Appointment appointment = new Appointment();
-
         appointment.setHasOverlap(hasOverlap);
         appointment.setClient(client);
         appointment.setEmployee(employee);
         appointment.setTreatments(treatments);
-        if (!request.notes().isBlank()) {
+        appointment.setStartAt(request.startAt());
+        appointment.setEndAt(request.endAt());
+        if (request.notes() != null && !request.notes().isBlank()) {
             appointment.setNotes(request.notes());
         }
 
-        appointment.setStartAt(request.startAt());
-        appointment.setEndAt(request.endAt());
-        appointment.setNotes(request.notes());
+        Appointment saved = appointmentRepository.save(appointment);
 
-        appointmentRepository.save(appointment);
         List<TreatmentResponse> treatmentResponses = new ArrayList<>();
-        for (Treatment treatment : treatments) {
+        for (Treatment t : treatments) {
             treatmentResponses.add(new TreatmentResponse(
-                    treatment.getId(),
-                    treatment.getName(),
-                    treatment.getMinimumDuration(),
-                    treatment.getPrice(),
-                    treatment.getActive()
-            ));
+                    t.getId(), t.getName(), t.getMinimumDuration(), t.getPrice(), t.getActive()));
         }
 
         return new AppointmentResponse(
-                appointment.getId(),
-                appointment.getStartAt(),
-                appointment.getEndAt(),
-                appointment.getStatus(),
-                appointment.getNotes(),
-                hasOverlap,
-                new ClientResponse(
-                        client.getId(),
-                        client.getName(),
-                        client.getPhoneNumber(),
-                        client.getGender()
-                ),
-                new EmployeeResponse(
-                        employee.getId(),
-                        employee.getName(),
-                        employee.getPosition(),
-                        employee.getActive()
-                ),
+                saved.getId(), saved.getStartAt(), saved.getEndAt(),
+                saved.getStatus(), saved.getNotes(), hasOverlap,
+                new ClientResponse(client.getId(), client.getName(), client.getPhoneNumber(), client.getGender()),
+                new EmployeeResponse(employee.getId(), employee.getName(), employee.getPosition(), employee.getActive()),
                 treatmentResponses
-
-
         );
     }
 
     @Override
-    public Page<AppointmentResponse> findAll(Pageable pageable) {
-        return appointmentRepository.findAll(pageable)
-                .map(AppointmentMapper::toResponse);
+    public AppointmentResponse update(RescheduleAppointmentRequest request) {
+        if (request.startAt() == null || request.endAt() == null) {
+            throw new BadRequestException("Start and end dates are required");
+        }
+        if (!request.endAt().isAfter(request.startAt())) {
+            throw new BadRequestException("End date must be after start date");
+        }
+
+        Appointment appointment = appointmentRepository.findById(request.id())
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found"));
+
+        if (appointment.getStatus() == AppointmentStatus.CANCELLED
+                || appointment.getStatus() == AppointmentStatus.COMPLETED) {
+            throw new BadRequestException("Cannot update a " + appointment.getStatus() + " appointment");
+        }
+
+        Employee employee = employeeRepository.findById(request.employeeId())
+                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
+
+        List<Treatment> treatments = treatmentRepository.findAllById(request.treatmentsIds());
+
+        appointment.setEmployee(employee);
+        appointment.setTreatments(treatments);
+        appointment.setStartAt(request.startAt());
+        appointment.setEndAt(request.endAt());
+        appointment.setNotes(request.notes());
+
+        return AppointmentMapper.toResponse(appointmentRepository.save(appointment));
     }
 
     @Override
-    public AppointmentResponse cancel(CreateAppointmentRequest request) {
-        return null;
+    public AppointmentResponse changeStatus(Integer id, AppointmentStatus status) {
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found"));
+        validateStatusChange(appointment.getStatus(), status);
+        appointment.setStatus(status);
+        return AppointmentMapper.toResponse(appointmentRepository.save(appointment));
     }
 
     @Override
-    public AppointmentResponse closeAppointment(Integer clientId) {
-        return null;
+    public AppointmentResponse cancel(Integer id) {
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found"));
+
+        if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
+            throw new BadRequestException("Appointment is already cancelled");
+        }
+        if (appointment.getStatus() == AppointmentStatus.COMPLETED) {
+            throw new BadRequestException("Cannot cancel a completed appointment");
+        }
+
+        appointment.setStatus(AppointmentStatus.CANCELLED);
+        return AppointmentMapper.toResponse(appointmentRepository.save(appointment));
     }
 
     @Override
@@ -148,7 +176,16 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public void validateStatusChange(AppointmentStatus currentStatus, AppointmentStatus nextStatus) {
-
+        boolean valid = switch (currentStatus) {
+            case PENDING -> nextStatus == AppointmentStatus.CONFIRMED || nextStatus == AppointmentStatus.CANCELLED;
+            case CONFIRMED ->
+                    nextStatus == AppointmentStatus.IN_PROGRESS || nextStatus == AppointmentStatus.CANCELLED || nextStatus == AppointmentStatus.NO_SHOW;
+            case IN_PROGRESS -> nextStatus == AppointmentStatus.COMPLETED || nextStatus == AppointmentStatus.CANCELLED;
+            default -> false;
+        };
+        if (!valid) {
+            throw new BadRequestException("Invalid status transition: " + currentStatus + " → " + nextStatus);
+        }
     }
 
     @Override
@@ -160,31 +197,4 @@ public class AppointmentServiceImpl implements AppointmentService {
     public Sale checkout() {
         return null;
     }
-
-    @Override
-    public AppointmentResponse update(RescheduleAppointmentRequest request) {
-        if (request.startAt() == null || request.endAt() == null) {
-            throw new BadRequestException("Start and end dates are required");
-        }
-
-        if (!request.endAt().isAfter(request.startAt())) {
-            throw new BadRequestException("End date must be after start date");
-        }
-        Appointment appointment = appointmentRepository.findById(request.id())
-                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found"));
-        Employee employee = employeeRepository.findById(request.employeeId())
-                .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
-        List<Treatment> treatments = treatmentRepository.findAllById(request.treatmentsIds());
-
-        appointment.setEmployee(employee);
-        appointment.setTreatments(treatments);
-        appointment.setStartAt(request.startAt());
-        appointment.setEndAt(request.endAt());
-        appointment.setNotes(request.notes());
-        Appointment updatedAppointment = appointmentRepository.save(appointment);
-
-        return AppointmentMapper.toResponse(updatedAppointment);
-    }
-
-
 }

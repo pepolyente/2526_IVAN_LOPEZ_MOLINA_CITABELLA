@@ -3,6 +3,8 @@ package com.citabella.citabellaapi.service.implementations;
 import com.citabella.citabellaapi.dto.auth.UserInfoResponse;
 import com.citabella.citabellaapi.dto.user.UserRequest;
 import com.citabella.citabellaapi.dto.user.UserResponse;
+import com.citabella.citabellaapi.entity.enums.AccountStatus;
+import com.citabella.citabellaapi.entity.enums.ProfileType;
 import com.citabella.citabellaapi.entity.security.Role;
 import com.citabella.citabellaapi.entity.security.User;
 import com.citabella.citabellaapi.exception.BadRequestException;
@@ -118,7 +120,9 @@ public class UserServiceImpl implements UserService {
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
-                user.getRole().getName()
+                user.getRole().getName(),
+                AccountStatus.ACTIVE,
+                ProfileType.CLIENT
         );
     }
 }

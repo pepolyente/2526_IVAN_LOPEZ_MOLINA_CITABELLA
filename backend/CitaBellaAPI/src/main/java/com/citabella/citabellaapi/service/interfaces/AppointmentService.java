@@ -13,23 +13,22 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface AppointmentService {
-    Page<AppointmentResponse> findAll(Pageable pageable);
+    Page<AppointmentResponse> findAll(Pageable pageable, AppointmentStatus status);
+
+    AppointmentResponse getById(Integer id);
+
 
     AppointmentResponse create(CreateAppointmentRequest request);
 
-    AppointmentResponse cancel(CreateAppointmentRequest request);
+    AppointmentResponse update(@Valid RescheduleAppointmentRequest request);
 
-    AppointmentResponse closeAppointment(Integer clientId);
+    AppointmentResponse changeStatus(Integer id, AppointmentStatus status);
+
+    AppointmentResponse cancel(Integer id);
 
     List<Appointment> getAllByEmployeeId(Integer employeeId);
-
     List<Appointment> getAllByClientId(Integer clientId);
-
     void validateStatusChange(AppointmentStatus currentStatus, AppointmentStatus nextStatus);
-
     boolean hasOverlap();
-
     Sale checkout();
-
-    AppointmentResponse update(@Valid RescheduleAppointmentRequest request);
 }
