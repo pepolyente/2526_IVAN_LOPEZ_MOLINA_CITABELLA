@@ -15,9 +15,10 @@ import com.citabella.citabellaapi.repository.UserRepository;
 import com.citabella.citabellaapi.service.interfaces.ClientService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,69 +30,17 @@ public class ClientServiceImpl implements ClientService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
 
-
     @Override
     public ClientResponse createFull(ClientRequest request) {
-
         if (clientRepository.existsByPhoneNumber(request.phoneNumber())) {
             throw new BadRequestException("Phone number already registered");
         }
-
         Client client = new Client();
         client.setName(request.name());
         client.setPhoneNumber(request.phoneNumber());
         client.setGender(request.gender());
         client.setBirthday(request.birthday());
-
-        Client createdClient = clientRepository.save(client);
-        return mapToResponse(createdClient);
-    }
-
-    @Override
-    public ClientResponse getById(Integer id) {
-        Client client = clientRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
-        return mapToResponse(client);
-    }
-
-    @Override
-    public List<ClientResponse> findAll() {
-        return clientRepository.findAll().stream()
-                .map(this::mapToResponse).toList();
-    }
-
-    @Override
-    public ClientResponse assignUser(Integer clientId, Integer userId) {
-        Client client = clientRepository.findById(clientId)
-                .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
-        if (client.getUser() != null) {
-            throw new BadRequestException("Client already has a user assigned");
-        }
-        if (clientRepository.existsByUser_Id(userId)) {
-            throw new BadRequestException("User is already assigned to another client");
-        }
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        client.setUser(user);
-
-        Client changedClient = clientRepository.save(client);
-        return mapToResponse(changedClient);
-    }
-
-    @Override
-    public ClientResponse unassignUser(Integer clientId) {
-        Client client = clientRepository.findById(clientId)
-                .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
-        if (client.getUser() == null) {
-            throw new BadRequestException("Client does not have a user assigned");
-        }
-        client.setUser(null);
-
-        Client updatedClient = clientRepository.save(client);
-
-        return mapToResponse(updatedClient);
+        return ClientMapper.toResponse(clientRepository.save(client));
     }
 
     @Override
@@ -105,17 +54,101 @@ public class ClientServiceImpl implements ClientService {
         Client client = new Client();
         client.setName(name);
         client.setPhoneNumber(phoneNumber);
-
-        Client createdClient = clientRepository.save(client);
-
-        return mapToResponse(createdClient);
+        return ClientMapper.toResponse(clientRepository.save(client));
     }
 
+    @Override
+    public ClientResponse getById(Integer id) {
+        return ClientMapper.toResponse(
+                clientRepository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Client not found")));
+    }
+
+    @Override
+    public Page<ClientResponse> findAll(Pageable pageable, Boolean active) {
+        if (active != null) {
+            return clientRepository.findAllByActive(active, pageable)
+                    .map(ClientMapper::toResponse);
+        }
+        return clientRepository.findAll(pageable)
+                .map(ClientMapper::toResponse);
+    }
+
+    @Override
+    public List<ClientResponse> findAllActive() {
+        return clientRepository.findAllByActive(true).stream()
+                .map(ClientMapper::toResponse).toList();
+    }
+
+    @Override
+    public ClientResponse update(Integer id, ClientRequest request) {
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
+
+        if (request.name() != null && !request.name().isBlank()) {
+            client.setName(request.name());
+        }
+        if (request.phoneNumber() != null && !request.phoneNumber().isBlank()) {
+            if (!request.phoneNumber().equals(client.getPhoneNumber())
+                    && clientRepository.existsByPhoneNumber(request.phoneNumber())) {
+                throw new BadRequestException("Phone number already registered");
+            }
+            client.setPhoneNumber(request.phoneNumber());
+        }
+        if (request.gender() != null) {
+            client.setGender(request.gender());
+        }
+        if (request.birthday() != null) {
+            client.setBirthday(request.birthday());
+        }
+
+        return ClientMapper.toResponse(clientRepository.save(client));
+    }
+
+    @Override
+    public ClientResponse deactivate(Integer id) {
+        Client client = clientRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
+
+        if (!client.getActive()) {
+            throw new BadRequestException("Client is already inactive");
+        }
+        client.setActive(false);
+        return ClientMapper.toResponse(clientRepository.save(client));
+    }
+
+    @Override
+    public ClientResponse assignUser(Integer clientId, Integer userId) {
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
+        if (client.getUser() != null) {
+            throw new BadRequestException("Client already has a user assigned");
+        }
+        if (clientRepository.existsByUser_Id(userId)) {
+            throw new BadRequestException("User is already assigned to another client");
+        }
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        client.setUser(user);
+        return ClientMapper.toResponse(clientRepository.save(client));
+    }
+
+    @Override
+    public ClientResponse unassignUser(Integer clientId) {
+        Client client = clientRepository.findById(clientId)
+                .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
+        if (client.getUser() == null) {
+            throw new BadRequestException("Client does not have a user assigned");
+        }
+        client.setUser(null);
+        return ClientMapper.toResponse(clientRepository.save(client));
+    }
+
+    @Override
     @Transactional
     public void linkUserAccount(Integer clientId, Integer userId) {
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new BadRequestException("Client not found"));
-
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
@@ -138,40 +171,23 @@ public class ClientServiceImpl implements ClientService {
         userRepository.save(user);
     }
 
+    @Override
     @Transactional
     public void unlinkUserAccount(Integer clientId) {
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new ResourceNotFoundException("Client not found"));
-
         if (client.getUser() == null) {
             throw new BadRequestException("Client has no user linked");
         }
         User user = client.getUser();
-
         client.setUser(null);
         clientRepository.save(client);
 
         user.unassignProfile();
-        user.setRole(roleRepository.findByName("NONE")
-                .orElseThrow(() -> new BadRequestException("NONE role not found")));
+        Role noneRole = roleRepository.findByName("USER")
+                .orElseThrow(() -> new BadRequestException("USER role not found"));
+        user.setRole(noneRole);
         user.setAccountStatus(AccountStatus.PENDING);
         userRepository.save(user);
-    }
-
-    @Override
-    public List<ClientResponse> findAllActive() {
-        return clientRepository.findAllByActive(true)
-                .stream()
-                .map(ClientMapper::toResponse)
-                .toList();
-    }
-
-    private ClientResponse mapToResponse(Client client) {
-        return new ClientResponse(
-                client.getId(),
-                client.getName(),
-                client.getPhoneNumber(),
-                client.getGender()
-        );
     }
 }
