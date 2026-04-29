@@ -12,7 +12,9 @@ public class UserMapper {
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
-                user.getRole().getName()
+                user.getRole().getName(),
+                user.getAccountStatus(),
+                user.getProfileType()
         );
     }
 }
