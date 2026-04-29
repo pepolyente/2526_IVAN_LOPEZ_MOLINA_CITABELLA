@@ -3,8 +3,11 @@ package com.citabella.citabellaapi.service.interfaces;
 import com.citabella.citabellaapi.dto.auth.UserInfoResponse;
 import com.citabella.citabellaapi.dto.user.UserRequest;
 import com.citabella.citabellaapi.dto.user.UserResponse;
+import com.citabella.citabellaapi.dto.user.UserUpdateRequest;
+import com.citabella.citabellaapi.entity.enums.AccountStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 
 public interface UserService {
 
@@ -16,10 +19,13 @@ public interface UserService {
 
     UserResponse getAuthenticated();
 
+    UserResponse update(Integer id, UserUpdateRequest request);
+
+    UserResponse deactivate(Integer id);   // accountStatus → LOCKED
+
     boolean hasClient(Integer userId);
 
     UserInfoResponse swapRole(Integer userId, String roleName);
 
-    List<UserResponse> getAll();
-
+    Page<UserResponse> findAll(Pageable pageable, AccountStatus accountStatus);
 }
