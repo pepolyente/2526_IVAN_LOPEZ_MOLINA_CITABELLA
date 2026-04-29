@@ -1,5 +1,6 @@
 package com.citabella.citabellaapi.mappers;
 
+import com.citabella.citabellaapi.dto.treatment.TreatmentDetailedResponse;
 import com.citabella.citabellaapi.dto.treatment.TreatmentResponse;
 import com.citabella.citabellaapi.entity.treatment.Treatment;
 
@@ -16,6 +17,20 @@ public class TreatmentMapper {
                 treatment.getId(),
                 treatment.getName(),
                 treatment.getMinimumDuration(),
+                treatment.getPrice(),
+                treatment.getActive()
+        );
+    }
+
+    public static TreatmentDetailedResponse toDetailedResponse(Treatment treatment) {
+        if (treatment == null) return null;
+
+        return new TreatmentDetailedResponse(
+                treatment.getId(),
+                treatment.getName(),
+                treatment.getDescription(),
+                treatment.getMinimumDuration(),
+                treatment.getMaximumDuration(),
                 treatment.getPrice(),
                 treatment.getActive()
         );

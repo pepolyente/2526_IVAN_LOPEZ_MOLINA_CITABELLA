@@ -1,5 +1,6 @@
 package com.citabella.citabellaapi.service.implementations;
 
+import com.citabella.citabellaapi.dto.treatment.TreatmentDetailedResponse;
 import com.citabella.citabellaapi.dto.treatment.TreatmentRequest;
 import com.citabella.citabellaapi.dto.treatment.TreatmentResponse;
 import com.citabella.citabellaapi.entity.treatment.Treatment;
@@ -10,6 +11,8 @@ import com.citabella.citabellaapi.repository.TreatmentRepository;
 import com.citabella.citabellaapi.service.interfaces.TreatmentService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,45 +27,84 @@ public class TreatmentServiceImpl implements TreatmentService {
 
     @Override
     public TreatmentResponse create(TreatmentRequest request) {
-        Treatment treatment = new Treatment();
-        if (treatmentRepository.existsTreatmentByName(request.name())){
-            throw new BadRequestException("Treatment's name already exists");
+        if (treatmentRepository.existsTreatmentByName(request.name())) {
+            throw new BadRequestException("Treatment name already exists");
         }
+        Treatment treatment = new Treatment();
         treatment.setName(request.name());
         treatment.setDescription(request.description());
         treatment.setMinimumDuration(request.minimumDuration());
-        if (request.maximumDuration() != null){
+        if (request.maximumDuration() != null) {
             treatment.setMaximumDuration(request.maximumDuration());
         }
         treatment.setPrice(request.price());
-        Treatment createdTreatment = treatmentRepository.save(treatment);
-        return mapToResponse(createdTreatment);
+        return TreatmentMapper.toResponse(treatmentRepository.save(treatment));
     }
 
     @Override
     public TreatmentResponse getById(Integer id) {
-        Treatment treatment = treatmentRepository.findById(id) .orElseThrow(()
-                -> new ResourceNotFoundException("Treatment not found"));
+        return TreatmentMapper.toResponse(
+                treatmentRepository.findById(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Treatment not found")));
+    }
 
-        return mapToResponse(treatment);
+    @Override
+    public Page<TreatmentResponse> findAll(Pageable pageable, Boolean active) {
+        if (active != null) {
+            return treatmentRepository.findAllByActive(active, pageable)
+                    .map(TreatmentMapper::toResponse);
+        }
+        return treatmentRepository.findAll(pageable)
+                .map(TreatmentMapper::toResponse);
+    }
+
+    @Override
+    public Page<TreatmentDetailedResponse> findAllDetailed(Pageable pageable, Boolean active) {
+        if (active != null) {
+            return treatmentRepository.findAllByActive(active, pageable)
+                    .map(TreatmentMapper::toDetailedResponse);
+        }
+        return treatmentRepository.findAll(pageable)
+                .map(TreatmentMapper::toDetailedResponse);
     }
 
     @Override
     public List<TreatmentResponse> findAllActive() {
-        return treatmentRepository
-                .findAll()
-                .stream()
-                .filter(Treatment::getActive)
+        return treatmentRepository.findAllByActive(true).stream()
                 .map(TreatmentMapper::toResponse).toList();
     }
 
-    private TreatmentResponse mapToResponse(Treatment treatment) {
-        return new TreatmentResponse(
-                treatment.getId(),
-                treatment.getName(),
-                treatment.getMinimumDuration(),
-                treatment.getPrice(),
-                treatment.getActive()
-        );
+
+    @Override
+    public TreatmentResponse update(Integer id, TreatmentRequest request) {
+        Treatment treatment = treatmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Treatment not found"));
+
+        if (request.name() != null && !request.name().isBlank()) {
+            if (!request.name().equals(treatment.getName())
+                    && treatmentRepository.existsTreatmentByName(request.name())) {
+                throw new BadRequestException("Treatment name already exists");
+            }
+            treatment.setName(request.name());
+        }
+        if (request.description() != null) treatment.setDescription(request.description());
+        if (request.minimumDuration() != null) treatment.setMinimumDuration(request.minimumDuration());
+        if (request.maximumDuration() != null) treatment.setMaximumDuration(request.maximumDuration());
+        if (request.price() != null) treatment.setPrice(request.price());
+
+        return TreatmentMapper.toResponse(treatmentRepository.save(treatment));
+    }
+
+
+    @Override
+    public TreatmentResponse deactivate(Integer id) {
+        Treatment treatment = treatmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Treatment not found"));
+
+        if (!treatment.getActive()) {
+            throw new BadRequestException("Treatment is already inactive");
+        }
+        treatment.setActive(false);
+        return TreatmentMapper.toResponse(treatmentRepository.save(treatment));
     }
 }
