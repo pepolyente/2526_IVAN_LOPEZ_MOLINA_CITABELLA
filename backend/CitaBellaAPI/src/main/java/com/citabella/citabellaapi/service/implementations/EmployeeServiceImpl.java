@@ -4,7 +4,6 @@ import com.citabella.citabellaapi.dto.employee.EmployeeRequest;
 import com.citabella.citabellaapi.dto.employee.EmployeeResponse;
 import com.citabella.citabellaapi.entity.employee.Employee;
 import com.citabella.citabellaapi.entity.enums.AccountStatus;
-import com.citabella.citabellaapi.entity.enums.ProfileType;
 import com.citabella.citabellaapi.entity.security.Role;
 import com.citabella.citabellaapi.entity.security.User;
 import com.citabella.citabellaapi.exception.BadRequestException;
@@ -18,10 +17,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Transactional
 @Service

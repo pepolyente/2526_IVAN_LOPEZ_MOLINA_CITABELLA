@@ -5,7 +5,6 @@ import com.citabella.citabellaapi.dto.user.UserRequest;
 import com.citabella.citabellaapi.dto.user.UserResponse;
 import com.citabella.citabellaapi.dto.user.UserUpdateRequest;
 import com.citabella.citabellaapi.entity.enums.AccountStatus;
-import com.citabella.citabellaapi.entity.enums.ProfileType;
 import com.citabella.citabellaapi.entity.security.Role;
 import com.citabella.citabellaapi.entity.security.User;
 import com.citabella.citabellaapi.exception.BadRequestException;
