@@ -25,12 +25,23 @@ export class Home implements OnInit {
 
   ngOnInit(): void {
     this.treatmentService.getAll().subscribe({
-      next: data => { this.treatments = data.slice(0, 3); this.changeDetectorRef.detectChanges(); },
-      error: () => { this.treatments = []; this.changeDetectorRef.detectChanges(); }
+      next: data => {
+        this.treatments = data.content.slice(0, 4);
+        this.changeDetectorRef.detectChanges();
+      },
+      error: () => {
+        this.treatments = [];
+      }
     });
+
     this.productService.getAllActive().subscribe({
-      next: data => { this.products = data.slice(0, 4); this.changeDetectorRef.detectChanges(); },
-      error: () => { this.products = []; this.changeDetectorRef.detectChanges(); }
+      next: data => {
+        this.products = data.slice(0, 4);
+        this.changeDetectorRef.detectChanges();
+      },
+      error: () => {
+        this.products = [];
+      }
     });
   }
 }

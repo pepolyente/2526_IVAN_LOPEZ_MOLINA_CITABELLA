@@ -33,8 +33,12 @@ export class ServicesPage implements OnInit {
   constructor(private svc: TreatmentService, private changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.svc.getAll().subscribe({
-      next: data => { this.treatments = data; this.loading = false; this.changeDetectorRef.detectChanges(); },
+    this.svc.getAll({ page: 0, size: 100 }).subscribe({
+      next: data => {
+        this.treatments = data.content;
+        this.loading    = false;
+        this.changeDetectorRef.detectChanges();
+      },
       error: () => { this.loading = false; this.changeDetectorRef.detectChanges(); }
     });
   }

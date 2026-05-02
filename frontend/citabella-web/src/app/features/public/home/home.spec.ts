@@ -1,23 +1,42 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { TreatmentService } from '../../../core/services/treatment.service';
+import { ProductService } from '../../../core/services/product.service';
+import { TreatmentResponse } from '../../../shared/models/treatment.model';
+import { ProductPublicResponse } from '../../../shared/models/product.model';
+import { AuthService } from '../../../core/services/auth.service';
 
-import { Home } from './home';
+@Component({
+  selector: 'app-home',
+  standalone: false,
+  templateUrl: './home.html',
+  styleUrl: './home.css',
+})
+export class Home implements OnInit {
+  treatments: TreatmentResponse[]    = [];
+  products:   ProductPublicResponse[] = [];
+  readonly placeholder = '/images/citabella.jpg';
 
-describe('Home', () => {
-  let component: Home;
-  let fixture: ComponentFixture<Home>;
+  constructor(
+    private treatmentService: TreatmentService,
+    private productService:   ProductService,
+    public  auth:             AuthService,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [Home]
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(Home);
-    component = fixture.componentInstance;
-    await fixture.whenStable();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+  ngOnInit(): void {
+    this.treatmentService.getAll({ page: 0, size: 3 }).subscribe({
+      next: data => {
+        this.treatments = data.content.slice(0, 3);
+        this.changeDetectorRef.detectChanges();
+      },
+      error: () => { this.treatments = []; this.changeDetectorRef.detectChanges(); }
+    });
+    this.productService.getAllActive().subscribe({
+      next: data => {
+        this.products = data.slice(0, 4);
+        this.changeDetectorRef.detectChanges();
+      },
+      error: () => { this.products = []; this.changeDetectorRef.detectChanges(); }
+    });
+  }
+}

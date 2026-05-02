@@ -42,9 +42,9 @@ export class EmployeeList implements OnInit {
   constructor(private svc: EmployeeService, private changeDetectorRef: ChangeDetectorRef) {}
 
   ngOnInit(): void {
-    this.svc.getAll().subscribe({
+    this.svc.getAll({ page: 0, size: 200 }).subscribe({
       next: data => {
-        this.employees = data;
+        this.employees = data.content;
         this.loading = false;
         this.changeDetectorRef.detectChanges();
       },

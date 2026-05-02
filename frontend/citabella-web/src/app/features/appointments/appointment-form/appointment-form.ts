@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppointmentService } from '../../../core/services/appointment.service';
 import { ClientService } from '../../../core/services/client.service';
@@ -17,8 +17,8 @@ import { TreatmentResponse } from '../../../shared/models/treatment.model';
 })
 export class AppointmentForm implements OnInit {
 
-  clients: ClientResponse[]     = [];
-  employees: EmployeeResponse[] = [];
+  clients: ClientResponse[]       = [];
+  employees: EmployeeResponse[]   = [];
   treatments: TreatmentResponse[] = [];
 
   form: CreateAppointmentRequest = {
@@ -38,16 +38,16 @@ export class AppointmentForm implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.clientSvc.getAll().subscribe(data => {
-      this.clients = data;
+    this.clientSvc.getAll({ page: 0, size: 200 }).subscribe(data => {
+      this.clients = data.content;
       this.changeDetectorRef.detectChanges();
     });
-    this.employeeSvc.getAll().subscribe(data => {
-      this.employees = data;
+    this.employeeSvc.getAll({ page: 0, size: 200 }).subscribe(data => {
+      this.employees = data.content;
       this.changeDetectorRef.detectChanges();
     });
-    this.treatmentSvc.getAll().subscribe(data => {
-      this.treatments = data;
+    this.treatmentSvc.getAll({ page: 0, size: 200 }).subscribe(data => {
+      this.treatments = data.content;
       this.changeDetectorRef.detectChanges();
     });
   }

@@ -3,33 +3,96 @@
   <button class="btn-primary" (click)="newAppointment()">+ Nueva cita</button>
 </div>
 
-@if (loading) {
-  <p>Cargando...</p>
-} @else if (appointments.length === 0) {
-  <p class="empty-state">No hay citas registradas aún.</p>
-} @else {
-  <table class="simple-table">
-    <thead>
-    <tr>
-      <th>Inicio</th>
-      <th>Fin</th>
-      <th>Cliente</th>
-      <th>Empleado</th>
-      <th>Estado</th>
-      <th>Solape</th>
-    </tr>
-    </thead>
-    <tbody>
-      @for (appointment of appointments; track appointment.id) {
-        <tr>
-          <td>{{ appointment.startAt | date:'dd/MM/yy HH:mm' }}</td>
-          <td>{{ appointment.endAt   | date:'HH:mm' }}</td>
-          <td>{{ appointment.client.name }}</td>
-          <td>{{ appointment.employee.name }}</td>
-          <td><span class="badge badge-{{appointment.status | lowercase}}">{{ appointment.status }}</span></td>
-          <td>{{ appointment.hasOverlap ? '⚠️' : '' }}</td>
-        </tr>
+<div class="filters-bar">
+  <div class="filter-group">
+    <label>Filtrar por estado</label>
+    <select [(ngModel)]="filterStatus" (change)="applyFilter()">
+      <option value="">Todos</option>
+      @for (s of statuses; track s) {
+        <option [value]="s">{{ s }}</option>
       }
-    </tbody>
-  </table>
+    </select>
+  </div>
+  <span class="total-hint" *ngIf="!loading">{{ totalElements }} cita(s)</span>
+</div>
+
+@if (loading) {
+  <p class="empty-state">Cargando...</p>
+} @else if (error) {
+  <p class="error-msg">{{ error }}</p>
+} @else if (appointments.length === 0) {
+  <p class="empty-state">No hay citas con los filtros aplicados.</p>
+} @else {
+  <div class="table-wrapper">
+    <table class="simple-table">
+      <thead>
+      <tr>
+        <th>Inicio</th>
+        <th>Fin</th>
+        <th>Cliente</th>
+        <th>Empleado</th>
+        <th>Tratamientos</th>
+        <th>Estado</th>
+        <th>Solape</th>
+        <th>Acciones</th>
+      </tr>
+      </thead>
+      <tbody>
+        @for (appointment of appointments; track appointment.id) {
+          <tr [class.row-cancelled]="appointment.status === 'CANCELLED' || appointment.status === 'NO_SHOW'"
+              [class.row-completed]="appointment.status === 'COMPLETED'">
+            <td>{{ appointment.startAt | date:'dd/MM/yy HH:mm' }}</td>
+            <td>{{ appointment.endAt   | date:'HH:mm' }}</td>
+            <td>{{ appointment.client?.name ?? '–' }}</td>
+            <td>{{ appointment.employee?.name ?? '–' }}</td>
+            <td class="treatments-cell">
+              @for (t of appointment.treatments; track t.id) {
+                <span class="badge">{{ t.name }}</span>
+              }
+            </td>
+            <td>
+              @if (changingStatusId === appointment.id) {
+                <div class="status-change-row">
+                  <select [(ngModel)]="newStatus">
+                    <option value="">-- elige --</option>
+                    @for (ts of allowedTransitions(appointment.status); track ts) {
+                      <option [value]="ts">{{ ts }}</option>
+                    }
+                  </select>
+                  <button class="btn-xs btn-success" (click)="confirmChangeStatus(appointment.id)"
+                          [disabled]="!newStatus">✓</button>
+                  <button class="btn-xs btn-outline" (click)="cancelChangeStatus()">✕</button>
+                </div>
+              } @else {
+                <span class="badge badge-{{ appointment.status | lowercase }}">{{ appointment.status }}</span>
+              }
+            </td>
+            <td class="cell-center">{{ appointment.hasOverlap ? '⚠️' : '' }}</td>
+            <td class="actions-cell">
+              @if (!isFinal(appointment.status) && changingStatusId !== appointment.id) {
+                <button class="btn-xs btn-outline"
+                        (click)="startChangeStatus(appointment.id, appointment.status)"
+                        title="Cambiar estado">
+                  Estado
+                </button>
+              }
+              @if (!isFinal(appointment.status)) {
+                <button class="btn-xs btn-danger"
+                        (click)="cancelAppointment(appointment.id)"
+                        title="Cancelar cita">
+                  Cancelar
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="paginator">
+    <button class="btn-outline" (click)="prevPage()" [disabled]="page === 0">← Anterior</button>
+    <span class="page-info">Pág. {{ page + 1 }} / {{ totalPages }}</span>
+    <button class="btn-outline" (click)="nextPage()" [disabled]="page >= totalPages - 1">Siguiente →</button>
+  </div>
 }

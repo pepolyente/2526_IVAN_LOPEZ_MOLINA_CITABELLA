@@ -1,0 +1,191 @@
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ProductService } from '../../../core/services/product.service';
+import { ProductPrivateResponse, ProductRequest } from '../../../shared/models/product.model';
+
+@Component({
+  selector: 'app-product-list',
+  standalone: false,
+  template: `
+    <div class="page-header">
+      <h2>Gestión de productos</h2>
+      <button class="btn-primary" (click)="showCreateForm = !showCreateForm">
+        {{ showCreateForm ? 'Cancelar' : '+ Nuevo producto' }}
+      </button>
+    </div>
+
+    @if (showCreateForm) {
+      <form class="form-card create-form" (ngSubmit)="createProduct()">
+        <h3>Nuevo producto</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre *</label>
+            <input type="text" [(ngModel)]="newProduct.name" name="name" required />
+          </div>
+          <div class="form-group">
+            <label>Categoría</label>
+            <input type="text" [(ngModel)]="newProduct.category" name="category" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Precio compra (€)</label>
+            <input type="number" [(ngModel)]="newProduct.purchasePrice" name="purchasePrice" min="0" step="0.01" />
+          </div>
+          <div class="form-group">
+            <label>Precio venta (€)</label>
+            <input type="number" [(ngModel)]="newProduct.salePrice" name="salePrice" min="0" step="0.01" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tipo de uso</label>
+            <select [(ngModel)]="newProduct.usageType" name="usageType">
+              <option value="">Sin especificar</option>
+              <option value="INTERNAL">Uso interno</option>
+              <option value="SALE">Venta</option>
+              <option value="BOTH">Ambos</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Proveedor</label>
+            <input type="text" [(ngModel)]="newProduct.supplier" name="supplier" />
+          </div>
+        </div>
+        <div class="form-group check-group">
+          <label>
+            <input type="checkbox" [(ngModel)]="newProduct.isCritical" name="isCritical" />
+            Producto crítico (stock mínimo)
+          </label>
+        </div>
+        @if (createError) { <p class="error-msg">{{ createError }}</p> }
+        <button type="submit" class="btn-primary" [disabled]="creating || !newProduct.name">
+          {{ creating ? 'Guardando...' : 'Crear producto' }}
+        </button>
+      </form>
+    }
+
+    <div class="filters-bar">
+      <div class="filter-group">
+        <label>Estado</label>
+        <select [(ngModel)]="filterActive" (change)="applyFilter()">
+          <option [ngValue]="undefined">Todos</option>
+          <option [ngValue]="true">Activos</option>
+          <option [ngValue]="false">Inactivos</option>
+        </select>
+      </div>
+      <span class="total-hint">{{ totalElements }} producto(s)</span>
+    </div>
+
+    @if (loading) {
+      <p class="empty-state">Cargando...</p>
+    } @else if (products.length === 0) {
+      <p class="empty-state">No hay productos.</p>
+    } @else {
+      <div class="table-wrapper">
+        <table class="simple-table">
+          <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>P. Compra</th>
+            <th>P. Venta</th>
+            <th>Proveedor</th>
+            <th>Crítico</th>
+            <th>Activo</th>
+            <th>Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (p of products; track p.id) {
+              <tr [class.row-inactive]="!p.active">
+                <td><strong>{{ p.name }}</strong></td>
+                <td>{{ p.category ?? '–' }}</td>
+                <td>{{ p.purchasePrice != null ? (p.purchasePrice | currency:'EUR') : '–' }}</td>
+                <td>{{ p.salePrice != null ? (p.salePrice | currency:'EUR') : '–' }}</td>
+                <td>{{ p.supplier ?? '–' }}</td>
+                <td class="cell-center">{{ p.isCritical ? '⚠️' : '' }}</td>
+                <td>
+                  <span class="badge"
+                        [class.badge-confirmed]="p.active"
+                        [class.badge-cancelled]="!p.active">
+                    {{ p.active ? 'Activo' : 'Inactivo' }}
+                  </span>
+                </td>
+                <td class="actions-cell">
+                  @if (p.active) {
+                    <button class="btn-xs btn-danger" (click)="deactivate(p.id)">Desactivar</button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="paginator">
+        <button class="btn-outline" (click)="prevPage()" [disabled]="page === 0">← Anterior</button>
+        <span class="page-info">Pág. {{ page + 1 }} / {{ totalPages }}</span>
+        <button class="btn-outline" (click)="nextPage()" [disabled]="page >= totalPages - 1">Siguiente →</button>
+      </div>
+    }
+  `,
+})
+export class ProductList implements OnInit {
+  products:      ProductPrivateResponse[] = [];
+  loading        = true;
+  page           = 0;
+  size           = 20;
+  totalPages     = 0;
+  totalElements  = 0;
+  filterActive: boolean | undefined = undefined;
+
+  showCreateForm = false;
+  newProduct: ProductRequest = { name: '' };
+  creating    = false;
+  createError = '';
+
+  constructor(private svc: ProductService, private changeDetectorRef: ChangeDetectorRef) {}
+
+  ngOnInit(): void { this.load(); }
+
+  load(): void {
+    this.loading = true;
+    this.svc.getAdmin({ page: this.page, size: this.size, active: this.filterActive }).subscribe({
+      next: (p: any) => {
+        this.products      = p.content;
+        this.totalPages    = p.totalPages;
+        this.totalElements = p.totalElements;
+        this.loading = false;
+        this.changeDetectorRef.detectChanges();
+      },
+      error: () => { this.loading = false; this.changeDetectorRef.detectChanges(); },
+    });
+  }
+
+  applyFilter(): void { this.page = 0; this.load(); }
+  prevPage(): void { if (this.page > 0) { this.page--; this.load(); } }
+  nextPage(): void { if (this.page < this.totalPages - 1) { this.page++; this.load(); } }
+
+  createProduct(): void {
+    this.creating    = true;
+    this.createError = '';
+    this.svc.create(this.newProduct).subscribe({
+      next: () => {
+        this.creating       = false;
+        this.showCreateForm = false;
+        this.newProduct     = { name: '' };
+        this.load();
+      },
+      error: err => {
+        this.createError = err.error?.message ?? 'Error al crear el producto';
+        this.creating    = false;
+        this.changeDetectorRef.detectChanges();
+      },
+    });
+  }
+
+  deactivate(id: number): void {
+    if (!confirm('¿Desactivar este producto?')) return;
+    this.svc.deactivate(id).subscribe({ next: () => this.load() });
+  }
+}

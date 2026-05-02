@@ -30,3 +30,11 @@ export interface AppointmentResponse {
   employee: EmployeeResponse;
   treatments: TreatmentResponse[];
 }
+export interface RescheduleAppointmentRequest {
+  id: number;
+  employeeId: number;
+  treatmentsIds: [number];
+  startAt: number;
+  endAt: number;
+  notes: string;
+}

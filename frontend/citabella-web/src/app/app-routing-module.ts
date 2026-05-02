@@ -52,7 +52,7 @@ const routes: Routes = [
             .then(m => m.ClientsModule),
       },
 
-      //─── ADMIN ───────────────────────────────────────────────────────
+      // ─── ADMIN ───────────────────────────────────────────────────────
       {
         path: 'employees',
         canActivate: [RoleGuard],
@@ -68,6 +68,14 @@ const routes: Routes = [
         loadChildren: () =>
           import('./features/treatments/treatments-module')
             .then(m => m.TreatmentsModule),
+      },
+      {
+        path: 'products',
+        canActivate: [RoleGuard],
+        data: { roles: ['ADMIN', 'EMPLOYEE'] },
+        loadChildren: () =>
+          import('./features/product/product-module')
+            .then(m => m.ProductModule),
       },
       {
         path: 'admin',
