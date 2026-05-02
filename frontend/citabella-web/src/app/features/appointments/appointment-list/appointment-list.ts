@@ -64,7 +64,7 @@ export class AppointmentList implements OnInit {
       error: () => {
         this.error   = 'Error al cargar las citas';
         this.loading = false;
-        this.cdr.detectChanges();
+        this.changeDetectorRef.detectChanges();
       },
     });
   }
