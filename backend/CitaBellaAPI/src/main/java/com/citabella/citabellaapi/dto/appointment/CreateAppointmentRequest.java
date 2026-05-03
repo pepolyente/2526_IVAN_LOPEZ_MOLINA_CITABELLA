@@ -7,12 +7,16 @@ import java.time.LocalDateTime;
 import java.util.Set;
 
 public record CreateAppointmentRequest(
+        @NotNull
         Integer clientId,
+        @NotNull
         Integer employeeId,
         @NotNull
         @NotEmpty
         Set<Integer> treatmentsIds,
+        @NotNull
         LocalDateTime startAt,
+        @NotNull
         LocalDateTime endAt,
         String notes
 ) {
