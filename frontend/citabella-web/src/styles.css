@@ -417,3 +417,164 @@ html, body {
   cursor:not-allowed;
 }
 
+.auth-wrapper {
+  min-height: calc(100vh - 64px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 16px;
+  background: var(--color-bg);
+}
+
+.auth-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  padding: 40px 36px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-card-lg);
+}
+
+.auth-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.auth-logo h1 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.auth-title {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  text-align: center;
+}
+
+.auth-sub {
+  font-size: 14px;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.auth-error {
+  background: var(--badge-cancelled-bg);
+  color: var(--badge-cancelled-text);
+  border: 1px solid var(--color-danger);
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.input-with-toggle {
+  position: relative;
+}
+
+.input-with-toggle .input-large {
+  padding-right: 44px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none;
+  cursor: pointer; font-size: 16px;
+}
+
+.btn-full {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.auth-footer a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+button, a, input, select, textarea, label {
+  touch-action: manipulation;
+}
+
+@media (max-width: 767px) {
+  html, body {
+    font-size: 14px;
+  }
+
+  .page-wrapper {
+    padding: 24px 16px;
+  }
+
+  .form-card {
+    max-width: 100%;
+    padding: 20px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero {
+    padding: 60px 16px;
+  }
+  .hero > div {
+    width: 90%;
+  }
+
+  .simple-table {
+    display: block;
+    thead { display: none; }
+    tbody, tr, td {
+      display: block;
+    }
+    tr {
+      margin-bottom: 16px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      padding: 12px;
+      background: var(--color-surface);
+    }
+    td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--color-border);
+    }
+    td:last-child { border-bottom: none; }
+    td::before {
+      content: attr(data-label);
+      font-weight: 500;
+      color: var(--color-text-muted);
+      margin-right: 8px;
+      white-space: nowrap;
+    }
+  }
+
+  .calendar-wrapper {
+    overflow-x: hidden;
+  }
+}

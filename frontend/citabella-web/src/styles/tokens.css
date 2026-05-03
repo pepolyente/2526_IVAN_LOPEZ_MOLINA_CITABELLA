@@ -57,6 +57,10 @@
   --shadow:         0 1px 3px rgba(10, 15, 30, 0.10);
   --shadow-header:  0 2px 4px rgba(10, 15, 30, 0.20);
   --shadow-card-lg: 0 20px 40px rgba(10, 15, 30, 0.18);
+
+  --breakpoint-sm: 576px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
 }
 
 
@@ -113,6 +117,16 @@
     --shadow-header:  0 2px 6px rgba(0, 0, 0, 0.6);
     --shadow-card-lg: 0 20px 40px rgba(0, 0, 0, 0.5);
   }
+}
+
+@media (max-width: 767px) {
+  .hide-on-mobile { display: none !important; }
+  .show-on-mobile { display: block !important; }
+}
+
+@media (min-width: 768px) {
+  .hide-on-desktop { display: none !important; }
+  .show-on-desktop { display: block !important; }
 }
 
 html.theme-light {

@@ -1,6 +1,8 @@
 <div class="page-header">
   <h2>Agenda de citas</h2>
-  <button class="btn-primary" (click)="newAppointment()">+ Nueva cita</button>
+  <button class="btn-primary" (click)="newAppointment()">
+    <span class="material-symbols-outlined">add</span> Nueva
+  </button>
 </div>
 
 <div class="filters-bar">
@@ -8,21 +10,13 @@
     <label>Filtrar por estado</label>
     <select [(ngModel)]="filterStatus" (change)="applyFilter()">
       <option value="">Todos</option>
-      @for (s of statuses; track s) {
-        <option [value]="s">{{ s }}</option>
-      }
+      @for (s of statuses; track s) { <option [value]="s">{{ s }}</option> }
     </select>
   </div>
   <span class="total-hint" *ngIf="!loading">{{ totalElements }} cita(s)</span>
 </div>
 
-@if (loading) {
-  <p class="empty-state">Cargando...</p>
-} @else if (error) {
-  <p class="error-msg">{{ error }}</p>
-} @else if (appointments.length === 0) {
-  <p class="empty-state">No hay citas con los filtros aplicados.</p>
-} @else {
+@if (loading) { ... } @else if (error) { ... } @else if (appointments.length === 0) { ... } @else {
   <div class="table-wrapper">
     <table class="simple-table">
       <thead>
@@ -30,10 +24,10 @@
         <th>Inicio</th>
         <th>Fin</th>
         <th>Cliente</th>
-        <th>Empleado</th>
-        <th>Tratamientos</th>
+        <th class="hide-on-mobile">Empleado</th>
+        <th class="hide-on-mobile">Tratamientos</th>
         <th>Estado</th>
-        <th>Solape</th>
+        <th class="hide-on-mobile">Solape</th>
         <th>Acciones</th>
       </tr>
       </thead>
@@ -41,46 +35,28 @@
         @for (appointment of appointments; track appointment.id) {
           <tr [class.row-cancelled]="appointment.status === 'CANCELLED' || appointment.status === 'NO_SHOW'"
               [class.row-completed]="appointment.status === 'COMPLETED'">
-            <td>{{ appointment.startAt | date:'dd/MM/yy HH:mm' }}</td>
-            <td>{{ appointment.endAt   | date:'HH:mm' }}</td>
-            <td>{{ appointment.client?.name ?? '–' }}</td>
-            <td>{{ appointment.employee?.name ?? '–' }}</td>
-            <td class="treatments-cell">
-              @for (t of appointment.treatments; track t.id) {
-                <span class="badge">{{ t.name }}</span>
-              }
+            <td data-label="Inicio">{{ appointment.startAt | date:'dd/MM/yy HH:mm' }}</td>
+            <td data-label="Fin">{{ appointment.endAt | date:'HH:mm' }}</td>
+            <td data-label="Cliente">{{ appointment.client?.name ?? '–' }}</td>
+            <td class="hide-on-mobile" data-label="Empleado">{{ appointment.employee?.name ?? '–' }}</td>
+            <td class="treatments-cell hide-on-mobile" data-label="Tratamientos">
+              @for (t of appointment.treatments; track t.id) { <span class="badge">{{ t.name }}</span> }
             </td>
-            <td>
-              @if (changingStatusId === appointment.id) {
-                <div class="status-change-row">
-                  <select [(ngModel)]="newStatus">
-                    <option value="">-- elige --</option>
-                    @for (ts of allowedTransitions(appointment.status); track ts) {
-                      <option [value]="ts">{{ ts }}</option>
-                    }
-                  </select>
-                  <button class="btn-xs btn-success" (click)="confirmChangeStatus(appointment.id)"
-                          [disabled]="!newStatus">✓</button>
-                  <button class="btn-xs btn-outline" (click)="cancelChangeStatus()">✕</button>
-                </div>
-              } @else {
+            <td data-label="Estado">
+              @if (changingStatusId === appointment.id) { ... } @else {
                 <span class="badge badge-{{ appointment.status | lowercase }}">{{ appointment.status }}</span>
               }
             </td>
-            <td class="cell-center">{{ appointment.hasOverlap ? '⚠️' : '' }}</td>
-            <td class="actions-cell">
+            <td class="cell-center hide-on-mobile" data-label="Solape">{{ appointment.hasOverlap ? '⚠️' : '' }}</td>
+            <td class="actions-cell" data-label="Acciones">
               @if (!isFinal(appointment.status) && changingStatusId !== appointment.id) {
-                <button class="btn-xs btn-outline"
-                        (click)="startChangeStatus(appointment.id, appointment.status)"
-                        title="Cambiar estado">
-                  Estado
+                <button class="btn-xs btn-outline" (click)="startChangeStatus(appointment.id, appointment.status)" title="Cambiar estado">
+                  <span class="material-symbols-outlined">edit</span>
                 </button>
               }
               @if (!isFinal(appointment.status)) {
-                <button class="btn-xs btn-danger"
-                        (click)="cancelAppointment(appointment.id)"
-                        title="Cancelar cita">
-                  Cancelar
+                <button class="btn-xs btn-danger" (click)="cancelAppointment(appointment.id)" title="Cancelar">
+                  <span class="material-symbols-outlined">cancel</span>
                 </button>
               }
             </td>
@@ -91,8 +67,12 @@
   </div>
 
   <div class="paginator">
-    <button class="btn-outline" (click)="prevPage()" [disabled]="page === 0">← Anterior</button>
+    <button class="btn-outline" (click)="prevPage()" [disabled]="page === 0">
+      <span class="material-symbols-outlined">chevron_left</span>
+    </button>
     <span class="page-info">Pág. {{ page + 1 }} / {{ totalPages }}</span>
-    <button class="btn-outline" (click)="nextPage()" [disabled]="page >= totalPages - 1">Siguiente →</button>
+    <button class="btn-outline" (click)="nextPage()" [disabled]="page >= totalPages - 1">
+      <span class="material-symbols-outlined">chevron_right</span>
+    </button>
   </div>
 }

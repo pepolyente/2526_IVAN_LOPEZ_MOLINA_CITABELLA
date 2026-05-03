@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 
@@ -9,7 +9,20 @@ import { Router } from '@angular/router';
   styleUrl: './header.css',
 })
 export class Header {
-  constructor(public auth: AuthService, private router: Router) {}
+  isMenuOpen = false;
+  isMobile = false;
+
+  constructor(public auth: AuthService, private router: Router) {
+    this.checkScreen();
+  }
+
+  @HostListener('window:resize')
+  checkScreen() {
+    this.isMobile = window.innerWidth < 768;
+    if (!this.isMobile) this.isMenuOpen = false;
+  }
+
+  toggleMenu() { this.isMenuOpen = !this.isMenuOpen; }
 
   logout(): void {
     this.auth.logout();

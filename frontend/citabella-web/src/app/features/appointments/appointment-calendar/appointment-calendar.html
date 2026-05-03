@@ -1,0 +1,42 @@
+<div class="calendar-page">
+
+  <div class="page-header">
+    <div class="page-header-left">
+      <h2>Agenda de citas</h2>
+      <div class="legend">
+        <span class="legend-dot" style="background:#3B82F6"></span> Corte
+        <span class="legend-dot" style="background:#8B5CF6"></span> Tinte
+        <span class="legend-dot" style="background:#EC4899"></span> Peinado
+        <span class="legend-dot" style="background:#10B981"></span> Tratamiento
+        <span class="legend-dot" style="background:#F59E0B"></span> Manicura
+        <span class="legend-dot overlap"></span> ⚠ Solapada
+      </div>
+    </div>
+    <div class="page-header-actions">
+      <a routerLink="list" class="btn-outline">Ver lista</a>
+      <a routerLink="new"  class="btn-primary">+ Nueva cita</a>
+    </div>
+  </div>
+
+  <div class="calendar-wrapper">
+    <full-calendar [options]="calendarOptions"></full-calendar>
+  </div>
+
+  @if (showDetailModal && selectedAppointment) {
+    <app-appointment-modal
+      [appointment]="selectedAppointment"
+      (close)="closeDetailModal()"
+      (updated)="onAppointmentUpdated()">
+    </app-appointment-modal>
+  }
+
+  @if (showCreateModal && selectedSlot) {
+    <app-appointment-create-modal
+      [initialStart]="selectedSlot.start"
+      [initialEnd]="selectedSlot.end"
+      (close)="closeCreateModal()"
+      (created)="onAppointmentCreated()">
+    </app-appointment-create-modal>
+  }
+
+</div>

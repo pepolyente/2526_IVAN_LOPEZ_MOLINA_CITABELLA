@@ -4,6 +4,8 @@ import { MainLayout } from './layout/main-layout/main-layout';
 import { PublicLayout } from './layout/public-layout/public-layout';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
+import {Register} from './features/auth/register/register';
+import {Login} from './features/auth/login/login';
 
 const routes: Routes = [
 
@@ -23,8 +25,11 @@ const routes: Routes = [
   // ─── AUTHENTICATION ───────────────────────────────────────────────────────
   {
     path: 'login',
-    loadChildren: () =>
-      import('./features/auth/auth-module').then(m => m.AuthModule),
+    component: Login,
+  },
+  {
+    path: 'register',
+    component: Register,
   },
 
   // ─── PRIVATE PANEL ───────────────────────────────────────────────────────

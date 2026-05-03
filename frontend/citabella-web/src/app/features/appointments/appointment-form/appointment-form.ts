@@ -23,6 +23,8 @@ export class AppointmentForm implements OnInit {
 
   form: CreateAppointmentRequest = {
     treatmentsIds: [],
+    startAt: '',
+    endAt: '',
   };
 
   loading = false;

@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
-import {ThemeService} from '../../core/services/theme.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-public-header',
@@ -10,7 +10,26 @@ import {ThemeService} from '../../core/services/theme.service';
   styleUrl: './public-header.css',
 })
 export class PublicHeader {
-  constructor(public auth: AuthService, private router: Router,public theme: ThemeService) {}
+  isMenuOpen = false;
+  isMobile = false;
+
+  constructor(
+    public auth: AuthService,
+    private router: Router,
+    public theme: ThemeService,
+  ) {
+    this.checkScreen();
+  }
+
+  @HostListener('window:resize')
+  checkScreen() {
+    this.isMobile = window.innerWidth < 768;
+    if (!this.isMobile) this.isMenuOpen = false;
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
 
   goToPanel(): void {
     const role = this.auth.getRole();
@@ -18,6 +37,15 @@ export class PublicHeader {
       this.router.navigate(['/panel/appointments']);
     } else if (role === 'CLIENT') {
       this.router.navigate(['/panel/my-appointments']);
+    } else {
+      this.router.navigate(['/panel/appointments']);
     }
+    this.isMenuOpen = false;
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/']);
+    this.isMenuOpen = false;
   }
 }

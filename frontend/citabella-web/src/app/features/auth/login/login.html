@@ -1,41 +1,55 @@
-<div class="login-wrapper">
-  <div class="login-card">
-    <div class="login-header">
-      <span class="login-logo">✂</span>
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <div class="auth-logo">
+      <img src="/images/logoRedondo.png" alt="CitaBella" height="56">
       <h1>CitaBella</h1>
-      <p>Accede a tu panel de gestión</p>
     </div>
 
-    <form (ngSubmit)="submit()">
-      <div class="form-group">
-        <label for="username">Usuario</label>
-        <input
-          id="username"
-          type="text"
-          placeholder="Tu usuario"
-          [(ngModel)]="data.username"
-          name="username"
-          required
-          autocomplete="username"
-        />
-      </div>
+    <h2 class="auth-title">Bienvenido de nuevo</h2>
+    <p class="auth-sub">Introduce tus datos para acceder</p>
 
-      <div class="form-group">
-        <label for="password">Contraseña</label>
+    @if (error) {
+      <div class="auth-error">
+        ⚠ {{ error }}
+      </div>
+    }
+
+    <div class="form-group">
+      <label>Usuario</label>
+      <input
+        type="text"
+        [value]="form.username"
+        (input)="form.username = $any($event.target).value"
+        class="input-large"
+        placeholder="Tu nombre de usuario"
+        autocomplete="username"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>Contraseña</label>
+      <div class="input-with-toggle">
         <input
-          id="password"
-          type="password"
+          [type]="showPassword ? 'text' : 'password'"
+          [value]="form.password"
+          (input)="form.password = $any($event.target).value"
+          class="input-large"
           placeholder="••••••••"
-          [(ngModel)]="data.password"
-          name="password"
-          required
           autocomplete="current-password"
         />
+        <button class="toggle-password" (click)="showPassword = !showPassword" type="button">
+          {{ showPassword ? '🙈' : '👁' }}
+        </button>
       </div>
+    </div>
 
-      <button type="submit" class="btn-primary" [disabled]="!data.username || !data.password">
-        Entrar
-      </button>
-    </form>
+    <button class="btn-primary btn-full" (click)="submit()" [disabled]="loading">
+      {{ loading ? 'Entrando...' : 'Entrar →' }}
+    </button>
+
+    <p class="auth-footer">
+      ¿No tienes cuenta? <a routerLink="/register">Regístrate gratis</a>
+    </p>
   </div>
 </div>

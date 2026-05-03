@@ -11,11 +11,11 @@ export type AppointmentStatus =
   | 'NO_SHOW';
 
 export interface CreateAppointmentRequest {
-  clientId?: number;
-  employeeId?: number;
+  clientId?: number; //it should always be in it
+  employeeId?: number; //it should always be in it
   treatmentsIds: number[];
-  startAt?: string;          // ISO 8601: "2025-04-01T10:00:00"
-  endAt?: string;
+  startAt: string;          // ISO 8601: "2025-04-01T10:00:00"
+  endAt: string;
   notes?: string;
 }
 

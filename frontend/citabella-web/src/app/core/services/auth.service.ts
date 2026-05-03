@@ -18,8 +18,8 @@ export class AuthService {
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.BASE}/login`, request).pipe(
       tap(response => {
-        localStorage.setItem('token', response.token);
-        localStorage.setItem('role',  response.role);
+        localStorage.setItem('token',    response.token);
+        localStorage.setItem('role',     response.role);
         localStorage.setItem('username', response.username);
       })
     );
@@ -33,9 +33,11 @@ export class AuthService {
     return this.http.get<UserInfoResponse>(`${this.BASE}/me`);
   }
 
-  getToken(): string | null { return localStorage.getItem('token'); }
-  getRole(): string { return localStorage.getItem('role') ?? ''; }
-  getUsername(): string { return localStorage.getItem('username') ?? ''; }
+  getToken():    string | null { return localStorage.getItem('token'); }
+  getRole():     string        { return localStorage.getItem('role')     ?? ''; }
+  getUsername(): string        { return localStorage.getItem('username') ?? ''; }
+
+  getName(): string { return this.getUsername(); }
 
   isLogged(): boolean { return !!this.getToken(); }
 
