@@ -1,4 +1,4 @@
-FROM maven:3.9.9-eclipse-temurin-21 AS build
+FROM maven:3.9.9-eclipse-temurin-17 AS build
 LABEL authors="shdwd"
 
 WORKDIR /app
@@ -7,16 +7,13 @@ COPY CitaBellaAPI/pom.xml .
 RUN mvn dependency:go-offline
 
 COPY CitaBellaAPI/src ./src
-
 RUN mvn clean package -DskipTests
 
-
-FROM eclipse-temurin:21-jdk-jammy
+FROM eclipse-temurin:17-jdk-jammy
 
 WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
-
 RUN apt-get update && apt-get install -y netcat-openbsd
 
 COPY wait-for-it.sh .
