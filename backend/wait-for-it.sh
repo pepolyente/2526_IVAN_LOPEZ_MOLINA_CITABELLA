@@ -1,3 +1,4 @@
+#!/bin/sh
 host="$1"
 shift
 
