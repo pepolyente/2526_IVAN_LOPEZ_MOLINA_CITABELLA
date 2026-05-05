@@ -14,7 +14,7 @@ FROM eclipse-temurin:17-jdk-jammy
 WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
-RUN apt-get update && apt-get install -y netcat-openbsd
+RUN apt-get update && apt-get install -y netcat-openbsd curl
 
 COPY wait-for-it.sh .
 RUN chmod +x wait-for-it.sh
