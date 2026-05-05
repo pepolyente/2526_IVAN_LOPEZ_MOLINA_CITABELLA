@@ -1,0 +1,63 @@
+<div class="page-header">
+  <h2>Nueva cita</h2>
+  <button class="btn-outline" (click)="cancel()">Cancelar</button>
+</div>
+
+<form class="form-card" (ngSubmit)="submit()">
+
+  <div class="form-group">
+    <label>Cliente</label>
+    <select [(ngModel)]="form.clientId" name="clientId">
+      <option [ngValue]="undefined">Sin cliente</option>
+      @for (c of clients; track c.id) {
+        <option [ngValue]="c.id">{{ c.name }} – {{ c.phoneNumber }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>Empleado</label>
+    <select [(ngModel)]="form.employeeId" name="employeeId">
+      <option [ngValue]="undefined">Sin asignar</option>
+      @for (e of employees; track e.id) {
+        <option [ngValue]="e.id">{{ e.name }} ({{ e.position }})</option>
+      }
+    </select>
+  </div>
+
+  <div class="form-row">
+    <div class="form-group">
+      <label>Inicio</label>
+      <input type="datetime-local" [(ngModel)]="form.startAt" name="startAt" />
+    </div>
+    <div class="form-group">
+      <label>Fin</label>
+      <input type="datetime-local" [(ngModel)]="form.endAt" name="endAt" />
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Tratamientos</label>
+    <div class="treatments-list">
+      @for (t of treatments; track t.id) {
+        <label class="treatment-check">
+          <input type="checkbox"
+                 [checked]="isSelected(t.id)"
+                 (change)="toggleTreatment(t.id)" />
+          {{ t.name }} – {{ t.price | currency:'EUR' }}
+        </label>
+      }
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Notas</label>
+    <textarea [(ngModel)]="form.notes" name="notes" rows="3" placeholder="Opcional..."></textarea>
+  </div>
+
+  @if (error) { <p class="error-msg">{{ error }}</p> }
+
+  <button type="submit" class="btn-primary" [disabled]="loading || form.treatmentsIds.length === 0">
+    {{ loading ? 'Guardando...' : 'Crear cita' }}
+  </button>
+</form>

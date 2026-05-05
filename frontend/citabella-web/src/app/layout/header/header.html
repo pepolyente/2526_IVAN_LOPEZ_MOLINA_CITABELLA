@@ -1,0 +1,52 @@
+<header class="header">
+  <a routerLink="/" class="header-brand">
+    <span class="header-logo">✂</span>
+    <span class="header-title">CitaBella</span>
+  </a>
+
+  <nav class="header-nav hide-on-mobile">
+    <a routerLink="/panel/appointments" routerLinkActive="active">
+      <span class="material-symbols-outlined">calendar_month</span> Agenda
+    </a>
+    <a routerLink="/panel/clients" routerLinkActive="active">
+      <span class="material-symbols-outlined">people</span> Clientes
+    </a>
+    <a routerLink="/panel/employees" routerLinkActive="active">
+      <span class="material-symbols-outlined">badge</span> Equipo
+    </a>
+    <a routerLink="/panel/treatments" routerLinkActive="active">
+      <span class="material-symbols-outlined">spa</span> Servicios
+    </a>
+  </nav>
+
+  <div class="header-actions hide-on-mobile">
+    <span class="header-user-name">{{ auth.getName() }}</span>
+    <button class="btn-logout" (click)="logout()">Salir</button>
+  </div>
+
+  <button class="hamburger hide-on-desktop" (click)="toggleMenu()">
+    <span class="material-symbols-outlined">{{ isMenuOpen ? 'close' : 'menu' }}</span>
+  </button>
+</header>
+
+<aside class="mobile-menu" [class.open]="isMenuOpen && isMobile" (click)="toggleMenu()">
+  <nav class="mobile-nav" (click)="$event.stopPropagation()">
+    <a routerLink="/panel/appointments" routerLinkActive="active" (click)="toggleMenu()">
+      <span class="material-symbols-outlined">calendar_month</span> Agenda
+    </a>
+    <a routerLink="/panel/clients" routerLinkActive="active" (click)="toggleMenu()">
+      <span class="material-symbols-outlined">people</span> Clientes
+    </a>
+    <a routerLink="/panel/employees" routerLinkActive="active" (click)="toggleMenu()">
+      <span class="material-symbols-outlined">badge</span> Equipo
+    </a>
+    <a routerLink="/panel/treatments" routerLinkActive="active" (click)="toggleMenu()">
+      <span class="material-symbols-outlined">spa</span> Servicios
+    </a>
+    <hr>
+    <div class="user-info">
+      <span class="material-symbols-outlined">account_circle</span> {{ auth.getName() }}
+    </div>
+    <button class="mobile-btn logout" (click)="logout()">Cerrar sesión</button>
+  </nav>
+</aside>
