@@ -6,22 +6,27 @@ Thumbs.db
 desktop.ini
 
 # ==================================================
-# IntelliJ IDEA
+# IntelliJ / Android Studio
 # ==================================================
 .idea/
 *.iml
 *.iws
 *.ipr
 
-# Eclipse / legacy tooling (por si acaso)
+# ==================================================
+# Eclipse
+# ==================================================
 .project
 .classpath
 .settings/
 
-# Editor temp files
+# ==================================================
+# Temp files
+# ==================================================
 *.swp
 *.swo
 *.bak
+*.tmp
 
 # ==================================================
 # Logs
@@ -34,16 +39,18 @@ yarn-error.log*
 pnpm-debug.log*
 
 # ==================================================
-# Environment / Secrets
+# Environment
 # ==================================================
 .env
-.env.*
+.env.local
+.env.*.local
 !.env.example
 
 # ==================================================
 # Node / Angular
 # ==================================================
 node_modules/
+
 dist/
 .angular/
 .cache/
@@ -51,14 +58,13 @@ tmp/
 out-tsc/
 coverage/
 .sass-cache/
-__screenshots__/
 .history/
 
-# Angular generated local env files
+# Angular local envs
 **/environment*.local.ts
 
 # ==================================================
-# Java / Maven / Gradle / Spring Boot
+# Java / Spring
 # ==================================================
 *.class
 *.jar
@@ -69,10 +75,7 @@ target/
 **/target/
 
 .gradle/
-build/
-
-# Maven Wrapper
-.mvn/wrapper/maven-wrapper.jar
+**/build/
 
 # ==================================================
 # Flutter / Dart
@@ -82,20 +85,34 @@ build/
 .flutter-plugins-dependencies
 .packages
 .pub-cache/
-build/
 
+# Flutter generated builds
+.flutter/
+
+# ==================================================
+# Android
+# ==================================================
 android/.gradle/
 android/local.properties
 
+# Android signing
+*.jks
+*.keystore
+
+# ==================================================
+# iOS
+# ==================================================
 ios/Pods/
 ios/.symlinks/
 ios/Flutter/ephemeral/
+
+DerivedData/
+xcuserdata/
 
 # ==================================================
 # Docker
 # ==================================================
 docker-compose.override.yml
-*.env.docker
 
 # ==================================================
 # Nginx
