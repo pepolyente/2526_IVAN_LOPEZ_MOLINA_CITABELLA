@@ -6,7 +6,7 @@ Thumbs.db
 desktop.ini
 
 # ==================================================
-# IntelliJ / Android Studio
+# IntelliJ IDEA / Android Studio
 # ==================================================
 .idea/
 *.iml
@@ -14,14 +14,14 @@ desktop.ini
 *.ipr
 
 # ==================================================
-# Eclipse
+# Eclipse / Legacy tooling
 # ==================================================
 .project
 .classpath
 .settings/
 
 # ==================================================
-# Temp files
+# Temporary / Editor files
 # ==================================================
 *.swp
 *.swo
@@ -39,12 +39,16 @@ yarn-error.log*
 pnpm-debug.log*
 
 # ==================================================
-# Environment
+# Environment / Secrets
 # ==================================================
 .env
 .env.local
 .env.*.local
 !.env.example
+
+# Android signing / secrets
+*.jks
+*.keystore
 
 # ==================================================
 # Node / Angular
@@ -60,11 +64,11 @@ coverage/
 .sass-cache/
 .history/
 
-# Angular local envs
+# Angular local env files
 **/environment*.local.ts
 
 # ==================================================
-# Java / Spring
+# Java / Spring Boot / Maven / Gradle
 # ==================================================
 *.class
 *.jar
@@ -75,19 +79,32 @@ target/
 **/target/
 
 .gradle/
+
+# Build folders
 **/build/
 
 # ==================================================
-# Flutter / Dart
+# Flutter / Dart / Pub
 # ==================================================
-.dart_tool/
-.flutter-plugins
-.flutter-plugins-dependencies
-.packages
-.pub-cache/
+**/doc/api/
+**/ios/Flutter/.last_build_id
 
-# Flutter generated builds
+.dart_tool/
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+
+# Flutter generated
 .flutter/
+
+# Coverage
+coverage/
+
+# Symbolication
+app.*.symbols
+
+# Obfuscation
+app.*.map.json
 
 # ==================================================
 # Android
@@ -95,9 +112,10 @@ target/
 android/.gradle/
 android/local.properties
 
-# Android signing
-*.jks
-*.keystore
+# Android generated builds
+/android/app/debug
+/android/app/profile
+/android/app/release
 
 # ==================================================
 # iOS
