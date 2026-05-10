@@ -7,6 +7,7 @@ plugins {
 
 android {
     namespace = "com.citabella.citabella_app"
+
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -20,21 +21,39 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.citabella.citabella_app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
+
+        // Android 7+
+        minSdk = 24
+
+        // Android 16 / SDK 36
+        targetSdk = 36
+
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        // Evita futuros problemas con plugins/dependencias
+        multiDexEnabled = true
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // Temporal para desarrollo y pruebas
             signingConfig = signingConfigs.getByName("debug")
+
+            // Mantener desactivado durante el desarrollo
+            isMinifyEnabled = false
+            isShrinkResources = false
+        }
+
+        debug {
+            isDebuggable = true
+        }
+    }
+
+    packaging {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
 }
