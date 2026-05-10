@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AppointmentService } from '../../../core/services/appointment.service';
 import { AppointmentResponse, AppointmentStatus } from '../../../shared/models/appointment.model';
+import { ConfirmService } from '../../../core/services/confirm.service';
 
 @Component({
   selector: 'app-appointment-modal',
@@ -17,19 +18,19 @@ import { AppointmentResponse, AppointmentStatus } from '../../../shared/models/a
         <div class="modal-body">
           <div class="detail-grid">
             <div class="detail-row">
-              <span class="detail-label">🕐 Hora</span>
+              <span class="detail-label">Hora</span>
               <span>{{ appointment.startAt | date:'dd/MM/yyyy HH:mm' }} → {{ appointment.endAt | date:'HH:mm' }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">👤 Cliente</span>
-              <span>{{ appointment.client?.name ?? '—' }}</span>
+              <span class="detail-label">Cliente</span>
+              <span>{{ appointment.client.name }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">✂ Empleado</span>
-              <span>{{ appointment.employee?.name ?? '—' }}</span>
+              <span class="detail-label">Empleado</span>
+              <span>{{ appointment.employee.name }}</span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">💅 Servicios</span>
+              <span class="detail-label">Servicios</span>
               <span>
                 @for (t of appointment.treatments; track t.id) {
                   <span class="badge">{{ t.name }}</span>
@@ -37,7 +38,7 @@ import { AppointmentResponse, AppointmentStatus } from '../../../shared/models/a
               </span>
             </div>
             <div class="detail-row">
-              <span class="detail-label">📋 Estado</span>
+              <span class="detail-label">Estado</span>
               <span class="badge badge-{{ appointment.status | lowercase }}">{{ appointment.status }}</span>
             </div>
             @if (appointment.hasOverlap) {
@@ -46,10 +47,22 @@ import { AppointmentResponse, AppointmentStatus } from '../../../shared/models/a
               </div>
             }
           </div>
+          @if (showReschedule) {
+            <div class="form-group">
+              <label>Nueva fecha/hora</label>
+              <input type="datetime-local" [(ngModel)]="rescheduleForm.startAt" />
+              <input type="datetime-local" [(ngModel)]="rescheduleForm.endAt" />
+            </div>
+            <div class="action-row">
+              <button class="btn-primary" (click)="confirmReschedule()" [disabled]="loading">Confirmar reagendado</button>
+              <button class="btn-outline" (click)="showReschedule = false">Cancelar</button>
+            </div>
+          }
 
-          @if (!isFinal && !showStatusChange) {
+          @if (!isFinal && !showStatusChange && !showReschedule) {
             <div class="action-row">
               <button class="btn-outline" (click)="showStatusChange = true">Cambiar estado</button>
+              <button class="btn-outline" (click)="openReschedule()">Reagendar</button>
               <button class="btn-xs btn-danger" (click)="cancelAppointment()">Cancelar cita</button>
             </div>
           }
@@ -150,14 +163,16 @@ export class AppointmentModal {
   newStatus        = '';
   loading          = false;
   error            = '';
+  showReschedule = false;
+  rescheduleForm = { startAt: '', endAt: '' };
 
   private readonly transitions: Partial<Record<AppointmentStatus, AppointmentStatus[]>> = {
-    PENDING:     ['CONFIRMED', 'CANCELLED', 'NO_SHOW'],
+    PENDING:     ['CONFIRMED', 'CANCELLED'],
     CONFIRMED:   ['IN_PROGRESS', 'CANCELLED', 'NO_SHOW'],
     IN_PROGRESS: ['COMPLETED', 'CANCELLED'],
   };
 
-  constructor(private svc: AppointmentService) {}
+  constructor(private svc: AppointmentService, private confirmSvc: ConfirmService) {}
 
   get allowedTransitions(): AppointmentStatus[] {
     return this.transitions[this.appointment.status] ?? [];
@@ -168,21 +183,67 @@ export class AppointmentModal {
   }
 
   confirmStatus(): void {
-    if (!this.newStatus) return;
+    if (!this.newStatus) {
+      this.error = 'Selecciona un estado';
+      return;
+    }
     this.loading = true;
-    this.error   = '';
+    this.error = '';
     this.svc.changeStatus(this.appointment.id, this.newStatus).subscribe({
-      next: () => { this.loading = false; this.updated.emit(); },
-      error: () => { this.error = 'Error al cambiar el estado'; this.loading = false; },
+      next: () => {
+        this.loading = false;
+        this.showStatusChange = false;
+        this.newStatus = '';
+        this.updated.emit();
+      },
+      error: (err) => {
+        this.loading = false;
+        this.showStatusChange = false;
+        this.error = err.error?.message ?? 'Error al cambiar el estado';
+      },
     });
   }
 
-  cancelAppointment(): void {
-    if (!confirm('¿Cancelar esta cita?')) return;
+  async cancelAppointment(): Promise<void> {
+    const ok = await this.confirmSvc.confirm('¿Cancelar esta cita?');
+    if (!ok) return;
     this.loading = true;
     this.svc.cancel(this.appointment.id).subscribe({
       next: () => { this.loading = false; this.updated.emit(); },
       error: () => { this.error = 'Error al cancelar la cita'; this.loading = false; },
+    });
+  }
+
+  openReschedule(): void {
+    this.showReschedule = true;
+    this.rescheduleForm.startAt = this.appointment.startAt; // formato ISO
+    this.rescheduleForm.endAt = this.appointment.endAt;
+  }
+
+  confirmReschedule(): void {
+    if (!this.rescheduleForm.startAt || !this.rescheduleForm.endAt) {
+      this.error = 'Fechas requeridas';
+      return;
+    }
+    this.loading = true;
+    this.error = '';
+    const req: any = {
+      id: this.appointment.id,
+      employeeId: this.appointment.employee?.id,
+      treatmentsIds: this.appointment.treatments.map(t => t.id),
+      startAt: this.rescheduleForm.startAt,
+      endAt: this.rescheduleForm.endAt,
+      notes: this.appointment.notes || '',
+    };
+    this.svc.update(req).subscribe({
+      next: () => {
+        this.loading = false;
+        this.updated.emit();
+      },
+      error: () => {
+        this.error = 'Error al reagendar';
+        this.loading = false;
+      },
     });
   }
 }

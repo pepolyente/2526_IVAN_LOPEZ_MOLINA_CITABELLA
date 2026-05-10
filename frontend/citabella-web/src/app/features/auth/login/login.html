@@ -1,6 +1,8 @@
 <div class="auth-wrapper">
   <div class="auth-card">
 
+    <a routerLink="/" class="auth-back-link">← Volver al inicio</a>
+
     <div class="auth-logo">
       <img src="/images/logoRedondo.png" alt="CitaBella" height="56">
       <h1>CitaBella</h1>
@@ -8,12 +10,6 @@
 
     <h2 class="auth-title">Bienvenido de nuevo</h2>
     <p class="auth-sub">Introduce tus datos para acceder</p>
-
-    @if (error) {
-      <div class="auth-error">
-        ⚠ {{ error }}
-      </div>
-    }
 
     <div class="form-group">
       <label>Usuario</label>
@@ -44,7 +40,7 @@
       </div>
     </div>
 
-    <button class="btn-primary btn-full" (click)="submit()" [disabled]="loading">
+    <button class="btn-primary btn-full" (click)="submit()" [disabled]="loading || !form.username.trim() || !form.password.trim()">
       {{ loading ? 'Entrando...' : 'Entrar →' }}
     </button>
 

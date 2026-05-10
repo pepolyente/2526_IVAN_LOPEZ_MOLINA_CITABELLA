@@ -1,4 +1,9 @@
 <app-header></app-header>
-<main class="main-content">
-  <router-outlet></router-outlet>
+<app-breadcrumbs></app-breadcrumbs>
+<main class="panel-content">
+  <div class="page-wrapper">
+    <router-outlet></router-outlet>
+  </div>
 </main>
+<app-toast-container></app-toast-container>
+<app-confirm-dialog></app-confirm-dialog>

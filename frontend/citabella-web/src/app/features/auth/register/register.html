@@ -1,6 +1,8 @@
 <div class="auth-wrapper">
   <div class="auth-card">
 
+    <a routerLink="/" class="auth-back-link">← Volver al inicio</a>
+
     <div class="auth-logo">
       <img src="/images/logoRedondo.png" alt="CitaBella" height="56">
       <h1>CitaBella</h1>
@@ -8,18 +10,6 @@
 
     <h2 class="auth-title">Crear cuenta</h2>
     <p class="auth-sub">Regístrate para gestionar tus citas</p>
-
-    @if (error) {
-      <div class="auth-error">
-        ⚠ {{ error }}
-      </div>
-    }
-
-    @if (success) {
-      <div class="success-msg">
-        ✓ {{ success }}
-      </div>
-    }
 
     <form (ngSubmit)="submit()">
       <div class="form-group">

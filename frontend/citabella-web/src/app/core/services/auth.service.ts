@@ -7,6 +7,7 @@ import {
   RegisterRequest,
   UserInfoResponse,
 } from '../../shared/models/auth.model';
+import { switchMap, map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -18,9 +19,22 @@ export class AuthService {
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.BASE}/login`, request).pipe(
       tap(response => {
-        localStorage.setItem('token',    response.token);
-        localStorage.setItem('role',     response.role);
+        localStorage.setItem('token', response.token);
+        localStorage.setItem('role', response.role);
         localStorage.setItem('username', response.username);
+      }),
+      switchMap(() => this.me()),
+      tap(info => {
+        localStorage.setItem('role', info.role);
+        localStorage.setItem('username', info.username);
+        localStorage.setItem('userId', String(info.id));
+      }),
+      map(() => {
+        return {
+          token: this.getToken()!,
+          username: this.getUsername(),
+          role: this.getRole(),
+        };
       })
     );
   }
