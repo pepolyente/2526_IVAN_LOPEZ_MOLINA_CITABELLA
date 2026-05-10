@@ -98,11 +98,12 @@ public class AppointmentServiceImpl implements AppointmentService {
             treatmentResponses.add(new TreatmentResponse(
                     t.getId(), t.getName(), t.getMinimumDuration(), t.getPrice(), t.getActive()));
         }
-
+        String linkedUsername = null;
+        if (client.getUser() != null) linkedUsername = client.getUser().getUsername();
         return new AppointmentResponse(
                 saved.getId(), saved.getStartAt(), saved.getEndAt(),
                 saved.getStatus(), saved.getNotes(), hasOverlap,
-                new ClientResponse(client.getId(), client.getName(), client.getPhoneNumber(), client.getGender()),
+                new ClientResponse(client.getId(), client.getName(), client.getPhoneNumber(), client.getGender(), linkedUsername, client.getActive()),
                 new EmployeeResponse(employee.getId(), employee.getName(), employee.getPosition(), employee.getActive()),
                 treatmentResponses
         );
