@@ -7,12 +7,16 @@ public class ClientMapper {
 
     public static ClientResponse toResponse(Client client) {
         if (client == null) return null;
+        String linkedUsername = null;
+        if (client.getUser() != null) linkedUsername = client.getUser().getUsername();
 
         return new ClientResponse(
                 client.getId(),
                 client.getName(),
                 client.getPhoneNumber(),
-                client.getGender()
+                client.getGender(),
+                linkedUsername,
+                client.getActive()
         );
     }
 }

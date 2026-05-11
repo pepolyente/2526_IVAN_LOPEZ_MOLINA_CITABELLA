@@ -6,5 +6,7 @@ public record ClientResponse(
         Integer id,
         String name,
         String phoneNumber,
-        Gender gender
+        Gender gender,
+        String linkedUsername,
+        Boolean active
 ) {}
