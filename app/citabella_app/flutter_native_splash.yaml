@@ -1,0 +1,43 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# CitaBella — Configuración de Splash Screen Nativo
+# Ejecutar: dart run flutter_native_splash:create
+#
+# Colores basados en los design tokens de CitaBella:
+#   Light → fondo #E4F0F6 (--color-bg light)
+#   Dark  → fondo #0D0D0D (--color-bg dark)
+# ─────────────────────────────────────────────────────────────────────────────
+
+flutter_native_splash:
+  # Color de fondo en modo claro
+  color: "#E4F0F6"
+
+  # Color de fondo en modo oscuro
+  color_dark: "#0D0D0D"
+
+  # Logo/imagen centrada en el splash
+  # Tamaño recomendado: 400x400px (se escala automáticamente)
+  image: assets/images/logo_splash.png
+
+  # Logo para dark mode (opcional — puede ser el mismo)
+  image_dark: assets/images/logo_splash_dark.png
+
+  # Configuración Android
+  android: true
+  android_gravity: center
+
+  # Configuración iOS
+  ios: true
+  ios_content_mode: center
+
+  # Duración del splash (web únicamente, ignorado en nativo)
+  web: false
+
+  # ── Android 12+ (splash screen API nativa) ─────────────────────────────
+  android_12:
+    # Color de fondo para Android 12+ splash screen API
+    color: "#E4F0F6"
+    color_dark: "#0D0D0D"
+    image: assets/images/logo_splash.png
+    image_dark: assets/images/logo_splash_dark.png
+    icon_background_color: "#E4F0F6"
+    icon_background_color_dark: "#0D0D0D"
