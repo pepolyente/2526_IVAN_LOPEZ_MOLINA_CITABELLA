@@ -6,22 +6,27 @@ Thumbs.db
 desktop.ini
 
 # ==================================================
-# IntelliJ IDEA
+# IntelliJ IDEA / Android Studio
 # ==================================================
 .idea/
 *.iml
 *.iws
 *.ipr
 
-# Eclipse / legacy tooling (por si acaso)
+# ==================================================
+# Eclipse / Legacy tooling
+# ==================================================
 .project
 .classpath
 .settings/
 
-# Editor temp files
+# ==================================================
+# Temporary / Editor files
+# ==================================================
 *.swp
 *.swo
 *.bak
+*.tmp
 
 # ==================================================
 # Logs
@@ -37,13 +42,19 @@ pnpm-debug.log*
 # Environment / Secrets
 # ==================================================
 .env
-.env.*
+.env.local
+.env.*.local
 !.env.example
+
+# Android signing / secrets
+*.jks
+*.keystore
 
 # ==================================================
 # Node / Angular
 # ==================================================
 node_modules/
+
 dist/
 .angular/
 .cache/
@@ -51,14 +62,13 @@ tmp/
 out-tsc/
 coverage/
 .sass-cache/
-__screenshots__/
 .history/
 
-# Angular generated local env files
+# Angular local env files
 **/environment*.local.ts
 
 # ==================================================
-# Java / Maven / Gradle / Spring Boot
+# Java / Spring Boot / Maven / Gradle
 # ==================================================
 *.class
 *.jar
@@ -69,33 +79,58 @@ target/
 **/target/
 
 .gradle/
-build/
 
-# Maven Wrapper
-.mvn/wrapper/maven-wrapper.jar
+# Build folders
+**/build/
 
 # ==================================================
-# Flutter / Dart
+# Flutter / Dart / Pub
 # ==================================================
+**/doc/api/
+**/ios/Flutter/.last_build_id
+
 .dart_tool/
-.flutter-plugins
 .flutter-plugins-dependencies
-.packages
 .pub-cache/
-build/
+.pub/
 
+# Flutter generated
+.flutter/
+
+# Coverage
+coverage/
+
+# Symbolication
+app.*.symbols
+
+# Obfuscation
+app.*.map.json
+
+# ==================================================
+# Android
+# ==================================================
 android/.gradle/
 android/local.properties
 
+# Android generated builds
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# ==================================================
+# iOS
+# ==================================================
 ios/Pods/
 ios/.symlinks/
 ios/Flutter/ephemeral/
+
+DerivedData/
+xcuserdata/
 
 # ==================================================
 # Docker
 # ==================================================
 docker-compose.override.yml
-*.env.docker
 
 # ==================================================
 # Nginx
