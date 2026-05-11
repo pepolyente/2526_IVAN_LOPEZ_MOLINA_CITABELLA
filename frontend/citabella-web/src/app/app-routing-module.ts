@@ -25,11 +25,13 @@ const routes: Routes = [
   // ─── AUTHENTICATION ───────────────────────────────────────────────────────
   {
     path: 'login',
-    component: Login,
+    loadChildren: () =>
+      import('./features/auth/auth-module').then(m => m.AuthModule),
   },
   {
     path: 'register',
-    component: Register,
+    loadChildren: () =>
+      import('./features/auth/auth-module').then(m => m.AuthModule),
   },
 
   // ─── PRIVATE PANEL ───────────────────────────────────────────────────────

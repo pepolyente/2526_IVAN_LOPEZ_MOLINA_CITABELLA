@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { ToastService } from '../../../core/services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -17,35 +18,29 @@ export class Login {
 
   showPassword = false;
   loading = false;
-  error   = '';
 
   constructor(
     private auth: AuthService,
     private router: Router,
-    private cdr: ChangeDetectorRef
+    private toast: ToastService
   ) {}
 
   submit(): void {
-    console.log('form value:', this.form);
     if (!this.form.username || !this.form.password) {
-      this.error = 'Por favor, completa todos los campos';
-      this.cdr.detectChanges();
+      this.toast.show('Por favor, completa todos los campos', 'error');
       return;
     }
 
     this.loading = true;
-    this.error   = '';
-    this.cdr.detectChanges();
 
     this.auth.login({
       username: this.form.username,
       password: this.form.password
     }).subscribe({
       next: (response) => {
-        console.log('Login exitoso:', response);
+        this.toast.show(`Bienvenido, ${response.username}`, 'success');
         setTimeout(() => {
           const role = this.auth.getRole();
-          console.log('Rol detectado:', role);
           if (role === 'ADMIN' || role === 'EMPLOYEE') {
             this.router.navigate(['/panel/appointments']);
           } else if (role === 'CLIENT') {
@@ -53,13 +48,11 @@ export class Login {
           } else {
             this.router.navigate(['/panel/appointments']);
           }
-        }, 100);
+        }, 1000);
       },
       error: (err) => {
-        console.error('Error en login:', err);
-        this.error = 'Usuario o contraseña incorrectos';
+        this.toast.show(err.error?.message ?? 'Usuario o contraseña incorrectos', 'error');
         this.loading = false;
-        this.cdr.detectChanges();
       },
     });
   }

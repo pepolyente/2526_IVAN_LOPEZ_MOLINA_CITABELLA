@@ -7,7 +7,7 @@ import timeGridPlugin   from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import esLocale         from '@fullcalendar/core/locales/es';
 import { AppointmentService }  from '../../../core/services/appointment.service';
-import { AppointmentResponse } from '../../../shared/models/appointment.model';
+import {AppointmentResponse, AppointmentStatus} from '../../../shared/models/appointment.model';
 
 const STATUS_COLORS: Record<string, string> = {
   PENDING:     '#F59E0B',
@@ -25,7 +25,7 @@ const STATUS_COLORS: Record<string, string> = {
   styleUrl: './appointment-calendar.css',
 })
 export class AppointmentCalendar implements OnInit {
-
+  filterStatus: AppointmentStatus | '' = '';
   selectedAppointment: AppointmentResponse | null = null;
   showDetailModal = false;
   showCreateModal = false;
@@ -52,7 +52,9 @@ export class AppointmentCalendar implements OnInit {
   private readonly mobileView  = 'timeGridDay';
   private readonly tabletView  = 'timeGridWeek';
   private readonly desktopView = 'timeGridWeek';
-
+  readonly statuses: AppointmentStatus[] = [
+    'PENDING', 'CONFIRMED', 'IN_PROGRESS', 'CANCELLED', 'COMPLETED', 'NO_SHOW',
+  ];
   constructor(
     private appointmentSvc: AppointmentService,
     private cdr: ChangeDetectorRef,
@@ -176,5 +178,9 @@ export class AppointmentCalendar implements OnInit {
       },
     };
     this.cdr.detectChanges();
+  }
+
+  applyFilter(): void {
+    this.loadAppointments();
   }
 }

@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ProductService } from '../../../core/services/product.service';
 import { ProductPrivateResponse, ProductRequest } from '../../../shared/models/product.model';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmService } from '../../../core/services/confirm.service';
 
 @Component({
   selector: 'app-product-list',
@@ -77,7 +79,15 @@ import { ProductPrivateResponse, ProductRequest } from '../../../shared/models/p
     </div>
 
     @if (loading) {
-      <p class="empty-state">Cargando...</p>
+      <div class="skeleton-table">
+        @for (i of [1,2,3,4,5]; track i) {
+          <div class="skeleton-row">
+            <div class="skeleton-cell sk-wide"></div>
+            <div class="skeleton-cell sk-medium"></div>
+            <div class="skeleton-cell sk-narrow"></div>
+          </div>
+        }
+      </div>
     } @else if (products.length === 0) {
       <p class="empty-state">No hay productos.</p>
     } @else {
@@ -98,24 +108,37 @@ import { ProductPrivateResponse, ProductRequest } from '../../../shared/models/p
           <tbody>
             @for (p of products; track p.id) {
               <tr [class.row-inactive]="!p.active">
-                <td><strong>{{ p.name }}</strong></td>
-                <td>{{ p.category ?? '–' }}</td>
-                <td>{{ p.purchasePrice != null ? (p.purchasePrice | currency:'EUR') : '–' }}</td>
-                <td>{{ p.salePrice != null ? (p.salePrice | currency:'EUR') : '–' }}</td>
-                <td>{{ p.supplier ?? '–' }}</td>
-                <td class="cell-center">{{ p.isCritical ? '⚠️' : '' }}</td>
-                <td>
-                  <span class="badge"
-                        [class.badge-confirmed]="p.active"
-                        [class.badge-cancelled]="!p.active">
-                    {{ p.active ? 'Activo' : 'Inactivo' }}
-                  </span>
-                </td>
-                <td class="actions-cell">
-                  @if (p.active) {
-                    <button class="btn-xs btn-danger" (click)="deactivate(p.id)">Desactivar</button>
-                  }
-                </td>
+                @if (editingId === p.id) {
+                  <td><input [(ngModel)]="editForm.name" class="inline-input" /></td>
+                  <td><input [(ngModel)]="editForm.category" class="inline-input" /></td>
+                  <td><input type="number" step="0.01" [(ngModel)]="editForm.purchasePrice" class="inline-input" /></td>
+                  <td><input type="number" step="0.01" [(ngModel)]="editForm.salePrice" class="inline-input" /></td>
+                  <td><input [(ngModel)]="editForm.supplier" class="inline-input" /></td>
+                  <td class="cell-center">{{ p.isCritical ? '⚠️' : '' }}</td>
+                  <td><span class="badge" [class.badge-confirmed]="p.active" [class.badge-cancelled]="!p.active">{{ p.active ? 'Activo' : 'Inactivo' }}</span></td>
+                  <td class="actions-cell">
+                    <button class="btn-xs btn-success" (click)="saveEdit(p.id)">✓</button>
+                    <button class="btn-xs btn-outline" (click)="cancelEdit()">✕</button>
+                  </td>
+                } @else {
+                  <td>{{ p.name }}</td>
+                  <td>{{ p.category }}</td>
+                  <td>{{ p.purchasePrice }}</td>
+                  <td>{{ p.salePrice }}</td>
+                  <td>{{ p.supplier }}</td>
+                  <td class="cell-center">{{ p.isCritical ? '⚠️' : '' }}</td>
+                  <td>
+                    <span class="badge" [class.badge-confirmed]="p.active" [class.badge-cancelled]="!p.active">
+                      {{ p.active ? 'Activo' : 'Inactivo' }}
+                    </span>
+                  </td>
+                  <td class="actions-cell">
+                    <button class="btn-xs btn-outline" (click)="startEdit(p)">Editar</button>
+                    @if (p.active) {
+                      <button class="btn-xs btn-danger" (click)="deactivate(p.id)">Desactivar</button>
+                    }
+                  </td>
+                }
               </tr>
             }
           </tbody>
@@ -143,8 +166,15 @@ export class ProductList implements OnInit {
   newProduct: ProductRequest = { name: '' };
   creating    = false;
   createError = '';
+  editingId: number | null = null;
+  editForm: ProductRequest = { name: '' };
 
-  constructor(private svc: ProductService, private changeDetectorRef: ChangeDetectorRef) {}
+  constructor(
+    private svc: ProductService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private toast: ToastService,
+    private confirmSvc: ConfirmService
+  ) {}
 
   ngOnInit(): void { this.load(); }
 
@@ -184,8 +214,34 @@ export class ProductList implements OnInit {
     });
   }
 
-  deactivate(id: number): void {
-    if (!confirm('¿Desactivar este producto?')) return;
+  async deactivate(id: number): Promise<void> {
+    const ok = await this.confirmSvc.confirm('¿Desactivar este producto?');
+    if (!ok) return;
     this.svc.deactivate(id).subscribe({ next: () => this.load() });
+  }
+
+  startEdit(p: ProductPrivateResponse): void {
+    this.editingId = p.id;
+    this.editForm = {
+      name: p.name,
+      category: p.category,
+      purchasePrice: p.purchasePrice,
+      salePrice: p.salePrice,
+      supplier: p.supplier,
+      isCritical: p.isCritical,
+    };
+  }
+
+  cancelEdit(): void { this.editingId = null; }
+
+  saveEdit(id: number): void {
+    this.svc.update(id, this.editForm).subscribe({
+      next: () => {
+        this.toast.show('Producto actualizado');
+        this.cancelEdit();
+        this.load();
+      },
+      error: err => this.toast.show(err.error?.message ?? 'Error', 'error'),
+    });
   }
 }

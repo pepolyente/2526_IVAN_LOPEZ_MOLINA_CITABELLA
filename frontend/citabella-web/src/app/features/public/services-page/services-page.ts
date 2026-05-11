@@ -9,7 +9,15 @@ import { TreatmentResponse } from '../../../shared/models/treatment.model';
     <div class="page-wrapper">
       <h1>Nuestros servicios</h1>
       @if (loading) {
-        <p class="empty-state">Cargando...</p>
+        <div class="skeleton-table">
+          @for (i of [1,2,3,4,5]; track i) {
+            <div class="skeleton-row">
+              <div class="skeleton-cell sk-wide"></div>
+              <div class="skeleton-cell sk-medium"></div>
+              <div class="skeleton-cell sk-narrow"></div>
+            </div>
+          }
+        </div>
       } @else if (treatments.length === 0) {
         <p class="empty-state">Próximamente...</p>
       } @else {

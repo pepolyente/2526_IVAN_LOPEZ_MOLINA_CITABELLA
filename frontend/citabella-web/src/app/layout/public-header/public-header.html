@@ -26,7 +26,7 @@
       <a routerLink="/login" class="btn-primary">Entrar</a>
     } @else {
       <span class="user-pill">
-        <span class="user-avatar">{{ auth.getName()?.charAt(0) | uppercase }}</span>
+        <span class="user-avatar">{{ auth.getName().charAt(0) | uppercase }}</span>
         <span class="user-name">{{ auth.getName() }}</span>
       </span>
       <button class="btn-primary" (click)="goToPanel()">Mi panel</button>

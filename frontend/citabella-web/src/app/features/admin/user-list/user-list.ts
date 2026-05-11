@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UserService } from '../../../core/services/user.service';
 import { AccountStatus, UserResponse } from '../../../shared/models/user.model';
+import { ToastService } from '../../../core/services/toast.service';
+import { ConfirmService } from '../../../core/services/confirm.service';
 
 @Component({
   selector: 'app-user-list',
@@ -51,21 +53,29 @@ import { AccountStatus, UserResponse } from '../../../shared/models/user.model';
     </div>
 
     @if (loading) {
-      <p class="empty-state">Cargando...</p>
+      <div class="skeleton-table">
+        @for (i of [1,2,3,4,5]; track i) {
+          <div class="skeleton-row">
+            <div class="skeleton-cell sk-wide"></div>
+            <div class="skeleton-cell sk-medium"></div>
+            <div class="skeleton-cell sk-narrow"></div>
+          </div>
+        }
+      </div>
     } @else if (users.length === 0) {
       <p class="empty-state">No hay usuarios con los filtros aplicados.</p>
     } @else {
       <table class="simple-table">
         <thead>
-          <tr>
-            <th>ID</th>
-            <th>Usuario</th>
-            <th>Email</th>
-            <th>Rol</th>
-            <th>Estado cuenta</th>
-            <th>Perfil</th>
-            <th>Acciones</th>
-          </tr>
+        <tr>
+          <th>ID</th>
+          <th>Usuario</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Estado cuenta</th>
+          <th>Perfil</th>
+          <th>Acciones</th>
+        </tr>
         </thead>
         <tbody>
           @for (u of users; track u.id) {
@@ -78,16 +88,16 @@ import { AccountStatus, UserResponse } from '../../../shared/models/user.model';
               </td>
               <td>
                 <span class="badge"
-                  [class.badge-confirmed]="u.accountStatus === 'ACTIVE'"
-                  [class.badge-pending]="u.accountStatus === 'PENDING'"
-                  [class.badge-cancelled]="u.accountStatus === 'LOCKED'">
+                      [class.badge-confirmed]="u.accountStatus === 'ACTIVE'"
+                      [class.badge-pending]="u.accountStatus === 'PENDING'"
+                      [class.badge-cancelled]="u.accountStatus === 'LOCKED'">
                   {{ u.accountStatus }}
                 </span>
               </td>
               <td>
                 <span class="badge"
-                  [class.badge-in_progress]="u.profileType === 'EMPLOYEE'"
-                  [class.badge-completed]="u.profileType === 'CLIENT'">
+                      [class.badge-in_progress]="u.profileType === 'EMPLOYEE'"
+                      [class.badge-completed]="u.profileType === 'CLIENT'">
                   {{ u.profileType }}
                 </span>
               </td>
@@ -141,7 +151,12 @@ export class UserList implements OnInit {
   swapRoleId: number | null = null;
   swapRoleName = '';
 
-  constructor(private svc: UserService, private changeDetectorRef: ChangeDetectorRef) {}
+  constructor(
+    private svc: UserService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private toast: ToastService,
+    private confirmSvc: ConfirmService
+  ) {}
 
   ngOnInit(): void { this.load(); }
 
@@ -182,9 +197,12 @@ export class UserList implements OnInit {
     });
   }
 
-  deactivate(id: number): void {
-    if (!confirm('¿Bloquear este usuario?')) return;
-    this.svc.deactivate(id).subscribe({ next: () => this.load() });
+  async deactivate(id: number): Promise<void> {
+    const ok = await this.confirmSvc.confirm('¿Bloquear este usuario?');
+    if (!ok) return;
+    this.svc.deactivate(id).subscribe({
+      next: () => { this.toast.show('Usuario bloqueado correctamente'); this.load(); }
+    });
   }
 
   startSwapRole(id: number): void  { this.swapRoleId = id; this.swapRoleName = ''; }
@@ -193,8 +211,8 @@ export class UserList implements OnInit {
   confirmSwapRole(id: number): void {
     if (!this.swapRoleName) return;
     this.svc.swapRole(id, this.swapRoleName).subscribe({
-      next: () => { this.cancelSwapRole(); this.load(); },
-      error: () => { alert('Error al cambiar el rol'); },
+      next: () => { this.toast.show('Rol cambiado correctamente'); this.cancelSwapRole(); this.load(); },
+      error: () => { this.toast.show('Error al cambiar el rol', 'error'); },
     });
   }
 }

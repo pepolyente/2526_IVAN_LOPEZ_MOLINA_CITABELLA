@@ -12,4 +12,6 @@ export interface ClientResponse {
   name: string;
   phoneNumber: string;
   gender?: Gender;
+  linkedUsername: string | null;
+  active: boolean;
 }

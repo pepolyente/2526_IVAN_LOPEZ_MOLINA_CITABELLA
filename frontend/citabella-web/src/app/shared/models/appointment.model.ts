@@ -33,8 +33,8 @@ export interface AppointmentResponse {
 export interface RescheduleAppointmentRequest {
   id: number;
   employeeId: number;
-  treatmentsIds: [number];
-  startAt: number;
-  endAt: number;
+  treatmentsIds: number[];
+  startAt: string;
+  endAt: string;
   notes: string;
 }

@@ -164,6 +164,22 @@
 .mobile-btn.logout { background: var(--badge-cancelled-bg); color: var(--color-danger); }
 .user-info { border-color: rgba(255,255,255,0.2); }
 
+.btn-theme {
+  background: none;
+  border: 1px solid var(--color-border-inverted);
+  border-radius: var(--radius);
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  color: var(--color-text-inverted);
+  transition: background 0.15s;
+}
+.btn-theme:hover {
+  background: var(--color-nav-hover-bg);
+}
+
 @media (max-width: 767px) {
   .header-nav, .header-actions { display: none; }
   .hamburger { display: flex; }

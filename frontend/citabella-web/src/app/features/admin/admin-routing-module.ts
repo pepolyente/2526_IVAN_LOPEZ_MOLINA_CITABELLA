@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { UserList } from './user-list/user-list';
 
 const routes: Routes = [
+  { path: '',      redirectTo: 'users', pathMatch: 'full' },
   { path: 'users', component: UserList },
 ];
 

@@ -5,44 +5,34 @@
   </a>
 
   <nav class="header-nav hide-on-mobile">
-    <a routerLink="/panel/appointments" routerLinkActive="active">
-      <span class="material-symbols-outlined">calendar_month</span> Agenda
-    </a>
-    <a routerLink="/panel/clients" routerLinkActive="active">
-      <span class="material-symbols-outlined">people</span> Clientes
-    </a>
-    <a routerLink="/panel/employees" routerLinkActive="active">
-      <span class="material-symbols-outlined">badge</span> Equipo
-    </a>
-    <a routerLink="/panel/treatments" routerLinkActive="active">
-      <span class="material-symbols-outlined">spa</span> Servicios
-    </a>
+    @for (item of visibleNavItems; track item.path) {
+      <a [routerLink]="item.path" routerLinkActive="active">
+        <span class="material-symbols-outlined">{{ item.icon }}</span>
+        {{ item.label }}
+      </a>
+    }
   </nav>
 
   <div class="header-actions hide-on-mobile">
+    <button class="btn-theme" (click)="theme.toggle()" title="Cambiar tema">
+      <span class="material-symbols-outlined">{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+    </button>
     <span class="header-user-name">{{ auth.getName() }}</span>
     <button class="btn-logout" (click)="logout()">Salir</button>
   </div>
 
-  <button class="hamburger hide-on-desktop" (click)="toggleMenu()">
+  <button class="hamburger hide-on-desktop" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen">
     <span class="material-symbols-outlined">{{ isMenuOpen ? 'close' : 'menu' }}</span>
   </button>
 </header>
 
 <aside class="mobile-menu" [class.open]="isMenuOpen && isMobile" (click)="toggleMenu()">
   <nav class="mobile-nav" (click)="$event.stopPropagation()">
-    <a routerLink="/panel/appointments" routerLinkActive="active" (click)="toggleMenu()">
-      <span class="material-symbols-outlined">calendar_month</span> Agenda
-    </a>
-    <a routerLink="/panel/clients" routerLinkActive="active" (click)="toggleMenu()">
-      <span class="material-symbols-outlined">people</span> Clientes
-    </a>
-    <a routerLink="/panel/employees" routerLinkActive="active" (click)="toggleMenu()">
-      <span class="material-symbols-outlined">badge</span> Equipo
-    </a>
-    <a routerLink="/panel/treatments" routerLinkActive="active" (click)="toggleMenu()">
-      <span class="material-symbols-outlined">spa</span> Servicios
-    </a>
+    @for (item of visibleNavItems; track item.path) {
+      <a [routerLink]="item.path" routerLinkActive="active" (click)="toggleMenu()">
+        <span class="material-symbols-outlined">{{ item.icon }}</span> {{ item.label }}
+      </a>
+    }
     <hr>
     <div class="user-info">
       <span class="material-symbols-outlined">account_circle</span> {{ auth.getName() }}
