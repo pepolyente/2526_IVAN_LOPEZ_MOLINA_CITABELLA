@@ -1,0 +1,186 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  height: var(--header-height);
+  width: 100%;
+  padding: 0 24px;
+  background-color: var(--color-brand);
+  color: var(--color-text-inverted);
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  box-shadow: var(--shadow-header);
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.header-logo {
+  font-size: 22px;
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.header-nav {
+  display: flex;
+  gap: 16px;
+}
+
+.header-nav a {
+  color: var(--color-text-nav);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: color 0.2s;
+}
+
+.header-nav a.active,
+.header-nav a:hover {
+  color: var(--color-text-inverted);
+  background-color: var(--color-brand);
+}
+
+.btn-logout {
+  background: transparent;
+  border: 1px solid var(--color-border-inverted);
+  color: var(--color-text-inverted);
+  padding: 6px 14px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+
+.btn-logout:hover {
+  background-color: var(--color-nav-hover-bg);
+}
+
+.header-brand {
+  text-decoration: none;
+  color: var(--color-text-inverted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+/* Sección de usuario a la derecha */
+.header-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-user-name {
+  font-size: 13px;
+  color: var(--color-text-nav);
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Active link */
+.header-nav a.active {
+  color: var(--color-text-inverted) !important;
+  background: rgba(255,255,255,0.15) !important;
+}
+
+.header {
+  position: sticky; top: 0; z-index: 100;
+  height: var(--header-height); padding: 0 24px;
+  background-color: var(--color-brand);
+  color: var(--color-text-inverted);
+  display: flex; align-items: center; gap: 24px;
+  box-shadow: var(--shadow-header);
+}
+
+.header-brand {
+  display: flex; align-items: center; gap: 10px; flex: 1;
+  text-decoration: none; color: var(--color-text-inverted);
+}
+
+.header-logo { font-size: 22px; }
+.header-title { font-size: 18px; font-weight: 600; }
+
+.header-nav { display: flex; gap: 16px; }
+.header-nav a {
+  color: var(--color-text-nav); text-decoration: none;
+  font-size: 14px; padding: 4px 8px; border-radius: 4px;
+  display: flex; align-items: center; gap: 6px;
+  transition: color 0.2s;
+}
+.header-nav a.active,
+.header-nav a:hover {
+  color: var(--color-text-inverted);
+  background-color: rgba(255,255,255,0.15);
+}
+
+.header-actions {
+  display: flex; align-items: center; gap: 12px;
+}
+.header-user-name {
+  font-size: 13px; color: var(--color-text-nav);
+  max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.btn-logout {
+  background: transparent; border: 1px solid var(--color-border-inverted);
+  color: var(--color-text-inverted); padding: 6px 14px;
+  border-radius: var(--radius); cursor: pointer; font-size: 13px;
+}
+
+.hamburger {
+  background: none; border: none; color: var(--color-text-inverted);
+  font-size: 24px; cursor: pointer; padding: 4px;
+}
+
+.mobile-menu {
+  display: none;
+  position: fixed; inset: 0; background: rgba(0,0,0,0.6);
+  z-index: 200; opacity: 0; pointer-events: none;
+  transition: opacity 0.3s;
+}
+.mobile-menu.open {
+  display: block; opacity: 1; pointer-events: auto;
+}
+.mobile-nav {
+  position: absolute; right: 0; top: 0; width: 280px; height: 100%;
+  background: var(--color-brand); color: var(--color-text-inverted);
+  padding: 24px 20px; display: flex; flex-direction: column; gap: 16px;
+  transform: translateX(100%); transition: transform 0.3s;
+}
+.mobile-menu.open .mobile-nav { transform: translateX(0); }
+.mobile-nav a { color: var(--color-text-inverted); display: flex; align-items: center; gap: 8px; }
+.mobile-btn.logout { background: var(--badge-cancelled-bg); color: var(--color-danger); }
+.user-info { border-color: rgba(255,255,255,0.2); }
+
+.btn-theme {
+  background: none;
+  border: 1px solid var(--color-border-inverted);
+  border-radius: var(--radius);
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  color: var(--color-text-inverted);
+  transition: background 0.15s;
+}
+.btn-theme:hover {
+  background: var(--color-nav-hover-bg);
+}
+
+@media (max-width: 767px) {
+  .header-nav, .header-actions { display: none; }
+  .hamburger { display: flex; }
+}

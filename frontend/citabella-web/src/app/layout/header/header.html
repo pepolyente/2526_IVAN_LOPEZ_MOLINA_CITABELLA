@@ -1,0 +1,42 @@
+<header class="header">
+  <a routerLink="/" class="header-brand">
+    <span class="header-logo">✂</span>
+    <span class="header-title">CitaBella</span>
+  </a>
+
+  <nav class="header-nav hide-on-mobile">
+    @for (item of visibleNavItems; track item.path) {
+      <a [routerLink]="item.path" routerLinkActive="active">
+        <span class="material-symbols-outlined">{{ item.icon }}</span>
+        {{ item.label }}
+      </a>
+    }
+  </nav>
+
+  <div class="header-actions hide-on-mobile">
+    <button class="btn-theme" (click)="theme.toggle()" title="Cambiar tema">
+      <span class="material-symbols-outlined">{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+    </button>
+    <span class="header-user-name">{{ auth.getName() }}</span>
+    <button class="btn-logout" (click)="logout()">Salir</button>
+  </div>
+
+  <button class="hamburger hide-on-desktop" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen">
+    <span class="material-symbols-outlined">{{ isMenuOpen ? 'close' : 'menu' }}</span>
+  </button>
+</header>
+
+<aside class="mobile-menu" [class.open]="isMenuOpen && isMobile" (click)="toggleMenu()">
+  <nav class="mobile-nav" (click)="$event.stopPropagation()">
+    @for (item of visibleNavItems; track item.path) {
+      <a [routerLink]="item.path" routerLinkActive="active" (click)="toggleMenu()">
+        <span class="material-symbols-outlined">{{ item.icon }}</span> {{ item.label }}
+      </a>
+    }
+    <hr>
+    <div class="user-info">
+      <span class="material-symbols-outlined">account_circle</span> {{ auth.getName() }}
+    </div>
+    <button class="mobile-btn logout" (click)="logout()">Cerrar sesión</button>
+  </nav>
+</aside>

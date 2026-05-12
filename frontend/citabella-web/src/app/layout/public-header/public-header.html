@@ -1,0 +1,65 @@
+<header class="pub-header">
+  <a routerLink="/" class="pub-brand">
+    <span class="pub-logo">
+      <img alt="CitaBella" src="/images/logoRedondo.png">
+    </span>
+    <span class="pub-title">CitaBella</span>
+  </a>
+
+  <button class="hamburger hide-on-desktop" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen">
+    <span class="material-symbols-outlined">{{ isMenuOpen ? 'close' : 'menu' }}</span>
+  </button>
+
+  <nav class="pub-nav hide-on-mobile">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Inicio</a>
+    <a routerLink="/servicios" routerLinkActive="active">Servicios</a>
+    <a routerLink="/productos" routerLinkActive="active">Productos</a>
+  </nav>
+
+  <div class="pub-actions hide-on-mobile">
+    <button class="btn-theme" (click)="theme.toggle()" title="Cambiar tema">
+      <span class="material-symbols-outlined">{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+    </button>
+
+    @if (!auth.isLogged()) {
+      <a routerLink="/register" class="btn-outline">Registrarse</a>
+      <a routerLink="/login" class="btn-primary">Entrar</a>
+    } @else {
+      <span class="user-pill">
+        <span class="user-avatar">{{ auth.getName().charAt(0) | uppercase }}</span>
+        <span class="user-name">{{ auth.getName() }}</span>
+      </span>
+      <button class="btn-primary" (click)="goToPanel()">Mi panel</button>
+      <button class="btn-logout-pub" (click)="logout()">Salir</button>
+    }
+  </div>
+</header>
+
+<aside class="mobile-menu" [class.open]="isMenuOpen && isMobile" (click)="toggleMenu()">
+  <nav class="mobile-nav" (click)="$event.stopPropagation()">
+    <button class="hamburger close-btn" (click)="toggleMenu()">
+      <span class="material-symbols-outlined">close</span>
+    </button>
+
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="toggleMenu()">Inicio</a>
+    <a routerLink="/servicios" routerLinkActive="active" (click)="toggleMenu()">Servicios</a>
+    <a routerLink="/productos" routerLinkActive="active" (click)="toggleMenu()">Productos</a>
+
+    <hr>
+
+    <button class="btn-theme" (click)="theme.toggle()">
+      <span class="material-symbols-outlined">{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</span> Tema
+    </button>
+
+    @if (!auth.isLogged()) {
+      <a routerLink="/register" class="mobile-btn" (click)="toggleMenu()">Registrarse</a>
+      <a routerLink="/login" class="mobile-btn primary" (click)="toggleMenu()">Entrar</a>
+    } @else {
+      <div class="user-info">
+        <span class="material-symbols-outlined">account_circle</span> {{ auth.getName() }}
+      </div>
+      <button class="mobile-btn primary" (click)="goToPanel()">Mi panel</button>
+      <button class="mobile-btn logout" (click)="logout()">Cerrar sesión</button>
+    }
+  </nav>
+</aside>

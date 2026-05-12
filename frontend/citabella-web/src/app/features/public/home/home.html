@@ -1,0 +1,51 @@
+<section class="hero">
+  <div>
+    <h1>Bienvenid&#64; a CitaBella</h1>
+    <p>Tu centro de belleza de confianza</p>
+  </div>
+  @if (!auth.isLogged()) {
+    <a routerLink="/login" class="btn-hero">Reserva tu cita</a>
+  } @else {
+    <a routerLink="/panel" class="btn-hero">Ver mi agenda</a>
+  }
+</section>
+
+<section class="section">
+  <h2 class="section-title">Nuestros servicios</h2>
+  @if (treatments.length === 0) {
+    <p class="empty-state">Próximamente...</p>
+  } @else {
+    <div class="cards-grid">
+      @for (treatment of treatments; track treatment.id) {
+        <div class="card">
+          <h3>{{ treatment.name }}</h3>
+          <p>Desde {{ treatment.minimumDuration }} min · {{ treatment.price | currency:'EUR' }}</p>
+        </div>
+      }
+    </div>
+  }
+  <a routerLink="/servicios" class="link-more">Ver todos los servicios →</a>
+</section>
+
+<section class="section section-alt">
+  <h2 class="section-title">Productos destacados</h2>
+  @if (products.length === 0) {
+    <p class="empty-state">Próximamente...</p>
+  } @else {
+    <div class="cards-grid">
+      @for (product of products; track product.id) {
+        <div class="card">
+          <img
+            [src]="product.imageKey || placeholder"
+            [alt]="product.name"
+            class="card-img"
+            (error)="$any($event.target).src = placeholder"
+          />
+          <h3>{{ product.name }}</h3>
+          <p>{{ product.category }} · {{ product.salePrice | currency:'EUR' }}</p>
+        </div>
+      }
+    </div>
+  }
+  <a routerLink="/productos" class="link-more">Ver todos los productos →</a>
+</section>

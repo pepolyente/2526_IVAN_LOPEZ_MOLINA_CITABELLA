@@ -9,21 +9,6 @@
 
 ---
 
-## Descripción
-
-CitaBella es una plataforma de gestión compuesta por:
-
-- Una **aplicación web** desarrollada con Angular, con zona pública y panel privado por roles
-- Una **aplicación móvil** basada en Flutter (contenedor WebView)
-- Un **backend con API REST** desarrollado con Spring Boot y seguridad JWT
-- Un **sistema de despliegue basado en Docker Compose**, arrancable con un único comando
-
-El sistema está diseñado para funcionar como una solución **autoalojada**, donde todos los servicios
-se levantan de forma conjunta mediante Docker Compose, comunicándose a través de redes internas y
-exponiendo únicamente un **proxy inverso Nginx** al exterior.
-
----
-
 ## ✅ Estado actual del proyecto — Fase 1 completada
 
 | Componente | Estado |

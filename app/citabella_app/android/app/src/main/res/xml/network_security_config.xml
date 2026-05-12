@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    PROPÓSITO:
+    Permite tráfico HTTP sin cifrar (cleartext) hacia los dominios
+    de desarrollo local:
+      • 10.0.2.2    → Android Emulator (host de la máquina de desarrollo)
+      • 10.0.3.2    → Genymotion emulator host
+      • 192.168.0.0/16 → Red local (dispositivos físicos)
+      • 172.16.0.0/12  → Rango Docker default bridge
+      • localhost / 127.0.0.1
+
+    PRODUCCIÓN:
+    Eliminar este archivo y usar HTTPS con certificado válido.
+    La red de producción NO necesita cleartext.
+
+    REFERENCIA:
+    https://developer.android.com/training/articles/security-config
+-->
+<network-security-config>
+
+    <!--
+        Configuración para dominios de debug/desarrollo.
+        cleartextTrafficPermitted="true" → permite HTTP sin TLS.
+    -->
+    <domain-config cleartextTrafficPermitted="true">
+
+        <!-- Android Emulator → host machine -->
+        <domain includeSubdomains="false">10.0.2.2</domain>
+
+        <!-- Genymotion emulator → host machine -->
+        <domain includeSubdomains="false">10.0.3.2</domain>
+
+        <!-- Localhost explícito -->
+        <domain includeSubdomains="false">localhost</domain>
+        <domain includeSubdomains="false">127.0.0.1</domain>
+
+        <!--
+            Red local típica para dispositivos físicos.
+            Cubre 192.168.X.X (IPs de routers domésticos/oficina).
+
+            NOTA: <domain> no soporta rangos CIDR nativamente.
+            Para redes locales con IPs variables, la opción más
+            pragmática para desarrollo es usar la base-config
+            con cleartext=true (ver abajo) y restringirla en producción.
+
+            Alternativa: agregar la IP exacta de tu ordenador aquí:
+        -->
+        <!-- <domain includeSubdomains="false">192.168.1.100</domain> -->
+
+    </domain-config>
+
+    <!--
+        Configuración base para TODOS los demás dominios.
+        cleartextTrafficPermitted="false" → fuerza HTTPS en producción.
+
+        En entorno puramente local, puedes cambiar a true:
+        <base-config cleartextTrafficPermitted="true">
+
+        Pero se recomienda mantenerlo false y añadir solo las IPs necesarias
+        en el domain-config de arriba.
+    -->
+    <base-config cleartextTrafficPermitted="false">
+        <trust-anchors>
+            <!-- Certificados del sistema (CA authorities normales) -->
+            <certificates src="system"/>
+        </trust-anchors>
+    </base-config>
+
+    <!--
+        OPCIÓN PARA DESARROLLO TOTALMENTE LOCAL:
+        Si necesitas conectar desde dispositivos físicos en cualquier IP
+        de red local sin conocer la IP de antemano, usa esto en lugar
+        del domain-config de arriba:
+
+        <base-config cleartextTrafficPermitted="true">
+            <trust-anchors>
+                <certificates src="system"/>
+            </trust-anchors>
+        </base-config>
+
+        RECUERDA eliminarlo antes de publicar en producción.
+    -->
+
+</network-security-config>

@@ -1,0 +1,189 @@
+src/main/java/com/citabella/citabellaapi/
+│
+├── CitaBellaApiApplication.java          -> Clase main
+│
+├── config/                                -> Configuración global
+│   ├── CorsConfig.java                   -> CORS (para NGINX y frontend)
+│   ├── SecurityConfig.java               -> Configuración Spring Security
+│   ├── JwtAuthFilter.java                -> Filtro JWT
+│   ├── JwtUtil.java                      -> Utilidad para tokens
+│   ├── PasswordEncoderConfig.java        -> BCryptPasswordEncoder
+│   ├── OpenApiConfig.java                -> Swagger/OpenAPI (opcional)
+│   └── ModelMapperConfig.java            -> Bean ModelMapper (opcional)
+│
+├── controller/                           -> API REST
+│   ├── auth/
+│   │   ├── AuthController.java
+│   │   ├── UsuarioController.java
+│   │   └── RolController.java
+│   │
+│   ├── cliente/
+│   │   ├── ClienteController.java
+│   │   └── TokenDispositivoController.java
+│   │
+│   ├── empleado/
+│   │   ├── EmpleadoController.java
+│   │   └── EmpleadoServicioController.java
+│   │
+│   ├── servicio/
+│   │   └── ServicioController.java
+│   │
+│   ├── cita/
+│   │   └── CitaController.java
+│   │
+│   ├── producto/
+│   │   ├── ProductoController.java
+│   │   ├── AlmacenController.java
+│   │   ├── StockController.java
+│   │   └── MovimientoStockController.java
+│   │
+│   ├── venta/
+│   │   ├── VentaController.java
+│   │   ├── DetalleVentaProductoController.java
+│   │   └── DetalleVentaServicioController.java
+│   │
+│   ├── notificacion/
+│   │   └── NotificacionController.java
+│   │
+│   └── auditoria/
+│       └── AuditoriaController.java
+│
+├── dto/                                  -> Request/Response objects
+│   ├── auth/
+│   │   ├── LoginRequest.java
+│   │   ├── LoginResponse.java
+│   │   ├── RefreshTokenRequest.java
+│   │   └── JwtResponse.java
+│   │
+│   ├── cliente/
+│   │   ├── ClienteRequest.java
+│   │   ├── ClienteResponse.java
+│   │   └── TokenDispositivoRequest.java
+│   │
+│   ├── empleado/
+│   │   ├── EmpleadoRequest.java
+│   │   ├── EmpleadoResponse.java
+│   │   └── EmpleadoServicioRequest.java
+│   │
+│   ├── servicio/
+│   │   ├── ServicioRequest.java
+│   │   ├── ServicioResponse.java
+│   │   └── PrecioServicioDTO.java
+│   │
+│   ├── cita/
+│   │   ├── CrearCitaRequest.java
+│   │   ├── ReprogramarCitaRequest.java
+│   │   ├── CitaResponse.java
+│   │   ├── CitaDetalleResponse.java
+│   │   └── CambiarEstadoCitaRequest.java
+│   │
+│   ├── producto/
+│   │   ├── ProductoRequest.java
+│   │   ├── ProductoResponse.java
+│   │   ├── MovimientoStockRequest.java
+│   │   ├── AlmacenRequest.java
+│   │   ├── StockResponse.java
+│   │   └── MovimientoStockResponse.java
+│   │
+│   ├── venta/
+│   │   ├── VentaRequest.java
+│   │   ├── VentaResponse.java
+│   │   ├── DetalleVentaProductoRequest.java
+│   │   ├── DetalleVentaProductoResponse.java
+│   │   ├── DetalleVentaServicioRequest.java
+│   │   └── DetalleVentaServicioResponse.java
+│   │
+│   └── notificacion/
+│       ├── NotificacionRequest.java
+│       └── NotificacionResponse.java
+│
+├── entity/                               -> Entidades JPA
+│   ├── seguridad/
+│   │   ├── Usuario.java
+│   │   ├── Rol.java
+│   │   └── RefreshToken.java
+│   │
+│   ├── cliente/
+│   │   ├── Cliente.java
+│   │   └── TokenDispositivo.java
+│   │
+│   ├── empleado/
+│   │   ├── Empleado.java
+│   │   └── EmpleadoServicio.java
+│   │
+│   ├── servicio/
+│   │   └── Servicio.java
+│   │
+│   ├── cita/
+│   │   └── Cita.java
+│   │
+│   ├── producto/
+│   │   ├── Producto.java
+│   │   ├── Almacen.java
+│   │   ├── Stock.java
+│   │   └── MovimientoStock.java
+│   │
+│   └── venta/
+│       ├── Venta.java
+│       ├── DetalleVentaProducto.java
+│       └── DetalleVentaServicio.java
+│
+├── repository/                           -> Interfaces DAO (JPA)
+│   ├── UsuarioRepository.java
+│   ├── RolRepository.java
+│   ├── RefreshTokenRepository.java
+│   ├── ClienteRepository.java
+│   ├── TokenDispositivoRepository.java
+│   ├── EmpleadoRepository.java
+│   ├── EmpleadoServicioRepository.java
+│   ├── ServicioRepository.java
+│   ├── CitaRepository.java
+│   ├── ProductoRepository.java
+│   ├── AlmacenRepository.java
+│   ├── StockRepository.java
+│   ├── MovimientoStockRepository.java
+│   ├── VentaRepository.java
+│   ├── DetalleVentaProductoRepository.java
+│   ├── DetalleVentaServicioRepository.java
+│   └── NotificacionRepository.java
+│
+├── service/
+│   ├── interfaces/                       -> Interfaces
+│   │   ├── UsuarioService.java
+│   │   ├── ClienteService.java
+│   │   ├── EmpleadoService.java
+│   │   ├── ServicioService.java
+│   │   ├── CitaService.java
+│   │   ├── ProductoService.java
+│   │   ├── StockService.java
+│   │   ├── VentaService.java
+│   │   ├── NotificacionService.java
+│   │   └── AuditoriaService.java
+│   │
+│   └── impl/                              -> Implementaciones
+│       ├── UsuarioServiceImpl.java
+│       ├── ClienteServiceImpl.java
+│       ├── EmpleadoServiceImpl.java
+│       ├── ServicioServiceImpl.java
+│       ├── CitaServiceImpl.java
+│       ├── ProductoServiceImpl.java
+│       ├── StockServiceImpl.java
+│       ├── VentaServiceImpl.java
+│       ├── NotificacionServiceImpl.java
+│       └── AuditoriaServiceImpl.java
+│
+├── exception/                             -> Gestión de errores global
+│   ├── ApiException.java
+│   ├── BadRequestException.java
+│   ├── NotFoundException.java
+│   ├── UnauthorizedException.java
+│   ├── ForbiddenException.java
+│   ├── GlobalExceptionHandler.java        -> @ControllerAdvice
+│   └── ValidationException.java
+│
+└── util/                                  -> Utilidades varias
+    ├── DateUtils.java
+    ├── EmailUtils.java
+    ├── MapperUtils.java
+    ├── StockUtils.java
+    └── CitaUtils.java

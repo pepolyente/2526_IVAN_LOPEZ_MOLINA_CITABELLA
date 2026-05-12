@@ -1,0 +1,234 @@
+.calendar-page {
+  padding: 0;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.page-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+  flex-wrap: wrap;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-dot.overlap {
+  background: repeating-linear-gradient(
+    45deg, #F59E0B 0px, #F59E0B 3px, #fff 3px, #fff 6px
+  );
+}
+
+.page-header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.calendar-wrapper {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 16px;
+  box-shadow: var(--shadow);
+}
+
+
+:host ::ng-deep {
+
+  /* Toolbar */
+  .fc .fc-toolbar {
+    margin-bottom: 16px;
+    gap: 8px;
+  }
+
+  .fc .fc-toolbar-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .fc .fc-button {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    font-size: 13px;
+    font-family: inherit;
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    transition: background 0.15s;
+  }
+
+  .fc .fc-button:hover {
+    background: var(--color-surface-hover);
+  }
+
+  .fc .fc-button-primary:not(.fc-button-active):not(:disabled):hover {
+    background: var(--color-surface-hover);
+    border-color: var(--color-border);
+    color: var(--color-text);
+  }
+
+  .fc .fc-button-active,
+  .fc .fc-button-primary:not(:disabled).fc-button-active {
+    background: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    color: var(--color-text-inverted) !important;
+  }
+
+  /* Cabeceras de columna (Lun, Mar...) */
+  .fc .fc-col-header-cell {
+    background: var(--color-surface-alt);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    padding: 8px 0;
+  }
+
+  /* Franjas horarias */
+  .fc .fc-timegrid-slot-label {
+    font-size: 11px;
+    color: var(--color-text-muted);
+  }
+
+  /* Horas de trabajo sombreadas */
+  .fc .fc-non-business {
+    background: var(--color-surface-alt);
+    opacity: 0.5;
+  }
+
+  /* Línea de "ahora" */
+  .fc .fc-timegrid-now-indicator-line {
+    border-color: var(--color-danger);
+    border-width: 2px;
+  }
+
+  .fc .fc-timegrid-now-indicator-arrow {
+    border-top-color: var(--color-danger);
+    border-bottom-color: var(--color-danger);
+  }
+
+  /* Bordes de la cuadrícula */
+  .fc td, .fc th {
+    border-color: var(--color-border);
+  }
+
+  /* Bloques de eventos */
+  .fc-event {
+    border-radius: 6px !important;
+    border-width: 2px !important;
+    cursor: pointer;
+    transition: filter 0.15s, transform 0.1s;
+  }
+
+  .fc-event:hover {
+    filter: brightness(1.08);
+    transform: translateY(-1px);
+  }
+
+  /* Evento solapado — resaltar con borde amarillo */
+  .event-overlap {
+    border-style: dashed !important;
+  }
+
+  /* Selección de hueco vacío */
+  .fc .fc-highlight {
+    background: var(--color-primary-alpha);
+    border: 2px dashed var(--color-primary);
+    border-radius: 6px;
+  }
+}
+
+/* ── Contenido interno de cada bloque de cita ─────────────────── */
+
+.cb-event-inner {
+  padding: 2px 4px;
+  overflow: hidden;
+  height: 100%;
+}
+
+.cb-event-title {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cb-event-sub {
+  font-size: 11px;
+  opacity: 0.85;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cb-event-employee {
+  font-size: 10px;
+  opacity: 0.75;
+}
+
+.overlap-icon {
+  font-size: 10px;
+  margin-left: 2px;
+}
+
+/* Mobile calendar tweaks */
+@media (max-width: 767px) {
+  .calendar-wrapper {
+    padding: 8px;
+  }
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .legend { margin-top: 8px; }
+  .page-header-actions {
+    width: 100%;
+    justify-content: flex-start;
+    margin-top: 12px;
+  }
+  .page-header-actions a {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+/* appointment-calendar.css */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+  font-size: 12px;
+  color: var(--color-text-muted);
+}
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
