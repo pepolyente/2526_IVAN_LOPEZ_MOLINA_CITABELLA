@@ -63,7 +63,7 @@ import { ConfirmService } from '../../../core/services/confirm.service';
                     <span class="material-symbols-outlined">edit</span>
                   </button>
                   @if (employee.active) {
-                    <button class="btn-xs btn-danger" (click)="deactivate(employee.id)">Desactivar</button>
+                    <button class="btn-xs btn-danger" (click)="deactivate(employee.id)"><span class="material-symbols-outlined">person_off</span></button>
                   } @else {
                     <button class="btn-xs btn-success" (click)="activate(employee.id)">Activar</button>
                   }

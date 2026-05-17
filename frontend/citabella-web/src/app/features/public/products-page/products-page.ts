@@ -6,33 +6,47 @@ import { ProductPublicResponse } from '../../../shared/models/product.model';
   selector: 'app-products-page',
   standalone: false,
   template: `
-    <div class="page-wrapper">
-      <h1>Nuestros productos</h1>
+    <div class="products-page-wrapper">
+      <div class="products-page-header">
+        <span class="products-eyebrow">Nuestra tienda</span>
+        <h1 class="products-page-title">Productos exclusivos</h1>
+        <p class="products-page-sub">Los mejores cosméticos y productos de belleza seleccionados por nuestras especialistas.</p>
+      </div>
+
       @if (loading) {
-        <div class="skeleton-table">
-          @for (i of [1,2,3,4,5]; track i) {
-            <div class="skeleton-row">
-              <div class="skeleton-cell sk-wide"></div>
-              <div class="skeleton-cell sk-medium"></div>
-              <div class="skeleton-cell sk-narrow"></div>
+        <div class="products-skeleton-grid">
+          @for (i of [1,2,3,4,5,6]; track i) {
+            <div class="product-skeleton-card">
+              <div class="skel-img"></div>
+              <div class="skel-line skel-wide" style="margin: 12px 16px 0;"></div>
+              <div class="skel-line skel-narrow" style="margin: 8px 16px 16px;"></div>
             </div>
           }
         </div>
       } @else if (products.length === 0) {
-        <p class="empty-state">Próximamente...</p>
+        <div class="products-empty">
+          <span class="material-symbols-outlined">inventory_2</span>
+          <p>Próximamente más productos</p>
+        </div>
       } @else {
-        <div class="cards-grid">
+        <div class="products-catalog-grid">
           @for (product of products; track product.id) {
-            <div class="card">
-              <img
-                [src]="product.imageKey || placeholder"
-                [alt]="product.name"
-                class="card-img"
-                (error)="$any($event.target).src = placeholder"
-              />
-              <h3>{{ product.name }}</h3>
-              <p>{{ product.category }}</p>
-              <strong>{{ product.salePrice | currency:'EUR' }}</strong>
+            <div class="product-catalog-card">
+              <div class="pcc-img-wrap">
+                <img
+                  [src]="product.imageKey || placeholder"
+                  [alt]="product.name"
+                  class="pcc-img"
+                  (error)="$any($event.target).src = placeholder"
+                />
+                @if (product.category) {
+                  <span class="pcc-category-badge">{{ product.category }}</span>
+                }
+              </div>
+              <div class="pcc-body">
+                <div class="pcc-name">{{ product.name }}</div>
+                <div class="pcc-price">{{ product.salePrice | currency:'EUR' }}</div>
+              </div>
             </div>
           }
         </div>

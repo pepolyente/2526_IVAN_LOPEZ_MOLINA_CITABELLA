@@ -1,42 +1,59 @@
 <div class="calendar-page">
 
-  <div class="page-header">
-    <div class="page-header-left">
-      <h2>Agenda de citas</h2>
+  <div class="cal-page-header">
+    <div class="cal-page-header-left">
+      <h2 class="cal-title">Agenda de citas</h2>
+      <p class="cal-subtitle">Gestiona y visualiza todas las citas del centro</p>
     </div>
-    <div class="legend">
-  <span class="legend-item">
-    <span class="legend-dot" style="background:#F59E0B"></span> Pendiente
-  </span>
-      <span class="legend-item">
-    <span class="legend-dot" style="background:#3B82F6"></span> Confirmada
-  </span>
-      <span class="legend-item">
-    <span class="legend-dot" style="background:#8B5CF6"></span> En progreso
-  </span>
-      <span class="legend-item">
-    <span class="legend-dot" style="background:#10B981"></span> Completada
-  </span>
-      <span class="legend-item">
-    <span class="legend-dot" style="background:#EF4444"></span> Cancelada
-  </span>
-      <span class="legend-item">
-    <span class="legend-dot" style="background:#6B7280"></span> No show
-  </span>
-    </div>
-    <div class="page-header-actions">
-      <a routerLink="new"  class="btn-primary">+ Nueva cita</a>
+
+    <div class="cal-page-header-right">
+      <div class="cal-filter-wrap">
+        <span class="material-symbols-outlined cal-filter-icon">filter_list</span>
+        <select [(ngModel)]="filterStatus" (change)="applyFilter()" class="cal-filter-select">
+          <option value="">Todos los estados</option>
+          @for (status of statuses; track status) {
+            <option [value]="status">{{ status }}</option>
+          }
+        </select>
+      </div>
+
+      <a routerLink="new" class="btn-primary">
+        <span class="material-symbols-outlined">add</span>
+      </a>
     </div>
   </div>
-  <div class="filters-bar">
-    <div class="filter-group">
-      <label>Filtrar por estado</label>
-      <select [(ngModel)]="filterStatus" (change)="applyFilter()">
-        <option value="">Todos</option>
-        @for (status of statuses; track status) { <option [value]="status">{{ status }}</option> }
-      </select>
-    </div>
+
+  <div class="cal-legend-bar">
+    <span class="cal-legend-item">
+      <span class="cal-legend-dot" style="background:#F59E0B"></span>
+      Pendiente
+    </span>
+    <span class="cal-legend-item">
+      <span class="cal-legend-dot" style="background:#3B82F6"></span>
+      Confirmada
+    </span>
+    <span class="cal-legend-item">
+      <span class="cal-legend-dot" style="background:#8B5CF6"></span>
+      En progreso
+    </span>
+    <span class="cal-legend-item">
+      <span class="cal-legend-dot" style="background:#10B981"></span>
+      Completada
+    </span>
+    <span class="cal-legend-item">
+      <span class="cal-legend-dot" style="background:#EF4444"></span>
+      Cancelada
+    </span>
+    <span class="cal-legend-item">
+      <span class="cal-legend-dot" style="background:#6B7280"></span>
+      No show
+    </span>
+    <span class="cal-legend-item cal-legend-overlap">
+      <span class="cal-legend-dot cal-legend-dot--overlap"></span>
+      Solapada
+    </span>
   </div>
+
   <div class="calendar-wrapper">
     <full-calendar [options]="calendarOptions"></full-calendar>
   </div>

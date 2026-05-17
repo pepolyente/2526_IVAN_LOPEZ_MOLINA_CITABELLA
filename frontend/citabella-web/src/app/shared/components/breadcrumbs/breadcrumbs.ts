@@ -18,6 +18,16 @@ import { BreadcrumbService, Breadcrumb } from '../../../core/services/breadcrumb
       </nav>
     }
   `,
+  styles: [`
+    .breadcrumbs {
+      background: var(--color-surface-alt);
+      padding: 8px 24px;
+      border-bottom: 1px solid var(--color-border);
+      font-size: 13px;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  `],
 })
 export class BreadcrumbsComponent implements OnInit {
   crumbs: Breadcrumb[] = [];

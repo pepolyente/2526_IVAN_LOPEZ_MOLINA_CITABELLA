@@ -1,51 +1,212 @@
-<section class="hero">
-  <div>
-    <h1>Bienvenid&#64; a CitaBella</h1>
-    <p>Tu centro de belleza de confianza</p>
+<section class="hero-section">
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+
+  <div class="hero-content">
+    <span class="hero-eyebrow">
+      <span class="material-symbols-outlined">spa</span>
+      Centro de Belleza Premium
+    </span>
+    <h1 class="hero-heading">Tu belleza,<br>nuestra pasión</h1>
+    <p class="hero-sub">
+      Echale un vistazo a nuestros tratamientos y disfruta de la mejor atención personalizada en CitaBella.
+    </p>
+    <div class="hero-ctas">
+      @if (!auth.isLogged()) {
+        <a routerLink="/login" class="btn-cta-primary">
+          Reserva tu cita
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+        <a routerLink="/servicios" class="btn-cta-ghost">Ver servicios</a>
+      } @else if (auth.isLogged() && (auth.getRole() === "ADMIN" || auth.getRole() === "EMPLOYEE")) {
+        <a routerLink="/panel" class="btn-cta-primary">
+          PANEL DE GESTIÓN
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+      }
+      @else {
+        <a routerLink="/panel" class="btn-cta-primary">
+          Mi agenda
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+        <a routerLink="/servicios" class="btn-cta-ghost">Ver servicios</a>
+      }
+    </div>
+    <div class="hero-social-proof">
+      <div class="proof-avatars">
+        <span class="proof-avatar">A</span>
+        <span class="proof-avatar">M</span>
+        <span class="proof-avatar">L</span>
+        <span class="proof-avatar">+</span>
+      </div>
+      <span class="proof-text">+500 clientes satisfechos este año</span>
+    </div>
   </div>
-  @if (!auth.isLogged()) {
-    <a routerLink="/login" class="btn-hero">Reserva tu cita</a>
-  } @else {
-    <a routerLink="/panel" class="btn-hero">Ver mi agenda</a>
-  }
+
+  <div class="hero-visual">
+    <div class="hero-image-frame">
+      <img
+        src="/images/hero.jpg"
+        alt="CitaBella — Centro de Belleza"
+        class="hero-img"
+        (error)="$any($event.target).src='/images/citabella.jpg'"
+      />
+      <div class="hero-float-card">
+        <span class="float-card-icon material-symbols-outlined">event_available</span>
+        <div>
+          <div class="float-card-title">Tratamiento de keratina</div>
+          <div class="float-card-sub">Hoy a las 16:00</div>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="section">
-  <h2 class="section-title">Nuestros servicios</h2>
+<div class="features-strip">
+  <div class="features-strip-inner">
+    <div class="feature-item">
+      <span class="feature-icon material-symbols-outlined">calendar_month</span>
+      <div class="feature-text">
+        <div class="feature-title">Revisa tus citas online 24/7</div>
+        <div class="feature-desc">Visualiza tu agenda desde cualquier dispositivo</div>
+      </div>
+    </div>
+    <div class="feature-sep"></div>
+    <div class="feature-item">
+      <span class="feature-icon material-symbols-outlined">spa</span>
+      <div class="feature-text">
+        <div class="feature-title">Tratamientos exclusivos</div>
+        <div class="feature-desc">Personalizados para cada tipo de belleza</div>
+      </div>
+    </div>
+    <div class="feature-sep"></div>
+    <div class="feature-item">
+      <span class="feature-icon material-symbols-outlined">verified</span>
+      <div class="feature-text">
+        <div class="feature-title">Profesionales expertas</div>
+        <div class="feature-desc">Equipo certificado con años de experiencia</div>
+      </div>
+    </div>
+    <div class="feature-sep"></div>
+    <div class="feature-item">
+      <span class="feature-icon material-symbols-outlined">star</span>
+      <div class="feature-text">
+        <div class="feature-title">Productos premium</div>
+        <div class="feature-desc">Solo usamos marcas de alta gama</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="home-section" id="servicios">
+  <div class="section-header">
+    <span class="section-eyebrow">Tratamientos</span>
+    <h2 class="section-heading">Servicios pensados para ti</h2>
+    <p class="section-sub">Descubre nuestra amplia gama de tratamientos de belleza y bienestar</p>
+  </div>
+
   @if (treatments.length === 0) {
-    <p class="empty-state">Próximamente...</p>
+    <div class="home-empty-state">
+      <span class="material-symbols-outlined">spa</span>
+      <p>Próximamente...</p>
+    </div>
   } @else {
-    <div class="cards-grid">
+    <div class="services-home-grid">
       @for (treatment of treatments; track treatment.id) {
-        <div class="card">
-          <h3>{{ treatment.name }}</h3>
-          <p>Desde {{ treatment.minimumDuration }} min · {{ treatment.price | currency:'EUR' }}</p>
+        <div class="service-home-card">
+          <div class="shc-icon-wrap">
+            <span class="material-symbols-outlined">spa</span>
+          </div>
+          <div class="shc-content">
+            <h3 class="shc-name">{{ treatment.name }}</h3>
+            <div class="shc-meta">
+              <span class="shc-duration">
+                <span class="material-symbols-outlined">schedule</span>
+                {{ treatment.minimumDuration }} min
+              </span>
+            </div>
+          </div>
+          <div class="shc-price">{{ treatment.price | currency:'EUR' }}</div>
         </div>
       }
     </div>
   }
-  <a routerLink="/servicios" class="link-more">Ver todos los servicios →</a>
+
+  <div class="section-cta-row">
+    <a routerLink="/servicios" class="btn-see-all">
+      Ver todos los servicios
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+  </div>
 </section>
 
-<section class="section section-alt">
-  <h2 class="section-title">Productos destacados</h2>
+<section class="home-section home-section-surface" id="productos">
+  <div class="section-header">
+    <span class="section-eyebrow">Nuestra tienda</span>
+    <h2 class="section-heading">Productos destacados</h2>
+    <p class="section-sub">Los mejores cosméticos y productos de belleza seleccionados por nuestras especialistas</p>
+  </div>
+
   @if (products.length === 0) {
-    <p class="empty-state">Próximamente...</p>
+    <div class="home-empty-state">
+      <span class="material-symbols-outlined">inventory_2</span>
+      <p>Próximamente...</p>
+    </div>
   } @else {
-    <div class="cards-grid">
+    <div class="products-home-grid">
       @for (product of products; track product.id) {
-        <div class="card">
-          <img
-            [src]="product.imageKey || placeholder"
-            [alt]="product.name"
-            class="card-img"
-            (error)="$any($event.target).src = placeholder"
-          />
-          <h3>{{ product.name }}</h3>
-          <p>{{ product.category }} · {{ product.salePrice | currency:'EUR' }}</p>
+        <div class="product-home-card">
+          <div class="phc-img-wrap">
+            <img
+              [src]="product.imageKey || placeholder"
+              [alt]="product.name"
+              class="phc-img"
+              (error)="$any($event.target).src = placeholder"
+            />
+            @if (product.category) {
+              <span class="phc-category">{{ product.category }}</span>
+            }
+          </div>
+          <div class="phc-body">
+            <h3 class="phc-name">{{ product.name }}</h3>
+            <div class="phc-price">{{ product.salePrice | currency:'EUR' }}</div>
+          </div>
         </div>
       }
     </div>
   }
-  <a routerLink="/productos" class="link-more">Ver todos los productos →</a>
+
+  <div class="section-cta-row">
+    <a routerLink="/productos" class="btn-see-all">
+      Ver todos los productos
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+  </div>
+</section>
+
+<section class="cta-banner">
+  <div class="cta-banner-inner">
+    <div class="cta-banner-content">
+      <span class="cta-eyebrow">¿No sabes a qué hora era tu cita?</span>
+      <h2 class="cta-heading">Revisa tu agenda fácilmente</h2>
+      <p class="cta-sub">Únete a cientos de clientas que confían en CitaBella para su cuidado personal. Pide a un profesional que vincule tu cuenta con tu agenda para poder visualizar tus citas.</p>
+      @if (!auth.isLogged()) {
+        <div class="cta-actions">
+          <a routerLink="/login" class="btn-cta-banner-primary">
+            Reservar ahora
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </a>
+          <a routerLink="/register" class="btn-cta-banner-ghost">Crear cuenta gratis</a>
+        </div>
+      } @else {
+        <a routerLink="/panel" class="btn-cta-banner-primary">
+          Ver mi agenda
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+      }
+    </div>
+    <div class="cta-banner-decoration" aria-hidden="true">
+      <img alt="CitaBella" src="/images/CitaBellaLogoFondoTransparente.png">
+    </div>
+  </div>
 </section>

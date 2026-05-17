@@ -68,7 +68,6 @@ import { ConfirmService } from '../../../core/services/confirm.service';
       <table class="simple-table">
         <thead>
         <tr>
-          <th>ID</th>
           <th>Usuario</th>
           <th>Email</th>
           <th>Rol</th>
@@ -80,7 +79,6 @@ import { ConfirmService } from '../../../core/services/confirm.service';
         <tbody>
           @for (u of users; track u.id) {
             <tr>
-              <td>{{ u.id }}</td>
               <td>{{ u.username }}</td>
               <td>{{ u.email }}</td>
               <td>
@@ -118,7 +116,7 @@ import { ConfirmService } from '../../../core/services/confirm.service';
                   <button class="btn-xs btn-outline" (click)="startSwapRole(u.id)">Rol</button>
                 }
                 @if (u.accountStatus !== 'LOCKED') {
-                  <button class="btn-xs btn-danger" (click)="deactivate(u.id)">Bloquear</button>
+                  <button class="btn-xs btn-danger" (click)="deactivate(u.id)"><span class="material-symbols-outlined">person_off</span></button>
                 }
               </td>
             </tr>
