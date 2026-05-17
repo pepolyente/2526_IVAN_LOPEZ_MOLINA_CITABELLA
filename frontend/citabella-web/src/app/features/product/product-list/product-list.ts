@@ -133,9 +133,9 @@ import { ConfirmService } from '../../../core/services/confirm.service';
                     </span>
                   </td>
                   <td class="actions-cell">
-                    <button class="btn-xs btn-outline" (click)="startEdit(p)">Editar</button>
+                    <button class="btn-xs btn-outline" (click)="startEdit(p)"><span class="material-symbols-outlined">edit</span></button>
                     @if (p.active) {
-                      <button class="btn-xs btn-danger" (click)="deactivate(p.id)">Desactivar</button>
+                      <button class="btn-xs btn-danger" (click)="deactivate(p.id)"><span class="material-symbols-outlined">person_off</span></button>
                     }
                   </td>
                 }

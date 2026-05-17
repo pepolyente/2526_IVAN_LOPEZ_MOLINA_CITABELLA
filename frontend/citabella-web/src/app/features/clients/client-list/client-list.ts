@@ -239,6 +239,7 @@ export class ClientList implements OnInit {
           u.username.toLowerCase().includes(this.userSearchTerm.toLowerCase()) ||
           u.email.toLowerCase().includes(this.userSearchTerm.toLowerCase())
         );
+        this.cdr.detectChanges();
       },
       error: () => this.toast.show('Error al buscar usuarios', 'error'),
     });

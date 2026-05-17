@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { AuthService } from '../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { ThemeService } from '../../core/services/theme.service';
@@ -9,9 +9,10 @@ import { ThemeService } from '../../core/services/theme.service';
   templateUrl: './public-header.html',
   styleUrl: './public-header.css',
 })
-export class PublicHeader {
+export class PublicHeader implements OnInit {
   isMenuOpen = false;
   isMobile = false;
+  isScrolled = false;
 
   constructor(
     public auth: AuthService,
@@ -21,10 +22,19 @@ export class PublicHeader {
     this.checkScreen();
   }
 
+  ngOnInit(): void {
+    this.onScroll();
+  }
+
   @HostListener('window:resize')
   checkScreen() {
     this.isMobile = window.innerWidth < 768;
     if (!this.isMobile) this.isMenuOpen = false;
+  }
+
+  @HostListener('window:scroll')
+  onScroll() {
+    this.isScrolled = window.scrollY > 10;
   }
 
   toggleMenu() {
