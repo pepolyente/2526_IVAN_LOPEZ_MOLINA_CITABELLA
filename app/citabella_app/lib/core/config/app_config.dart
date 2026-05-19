@@ -19,10 +19,10 @@ class AppConfig {
   // MODIFICA ESTA LÍNEA CUANDO CAMBIES DE ENTORNO
   //
   // Android Emulator por defecto:
-  static const String baseUrl = 'http://10.0.2.2:4200';
+  //static const String baseUrl = 'http://10.0.2.2:4200';
   //
   // Dispositivo físico en red local (ejemplo):
-  // static const String baseUrl = 'http://192.168.1.100';
+   static const String baseUrl = 'http://localhost:4200';
   //
   // Puerto Nginx (por defecto 80, no hace falta indicarlo):
   // static const String baseUrl = 'http://192.168.1.100:80';
