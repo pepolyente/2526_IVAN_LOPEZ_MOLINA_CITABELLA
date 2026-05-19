@@ -84,6 +84,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
       // MIXED_CONTENT_ALWAYS_ALLOW permite cargar recursos HTTP desde HTTP
       mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
 
+      allowContentAccess: true,
+      allowFileAccess: true,
+
       // UX
       supportZoom: AppConfig.webViewSupportZoom,
       builtInZoomControls: false,

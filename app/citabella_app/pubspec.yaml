@@ -26,6 +26,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
+  flutter_launcher_icons: "^0.14.4"
 
   # Splash screen nativo (genera recursos nativos Android/iOS)
   flutter_native_splash: ^2.4.3
@@ -37,6 +38,9 @@ flutter:
   # Assets del proyecto
   assets:
     - assets/images/
-
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/logo_splash_dark.png"
   # NOTA: No se define fuente Inter aquí porque Angular la carga desde Google Fonts
   # dentro del WebView. Flutter solo usa la fuente nativa del sistema.
