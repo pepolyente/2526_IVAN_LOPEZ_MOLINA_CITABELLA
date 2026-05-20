@@ -25,19 +25,38 @@
 
     @if (step === 1) {
       <div class="modal-body">
-        <p class="step-hint">¿Para quién es la cita y a qué hora?</p>
+        <p class="step-hint">¿Para quién es la cita?</p>
 
-        <div class="form-group">
-          <label>Cliente</label>
-          <select [(ngModel)]="form.clientId" class="input-large">
-            <option [ngValue]="undefined">— Sin cliente asignado —</option>
-            @for (c of clients; track c.id) {
-              <option [ngValue]="c.id">{{ c.name }} · {{ c.phoneNumber }}</option>
+        @if (!selectedClient) {
+          <div class="search-section">
+            <div class="search-group">
+              <input type="text"
+                     [(ngModel)]="clientSearchTerm"
+                     placeholder="Nombre o teléfono..."
+                     class="input-large"
+                     (keyup.enter)="searchClients()" />
+              <button class="btn-primary" (click)="searchClients()">Buscar</button>
+            </div>
+            @if (clientResults.length > 0) {
+              <div class="results-list">
+                @for (c of clientResults; track c.id) {
+                  <button class="result-item" (click)="selectClient(c)">
+                    <strong>{{ c.name }}</strong> — {{ c.phoneNumber }}
+                  </button>
+                }
+              </div>
+            } @else if (clientSearchTerm && clientResults.length === 0) {
+              <p class="empty-state">No se encontraron clientes</p>
             }
-          </select>
-        </div>
+          </div>
+        } @else {
+          <div class="selected-badge">
+            <span>Cliente: {{ selectedClient.name }} ({{ selectedClient.phoneNumber }})</span>
+            <button class="btn-xs btn-outline" (click)="clearClient()">Cambiar</button>
+          </div>
+        }
 
-        <div class="form-row-2">
+        <div class="form-row-2" style="margin-top: 16px;">
           <div class="form-group">
             <label>Inicio</label>
             <input type="datetime-local" [(ngModel)]="form.startAt" class="input-large" />
@@ -50,32 +69,82 @@
       </div>
     }
 
+    <!-- PASO 2: SERVICIOS + EMPLEADO -->
     @if (step === 2) {
       <div class="modal-body">
-        <p class="step-hint">¿Qué servicios se van a realizar?</p>
+        <p class="step-hint">¿Qué servicios y con quién?</p>
 
-        <div class="treatments-grid">
-          @for (t of treatments; track t.id) {
-            <button
-              class="treatment-chip"
-              [class.selected]="isSelected(t.id)"
-              (click)="toggleTreatment(t.id)"
-              type="button">
-              <span class="chip-name">{{ t.name }}</span>
-              <span class="chip-price">{{ t.price }}€</span>
-              <span class="chip-duration">{{ t.minimumDuration }} min</span>
-            </button>
+        <!-- Buscador de tratamientos -->
+        <div class="search-section">
+          <div class="search-group">
+            <input type="text"
+                   [(ngModel)]="treatmentSearchTerm"
+                   placeholder="Buscar tratamiento..."
+                   class="input-large"
+                   (keyup.enter)="searchTreatments()" />
+            <button class="btn-primary" (click)="searchTreatments()">Buscar</button>
+          </div>
+
+          @if (treatmentResults.length > 0) {
+            <div class="treatments-grid">
+              @for (t of treatmentResults; track t.id) {
+                <button
+                  class="treatment-chip"
+                  [class.selected]="isTreatmentSelected(t.id)"
+                  (click)="toggleTreatment(t)">
+                  <span class="chip-name">{{ t.name }}</span>
+                  <span class="chip-price">{{ t.price }}€</span>
+                  <span class="chip-duration">{{ t.minimumDuration }} min</span>
+                </button>
+              }
+            </div>
+          } @else if (treatmentSearchTerm && treatmentResults.length === 0) {
+            <p class="empty-state">No se encontraron tratamientos</p>
           }
         </div>
 
-        <div class="form-group" style="margin-top:16px">
+        @if (selectedTreatments.length > 0) {
+          <div class="selected-treatments">
+            <label>Tratamientos seleccionados:</label>
+            <div class="selected-chips">
+              @for (t of selectedTreatments; track t.id) {
+                <span class="selected-chip">
+                  {{ t.name }}
+                  <button class="remove-chip" (click)="toggleTreatment(t)">✕</button>
+                </span>
+              }
+            </div>
+          </div>
+        }
+
+        <div class="search-section" style="margin-top: 20px;">
           <label>Empleado</label>
-          <select [(ngModel)]="form.employeeId" class="input-large">
-            <option [ngValue]="undefined">— Sin asignar —</option>
-            @for (e of employees; track e.id) {
-              <option [ngValue]="e.id">{{ e.name }}</option>
+          @if (!selectedEmployee) {
+            <div class="search-group">
+              <input type="text"
+                     [(ngModel)]="employeeSearchTerm"
+                     placeholder="Nombre del empleado..."
+                     class="input-large"
+                     (keyup.enter)="searchEmployees()" />
+              <button class="btn-primary" (click)="searchEmployees()">Buscar</button>
+            </div>
+            @if (employeeResults.length > 0) {
+              <div class="results-list">
+                @for (e of employeeResults; track e.id) {
+                  <button class="result-item" (click)="selectEmployee(e)">
+                    {{ e.name }} — {{ e.position }}
+                  </button>
+                }
+              </div>
+            } @else if (employeeSearchTerm && employeeResults.length === 0) {
+              <p class="empty-state">No se encontraron empleados</p>
             }
-          </select>
+          } @else {
+            <div class="selected-badge">
+              <span>Empleado: {{ selectedEmployee.name }} ({{ selectedEmployee.position }})</span>
+              <button class="btn-xs btn-outline" (click)="clearEmployee()">Cambiar</button>
+            </div>
+          }
         </div>
       </div>
     }
@@ -83,27 +152,24 @@
     @if (step === 3) {
       <div class="modal-body">
         <p class="step-hint">Revisa los datos antes de guardar</p>
-
         <div class="confirm-card">
           <div class="confirm-row">
             <span class="confirm-label">🕐 Hora</span>
-            <!-- FIX: use component method instead of slice pipe -->
             <span>{{ formatTime(form.startAt) }} – {{ formatTime(form.endAt) }}</span>
           </div>
           <div class="confirm-row">
             <span class="confirm-label">👤 Cliente</span>
-            <span>{{ form.clientId ? 'Asignado' : 'Sin cliente' }}</span>
+            <span>{{ selectedClient?.name || 'Sin cliente' }}</span>
           </div>
           <div class="confirm-row">
             <span class="confirm-label">✂ Empleado</span>
-            <span>{{ form.employeeId ? 'Asignado' : 'Sin asignar' }}</span>
+            <span>{{ selectedEmployee?.name || 'Sin asignar' }}</span>
           </div>
           <div class="confirm-row">
             <span class="confirm-label">💅 Servicios</span>
-            <span>{{ form.treatmentsIds.length }} seleccionado(s)</span>
+            <span>{{ selectedTreatments.map(t => t.name).join(', ') || 'Ninguno' }}</span>
           </div>
         </div>
-
         @if (error) {
           <p class="error-msg">{{ error }}</p>
         }
@@ -122,7 +188,7 @@
           Siguiente <span class="material-symbols-outlined">arrow_forward</span>
         </button>
       } @else {
-        <button class="btn-primary btn-confirm" (click)="submit()" [disabled]="!isFormValid() || loading">
+        <button class="btn-primary btn-confirm" (click)="submit()" [disabled]="loading">
           {{ loading ? 'Guardando...' : 'Confirmar cita' }}
         </button>
       }
