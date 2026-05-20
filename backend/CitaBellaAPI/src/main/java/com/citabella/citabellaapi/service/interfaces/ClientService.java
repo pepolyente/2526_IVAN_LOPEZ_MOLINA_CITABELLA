@@ -2,6 +2,7 @@ package com.citabella.citabellaapi.service.interfaces;
 
 import com.citabella.citabellaapi.dto.client.ClientRequest;
 import com.citabella.citabellaapi.dto.client.ClientResponse;
+import com.citabella.citabellaapi.dto.filter.FilterRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,7 +13,7 @@ public interface ClientService {
 
     ClientResponse getById(Integer id);
 
-    Page<ClientResponse> findAll(Pageable pageable, Boolean active);
+    Page<ClientResponse> findAll(Pageable pageable, Boolean active, FilterRequest filterRequest);
 
     ClientResponse update(Integer id, ClientRequest request);
 

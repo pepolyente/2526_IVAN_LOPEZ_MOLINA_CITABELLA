@@ -1,6 +1,7 @@
 package com.citabella.citabellaapi.controller.treatment;
 
 import com.citabella.citabellaapi.docs.ApiSecurityDocs;
+import com.citabella.citabellaapi.dto.filter.FilterRequest;
 import com.citabella.citabellaapi.dto.page.PageResponse;
 import com.citabella.citabellaapi.dto.treatment.TreatmentDetailedResponse;
 import com.citabella.citabellaapi.dto.treatment.TreatmentRequest;
@@ -61,10 +62,11 @@ public class TreatmentController {
     @GetMapping("/detail")
     public ResponseEntity<PageResponse<TreatmentDetailedResponse>> findAllDetailed(
             @ParameterObject Pageable pageable,
-            @RequestParam(required = false) Boolean active) {
+            @RequestParam(required = false) Boolean active,
+            @ParameterObject FilterRequest filterRequest) {
 
         return ResponseEntity.ok(PageResponse.from(
-                treatmentService.findAllDetailed(pageable, active)));
+                treatmentService.findAllDetailed(pageable, active, filterRequest)));
     }
 
     @Operation(summary = "Update treatment", description = ApiSecurityDocs.ADMIN)

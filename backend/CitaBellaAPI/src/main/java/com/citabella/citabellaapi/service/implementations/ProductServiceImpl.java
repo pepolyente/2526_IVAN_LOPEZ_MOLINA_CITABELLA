@@ -1,5 +1,6 @@
 package com.citabella.citabellaapi.service.implementations;
 
+import com.citabella.citabellaapi.dto.filter.FilterRequest;
 import com.citabella.citabellaapi.dto.product.ProductPrivateResponse;
 import com.citabella.citabellaapi.dto.product.ProductPublicResponse;
 import com.citabella.citabellaapi.dto.product.ProductRequest;
@@ -8,11 +9,13 @@ import com.citabella.citabellaapi.exception.BadRequestException;
 import com.citabella.citabellaapi.exception.ResourceNotFoundException;
 import com.citabella.citabellaapi.mappers.ProductMapper;
 import com.citabella.citabellaapi.repository.ProductRepository;
+import com.citabella.citabellaapi.repository.specifications.ProductSpecification;
 import com.citabella.citabellaapi.service.interfaces.ProductService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -56,12 +59,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductPrivateResponse> findAllAdmin(Pageable pageable, Boolean active) {
-        if (active != null) {
-            return productRepository.findAllByActive(active, pageable)
-                    .map(ProductMapper::toPrivateResponse);
-        }
-        return productRepository.findAll(pageable)
+    public Page<ProductPrivateResponse> findAllAdmin(Pageable pageable, Boolean active, FilterRequest filterRequest) {
+        String search = (filterRequest != null) ? filterRequest.search() : null;
+
+        Specification<Product> spec = ProductSpecification.withFilters(search, active);
+
+        return productRepository.findAll(spec, pageable)
                 .map(ProductMapper::toPrivateResponse);
     }
 

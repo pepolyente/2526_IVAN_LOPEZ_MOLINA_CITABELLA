@@ -1,5 +1,6 @@
 package com.citabella.citabellaapi.service.interfaces;
 
+import com.citabella.citabellaapi.dto.filter.FilterRequest;
 import com.citabella.citabellaapi.dto.treatment.TreatmentDetailedResponse;
 import com.citabella.citabellaapi.dto.treatment.TreatmentRequest;
 import com.citabella.citabellaapi.dto.treatment.TreatmentResponse;
@@ -16,7 +17,7 @@ public interface TreatmentService {
 
     Page<TreatmentResponse> findAll(Pageable pageable, Boolean active);
 
-    Page<TreatmentDetailedResponse> findAllDetailed(Pageable pageable, Boolean active);
+    Page<TreatmentDetailedResponse> findAllDetailed(Pageable pageable, Boolean active, FilterRequest filterRequest);
 
     TreatmentResponse update(Integer id, TreatmentRequest request);
 

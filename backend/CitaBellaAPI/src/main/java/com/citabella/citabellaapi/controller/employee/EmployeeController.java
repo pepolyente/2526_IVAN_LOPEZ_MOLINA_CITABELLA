@@ -3,6 +3,7 @@ package com.citabella.citabellaapi.controller.employee;
 import com.citabella.citabellaapi.docs.ApiSecurityDocs;
 import com.citabella.citabellaapi.dto.employee.EmployeeRequest;
 import com.citabella.citabellaapi.dto.employee.EmployeeResponse;
+import com.citabella.citabellaapi.dto.filter.FilterRequest;
 import com.citabella.citabellaapi.dto.page.PageResponse;
 import com.citabella.citabellaapi.service.interfaces.EmployeeService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -47,10 +48,11 @@ public class EmployeeController {
     @GetMapping
     public ResponseEntity<PageResponse<EmployeeResponse>> findAll(
             @ParameterObject Pageable pageable,
-            @RequestParam(required = false) Boolean active) {
+            @RequestParam(required = false) Boolean active,
+            @ParameterObject FilterRequest filterRequest) {
 
         return ResponseEntity.ok(PageResponse.from(
-                employeeService.findAll(pageable, active)));
+                employeeService.findAll(pageable, active, filterRequest)));
     }
 
     @Operation(summary = "Update employee", description = ApiSecurityDocs.ADMIN)

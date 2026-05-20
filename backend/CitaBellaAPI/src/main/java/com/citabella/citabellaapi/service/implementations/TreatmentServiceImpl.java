@@ -1,5 +1,6 @@
 package com.citabella.citabellaapi.service.implementations;
 
+import com.citabella.citabellaapi.dto.filter.FilterRequest;
 import com.citabella.citabellaapi.dto.treatment.TreatmentDetailedResponse;
 import com.citabella.citabellaapi.dto.treatment.TreatmentRequest;
 import com.citabella.citabellaapi.dto.treatment.TreatmentResponse;
@@ -8,11 +9,13 @@ import com.citabella.citabellaapi.exception.BadRequestException;
 import com.citabella.citabellaapi.exception.ResourceNotFoundException;
 import com.citabella.citabellaapi.mappers.TreatmentMapper;
 import com.citabella.citabellaapi.repository.TreatmentRepository;
+import com.citabella.citabellaapi.repository.specifications.TreatmentSpecification;
 import com.citabella.citabellaapi.service.interfaces.TreatmentService;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,6 +51,10 @@ public class TreatmentServiceImpl implements TreatmentService {
                         .orElseThrow(() -> new ResourceNotFoundException("Treatment not found")));
     }
 
+    /**
+     * Listado público activo (sin búsqueda dinámica, sin auth).
+     * No requiere FilterRequest.
+     */
     @Override
     public Page<TreatmentResponse> findAll(Pageable pageable, Boolean active) {
         if (active != null) {
@@ -58,13 +65,17 @@ public class TreatmentServiceImpl implements TreatmentService {
                 .map(TreatmentMapper::toResponse);
     }
 
+    /**
+     * Listado detallado para admin con filtros dinámicos.
+     * Combina búsqueda por nombre (LIKE) y filtro por active mediante Specifications.
+     */
     @Override
-    public Page<TreatmentDetailedResponse> findAllDetailed(Pageable pageable, Boolean active) {
-        if (active != null) {
-            return treatmentRepository.findAllByActive(active, pageable)
-                    .map(TreatmentMapper::toDetailedResponse);
-        }
-        return treatmentRepository.findAll(pageable)
+    public Page<TreatmentDetailedResponse> findAllDetailed(Pageable pageable, Boolean active, FilterRequest filterRequest) {
+        String search = (filterRequest != null) ? filterRequest.search() : null;
+
+        Specification<Treatment> spec = TreatmentSpecification.withFilters(search, active);
+
+        return treatmentRepository.findAll(spec, pageable)
                 .map(TreatmentMapper::toDetailedResponse);
     }
 
@@ -73,7 +84,6 @@ public class TreatmentServiceImpl implements TreatmentService {
         return treatmentRepository.findAllByActive(true).stream()
                 .map(TreatmentMapper::toResponse).toList();
     }
-
 
     @Override
     public TreatmentResponse update(Integer id, TreatmentRequest request) {
@@ -94,7 +104,6 @@ public class TreatmentServiceImpl implements TreatmentService {
 
         return TreatmentMapper.toResponse(treatmentRepository.save(treatment));
     }
-
 
     @Override
     public TreatmentResponse deactivate(Integer id) {

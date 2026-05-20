@@ -3,6 +3,7 @@ package com.citabella.citabellaapi.controller.client;
 import com.citabella.citabellaapi.docs.ApiSecurityDocs;
 import com.citabella.citabellaapi.dto.client.ClientRequest;
 import com.citabella.citabellaapi.dto.client.ClientResponse;
+import com.citabella.citabellaapi.dto.filter.FilterRequest;
 import com.citabella.citabellaapi.dto.page.PageResponse;
 import com.citabella.citabellaapi.service.interfaces.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -45,9 +46,10 @@ public class ClientController {
     @GetMapping
     public ResponseEntity<PageResponse<ClientResponse>> findAll(
             @ParameterObject Pageable pageable,
-            @RequestParam(required = false) Boolean active) {
+            @RequestParam(required = false) Boolean active,
+            @ParameterObject FilterRequest filterRequest) {
         return ResponseEntity.ok(PageResponse.from(
-                clientService.findAll(pageable, active)));
+                clientService.findAll(pageable, active, filterRequest)));
     }
 
     @Operation(summary = "Update client", description = ApiSecurityDocs.ADMIN_EMPLOYEE)

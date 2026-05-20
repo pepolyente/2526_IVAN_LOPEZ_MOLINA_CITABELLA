@@ -1,6 +1,7 @@
 package com.citabella.citabellaapi.controller.product;
 
 import com.citabella.citabellaapi.docs.ApiSecurityDocs;
+import com.citabella.citabellaapi.dto.filter.FilterRequest;
 import com.citabella.citabellaapi.dto.page.PageResponse;
 import com.citabella.citabellaapi.dto.product.ProductPrivateResponse;
 import com.citabella.citabellaapi.dto.product.ProductPublicResponse;
@@ -52,10 +53,11 @@ public class ProductController {
     @GetMapping("/admin")
     public ResponseEntity<PageResponse<ProductPrivateResponse>> findAllAdmin(
             @ParameterObject Pageable pageable,
-            @RequestParam(required = false) Boolean active) {
+            @RequestParam(required = false) Boolean active,
+            @ParameterObject FilterRequest filterRequest) {
 
         return ResponseEntity.ok(PageResponse.from(
-                productService.findAllAdmin(pageable, active)));
+                productService.findAllAdmin(pageable, active, filterRequest)));
     }
 
     @Operation(summary = "Get all active products (public)", description = ApiSecurityDocs.ANYONE)

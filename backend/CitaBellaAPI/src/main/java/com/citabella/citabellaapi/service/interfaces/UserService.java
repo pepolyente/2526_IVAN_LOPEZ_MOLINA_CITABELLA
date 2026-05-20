@@ -1,6 +1,7 @@
 package com.citabella.citabellaapi.service.interfaces;
 
 import com.citabella.citabellaapi.dto.auth.UserInfoResponse;
+import com.citabella.citabellaapi.dto.filter.FilterRequest;
 import com.citabella.citabellaapi.dto.user.UserRequest;
 import com.citabella.citabellaapi.dto.user.UserResponse;
 import com.citabella.citabellaapi.dto.user.UserUpdateRequest;
@@ -27,5 +28,5 @@ public interface UserService {
 
     UserInfoResponse swapRole(Integer userId, String roleName);
 
-    Page<UserResponse> findAll(Pageable pageable, AccountStatus accountStatus);
+    Page<UserResponse> findAll(Pageable pageable, AccountStatus accountStatus, FilterRequest filterRequest);
 }

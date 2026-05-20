@@ -2,6 +2,7 @@ package com.citabella.citabellaapi.service.implementations;
 
 import com.citabella.citabellaapi.dto.employee.EmployeeRequest;
 import com.citabella.citabellaapi.dto.employee.EmployeeResponse;
+import com.citabella.citabellaapi.dto.filter.FilterRequest;
 import com.citabella.citabellaapi.entity.employee.Employee;
 import com.citabella.citabellaapi.entity.enums.AccountStatus;
 import com.citabella.citabellaapi.entity.security.Role;
@@ -12,11 +13,13 @@ import com.citabella.citabellaapi.mappers.EmployeeMapper;
 import com.citabella.citabellaapi.repository.EmployeeRepository;
 import com.citabella.citabellaapi.repository.RoleRepository;
 import com.citabella.citabellaapi.repository.UserRepository;
+import com.citabella.citabellaapi.repository.specifications.EmployeeSpecification;
 import com.citabella.citabellaapi.service.interfaces.EmployeeService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 
@@ -43,7 +46,6 @@ public class EmployeeServiceImpl implements EmployeeService {
         return EmployeeMapper.toResponse(employeeRepository.save(employee));
     }
 
-
     @Override
     public EmployeeResponse getById(Integer id) {
         Employee employee = employeeRepository.findById(id)
@@ -52,12 +54,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Page<EmployeeResponse> findAll(Pageable pageable, Boolean active) {
-        if (active != null) {
-            return employeeRepository.findAllByActive(active, pageable)
-                    .map(EmployeeMapper::toResponse);
-        }
-        return employeeRepository.findAll(pageable)
+    public Page<EmployeeResponse> findAll(Pageable pageable, Boolean active, FilterRequest filterRequest) {
+        String search = (filterRequest != null) ? filterRequest.search() : null;
+
+        Specification<Employee> spec = EmployeeSpecification.withFilters(search, active);
+
+        return employeeRepository.findAll(spec, pageable)
                 .map(EmployeeMapper::toResponse);
     }
 
