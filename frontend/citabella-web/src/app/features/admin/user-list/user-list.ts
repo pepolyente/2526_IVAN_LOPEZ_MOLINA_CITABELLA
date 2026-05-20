@@ -49,6 +49,22 @@ import { ConfirmService } from '../../../core/services/confirm.service';
           <option value="LOCKED">Bloqueado</option>
         </select>
       </div>
+
+      <div class="filter-group search-group">
+        <label>Buscar usuario</label>
+        <div class="search-wrapper">
+          <input type="text"
+                 [(ngModel)]="searchTerm"
+                 placeholder="Usuario o email..."
+                 (keyup.enter)="onSearch()"
+                 class="inline-input" />
+          <button class="btn-outline" (click)="onSearch()">Buscar</button>
+          @if (searchTerm) {
+            <button class="btn-outline" (click)="clearSearch()">✕</button>
+          }
+        </div>
+      </div>
+
       <span class="total-hint">{{ totalElements }} usuario(s)</span>
     </div>
 
@@ -140,6 +156,7 @@ export class UserList implements OnInit {
   totalPages     = 0;
   totalElements  = 0;
   filterStatus: AccountStatus | '' = '';
+  searchTerm = '';
 
   showCreateForm = false;
   newUser = { username: '', email: '', password: '' };
@@ -161,7 +178,7 @@ export class UserList implements OnInit {
   load(): void {
     this.loading = true;
     const accountStatus = this.filterStatus || undefined;
-    this.svc.getAll({ page: this.page, size: this.size, accountStatus }).subscribe({
+    this.svc.getAll({ page: this.page, size: this.size, accountStatus, search: this.searchTerm || undefined  }).subscribe({
       next: p => {
         this.users         = p.content;
         this.totalPages    = p.totalPages;
@@ -173,6 +190,15 @@ export class UserList implements OnInit {
     });
   }
 
+  onSearch(): void {
+    this.page = 0;
+    this.load();
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.onSearch();
+  }
   applyFilter(): void { this.page = 0; this.load(); }
   prevPage(): void { if (this.page > 0) { this.page--; this.load(); } }
   nextPage(): void { if (this.page < this.totalPages - 1) { this.page++; this.load(); } }

@@ -25,6 +25,21 @@ import { ConfirmService } from '../../../core/services/confirm.service';
           <option [ngValue]="false">Inactivos</option>
         </select>
       </div>
+
+      <div class="filter-group search-group">
+        <label>Buscar</label>
+        <div class="search-wrapper">
+          <input type="text"
+                 [(ngModel)]="searchTerm"
+                 placeholder="Nombre o teléfono..."
+                 (keyup.enter)="onSearch()"
+                 class="inline-input" />
+          <button class="btn-outline" (click)="onSearch()">Buscar</button>
+          @if (searchTerm) {
+            <button class="btn-outline" (click)="clearSearch()">✕</button>
+          }
+        </div>
+      </div>
       <span class="total-hint">{{ totalElements }} cliente(s)</span>
     </div>
 
@@ -147,6 +162,7 @@ export class ClientList implements OnInit {
   totalPages = 0;
   totalElements = 0;
   filterActive: boolean | undefined = undefined;
+  searchTerm = '';
 
   editingId: number | null = null;
   editForm: ClientRequest = { name: '', phoneNumber: '' };
@@ -169,7 +185,7 @@ export class ClientList implements OnInit {
 
   load(): void {
     this.loading = true;
-    this.svc.getAll({ page: this.page, size: this.size, active: this.filterActive }).subscribe({
+    this.svc.getAll({ page: this.page, size: this.size, active: this.filterActive, search: this.searchTerm || undefined }).subscribe({
       next: p => {
         this.clients = p.content;
         this.totalPages = p.totalPages;
@@ -187,6 +203,16 @@ export class ClientList implements OnInit {
   applyFilter(): void { this.page = 0; this.load(); }
   prevPage(): void { if (this.page > 0) { this.page--; this.load(); } }
   nextPage(): void { if (this.page < this.totalPages - 1) { this.page++; this.load(); } }
+
+  onSearch(): void {
+    this.page = 0;
+    this.load();
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.onSearch();
+  }
 
   async deactivate(id: number): Promise<void> {
     const ok = await this.confirmSvc.confirm('¿Desactivar este cliente?');

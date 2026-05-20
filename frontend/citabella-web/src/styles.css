@@ -2986,6 +2986,37 @@ button, a, input, select, textarea, label {
   color: var(--color-text-muted);
   margin-top: 2px;
 }
+.filters-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.search-group {
+  flex: 2;
+  min-width: 200px;
+}
+
+.search-wrapper {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.search-wrapper input {
+  flex: 1;
+}
+
+@media (max-width: 640px) {
+  .search-wrapper {
+    flex-wrap: wrap;
+  }
+  .search-wrapper button {
+    flex: 1;
+  }
+}
 
 @media (max-width: 767px) {
   .pub-header {

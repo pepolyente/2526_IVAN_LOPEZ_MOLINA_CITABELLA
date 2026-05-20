@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { UserInfoResponse } from '../../shared/models/auth.model';
 import { UserResponse, UserUpdateRequest } from '../../shared/models/user.model';
 import { PageResponse } from '../../shared/models/page-response.model';
+import {buildHttpParams} from '../utils/http-params.util';
+import {UserQueryParams} from '../../shared/models/query-params.model';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -12,26 +14,16 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(params?: {
-    page?: number;
-    size?: number;
-    sort?: string[];
-    accountStatus?: string;
-  }): Observable<PageResponse<UserResponse>> {
+  getAll(
+    params?: UserQueryParams
+  ): Observable<PageResponse<UserResponse>> {
 
-    let httpParams = new HttpParams();
-
-    Object.entries(params || {}).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        if (Array.isArray(value)) {
-          value.forEach(v => httpParams = httpParams.append(key, v));
-        } else {
-          httpParams = httpParams.set(key, value);
-        }
+    return this.http.get<PageResponse<UserResponse>>(
+      this.BASE,
+      {
+        params: buildHttpParams(params)
       }
-    });
-
-    return this.http.get<PageResponse<UserResponse>>(this.BASE, { params: httpParams });
+    );
   }
 
   getById(id: number): Observable<UserResponse> {

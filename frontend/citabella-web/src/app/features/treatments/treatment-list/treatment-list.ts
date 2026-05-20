@@ -23,6 +23,22 @@ import { ConfirmService } from '../../../core/services/confirm.service';
           <option [ngValue]="false">Inactivos</option>
         </select>
       </div>
+
+      <div class="filter-group search-group">
+        <label>Buscar</label>
+        <div class="search-wrapper">
+          <input type="text"
+                 [(ngModel)]="searchTerm"
+                 placeholder="Nombre del tratamiento..."
+                 (keyup.enter)="onSearch()"
+                 class="inline-input" />
+          <button class="btn-outline" (click)="onSearch()">Buscar</button>
+          @if (searchTerm) {
+            <button class="btn-outline" (click)="clearSearch()">✕</button>
+          }
+        </div>
+      </div>
+
       <span class="total-hint">{{ totalElements }} tratamiento(s)</span>
     </div>
 
@@ -100,6 +116,7 @@ export class TreatmentList implements OnInit {
   filterActive: boolean | undefined = undefined;
   editingId: number | null = null;
   editForm: TreatmentRequest = { name: '', minimumDuration: 0, price: 0 };
+  searchTerm = '';
 
   constructor(
     private svc: TreatmentService,
@@ -113,7 +130,7 @@ export class TreatmentList implements OnInit {
 
   load(): void {
     this.loading = true;
-    this.svc.getDetailed({ page: this.page, size: this.size, active: this.filterActive }).subscribe({
+    this.svc.getDetailed({ page: this.page, size: this.size, active: this.filterActive, search: this.searchTerm || undefined }).subscribe({
       next: p => {
         this.treatments = p.content;
         this.totalPages = p.totalPages;
@@ -124,7 +141,15 @@ export class TreatmentList implements OnInit {
       error: () => { this.loading = false; this.cdr.detectChanges(); },
     });
   }
+  onSearch(): void {
+    this.page = 0;
+    this.load();
+  }
 
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.onSearch();
+  }
   applyFilter(): void { this.page = 0; this.load(); }
   prevPage(): void { if (this.page > 0) { this.page--; this.load(); } }
   nextPage(): void { if (this.page < this.totalPages - 1) { this.page++; this.load(); } }
