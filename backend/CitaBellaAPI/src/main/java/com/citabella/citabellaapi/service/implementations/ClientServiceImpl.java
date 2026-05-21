@@ -2,6 +2,7 @@ package com.citabella.citabellaapi.service.implementations;
 
 import com.citabella.citabellaapi.dto.client.ClientRequest;
 import com.citabella.citabellaapi.dto.client.ClientResponse;
+import com.citabella.citabellaapi.dto.filter.FilterRequest;
 import com.citabella.citabellaapi.entity.client.Client;
 import com.citabella.citabellaapi.entity.enums.AccountStatus;
 import com.citabella.citabellaapi.entity.security.Role;
@@ -12,11 +13,13 @@ import com.citabella.citabellaapi.mappers.ClientMapper;
 import com.citabella.citabellaapi.repository.ClientRepository;
 import com.citabella.citabellaapi.repository.RoleRepository;
 import com.citabella.citabellaapi.repository.UserRepository;
+import com.citabella.citabellaapi.repository.specifications.ClientSpecification;
 import com.citabella.citabellaapi.service.interfaces.ClientService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -65,12 +68,12 @@ public class ClientServiceImpl implements ClientService {
     }
 
     @Override
-    public Page<ClientResponse> findAll(Pageable pageable, Boolean active) {
-        if (active != null) {
-            return clientRepository.findAllByActive(active, pageable)
-                    .map(ClientMapper::toResponse);
-        }
-        return clientRepository.findAll(pageable)
+    public Page<ClientResponse> findAll(Pageable pageable, Boolean active, FilterRequest filterRequest) {
+        String search = (filterRequest != null) ? filterRequest.search() : null;
+
+        Specification<Client> spec = ClientSpecification.withFilters(search, active);
+
+        return clientRepository.findAll(spec, pageable)
                 .map(ClientMapper::toResponse);
     }
 

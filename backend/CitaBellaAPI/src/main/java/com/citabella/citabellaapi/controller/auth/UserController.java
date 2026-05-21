@@ -2,6 +2,7 @@ package com.citabella.citabellaapi.controller.auth;
 
 import com.citabella.citabellaapi.docs.ApiSecurityDocs;
 import com.citabella.citabellaapi.dto.auth.UserInfoResponse;
+import com.citabella.citabellaapi.dto.filter.FilterRequest;
 import com.citabella.citabellaapi.dto.page.PageResponse;
 import com.citabella.citabellaapi.dto.user.UserRequest;
 import com.citabella.citabellaapi.dto.user.UserResponse;
@@ -42,10 +43,11 @@ public class UserController {
     @GetMapping
     public ResponseEntity<PageResponse<UserResponse>> findAll(
             @ParameterObject Pageable pageable,
-            @RequestParam(required = false) AccountStatus accountStatus) {
+            @RequestParam(required = false) AccountStatus accountStatus,
+            @ParameterObject FilterRequest filterRequest) {
 
         return ResponseEntity.ok(PageResponse.from(
-                userService.findAll(pageable, accountStatus)));
+                userService.findAll(pageable, accountStatus, filterRequest)));
     }
 
     @Operation(summary = "Get user by ID", description = ApiSecurityDocs.ADMIN)

@@ -1,6 +1,7 @@
 package com.citabella.citabellaapi.service.implementations;
 
 import com.citabella.citabellaapi.dto.auth.UserInfoResponse;
+import com.citabella.citabellaapi.dto.filter.FilterRequest;
 import com.citabella.citabellaapi.dto.user.UserRequest;
 import com.citabella.citabellaapi.dto.user.UserResponse;
 import com.citabella.citabellaapi.dto.user.UserUpdateRequest;
@@ -13,11 +14,13 @@ import com.citabella.citabellaapi.mappers.UserMapper;
 import com.citabella.citabellaapi.repository.ClientRepository;
 import com.citabella.citabellaapi.repository.RoleRepository;
 import com.citabella.citabellaapi.repository.UserRepository;
+import com.citabella.citabellaapi.repository.specifications.UserSpecification;
 import com.citabella.citabellaapi.service.interfaces.UserService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -78,16 +81,22 @@ public class UserServiceImpl implements UserService {
         return getByEmail(auth.getName());
     }
 
+    /**
+     * Búsqueda paginada con filtros dinámicos:
+     * - search: búsqueda LIKE por username (User no tiene campo "name")
+     * - accountStatus: filtro exacto por estado de cuenta
+     * <p>
+     * Si search es null/blank o accountStatus es null, el predicado correspondiente se omite.
+     */
     @Override
-    public Page<UserResponse> findAll(Pageable pageable, AccountStatus accountStatus) {
-        if (accountStatus != null) {
-            return userRepository.findAllByAccountStatus(accountStatus, pageable)
-                    .map(UserMapper::toResponse);
-        }
-        return userRepository.findAll(pageable)
+    public Page<UserResponse> findAll(Pageable pageable, AccountStatus accountStatus, FilterRequest filterRequest) {
+        String search = (filterRequest != null) ? filterRequest.search() : null;
+
+        Specification<User> spec = UserSpecification.withFilters(search, accountStatus);
+
+        return userRepository.findAll(spec, pageable)
                 .map(UserMapper::toResponse);
     }
-
 
     @Override
     public UserResponse update(Integer id, UserUpdateRequest request) {
@@ -115,7 +124,6 @@ public class UserServiceImpl implements UserService {
         return UserMapper.toResponse(userRepository.save(user));
     }
 
-
     @Override
     public UserResponse deactivate(Integer id) {
         User user = userRepository.findById(id)
@@ -127,6 +135,7 @@ public class UserServiceImpl implements UserService {
         user.setAccountStatus(AccountStatus.LOCKED);
         return UserMapper.toResponse(userRepository.save(user));
     }
+
     @Override
     public UserInfoResponse swapRole(Integer userId, String roleName) {
         User user = userRepository.findById(userId)
