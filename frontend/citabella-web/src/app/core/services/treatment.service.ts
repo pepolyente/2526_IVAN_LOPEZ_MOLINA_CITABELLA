@@ -7,6 +7,8 @@ import {
   TreatmentResponse
 } from '../../shared/models/treatment.model';
 import { PageResponse } from '../../shared/models/page-response.model';
+import {buildHttpParams} from '../utils/http-params.util';
+import {SearchableQueryParams} from '../../shared/models/query-params.model';
 
 @Injectable({ providedIn: 'root' })
 export class TreatmentService {
@@ -38,28 +40,15 @@ export class TreatmentService {
   }
 
   /** GET /api/treatments/detail */
-  getDetailed(params?: {
-    page?: number;
-    size?: number;
-    sort?: string[];
-    active?: boolean;
-  }): Observable<PageResponse<TreatmentDetailedResponse>> {
-
-    let httpParams = new HttpParams();
-
-    Object.entries(params || {}).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        if (Array.isArray(value)) {
-          value.forEach(v => httpParams = httpParams.append(key, v));
-        } else {
-          httpParams = httpParams.set(key, value);
-        }
-      }
-    });
+  getDetailed(
+    params?: SearchableQueryParams
+  ): Observable<PageResponse<TreatmentDetailedResponse>> {
 
     return this.http.get<PageResponse<TreatmentDetailedResponse>>(
       `${this.BASE}/detail`,
-      { params: httpParams }
+      {
+        params: buildHttpParams(params)
+      }
     );
   }
 

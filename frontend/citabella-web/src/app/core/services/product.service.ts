@@ -7,6 +7,8 @@ import {
   ProductRequest
 } from '../../shared/models/product.model';
 import { PageResponse } from '../../shared/models/page-response.model';
+import {buildHttpParams} from '../utils/http-params.util';
+import {SearchableQueryParams} from '../../shared/models/query-params.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProductService {
@@ -21,28 +23,15 @@ export class ProductService {
   }
 
   /** GET /api/products/admin */
-  getAdmin(params?: {
-    page?: number;
-    size?: number;
-    sort?: string[];
-    active?: boolean;
-  }): Observable<PageResponse<ProductPrivateResponse>> {
-
-    let httpParams = new HttpParams();
-
-    Object.entries(params || {}).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        if (Array.isArray(value)) {
-          value.forEach(v => httpParams = httpParams.append(key, v));
-        } else {
-          httpParams = httpParams.set(key, value);
-        }
-      }
-    });
+  getAdmin(
+    params?: SearchableQueryParams
+  ): Observable<PageResponse<ProductPrivateResponse>> {
 
     return this.http.get<PageResponse<ProductPrivateResponse>>(
       `${this.BASE}/admin`,
-      { params: httpParams }
+      {
+        params: buildHttpParams(params)
+      }
     );
   }
 

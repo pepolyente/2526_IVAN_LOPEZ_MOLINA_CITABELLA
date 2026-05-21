@@ -1,8 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+
 import { ClientRequest, ClientResponse } from '../../shared/models/client.model';
 import { PageResponse } from '../../shared/models/page-response.model';
+
+import { SearchableQueryParams } from '../../shared/models/query-params.model';
+import { buildHttpParams } from '../utils/http-params.util';
 
 @Injectable({ providedIn: 'root' })
 export class ClientService {
@@ -11,26 +15,16 @@ export class ClientService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(params?: {
-    page?: number;
-    size?: number;
-    sort?: string[];
-    active?: boolean;
-  }): Observable<PageResponse<ClientResponse>> {
+  getAll(
+    params?: SearchableQueryParams
+  ): Observable<PageResponse<ClientResponse>> {
 
-    let httpParams = new HttpParams();
-
-    Object.entries(params || {}).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        if (Array.isArray(value)) {
-          value.forEach(v => httpParams = httpParams.append(key, v));
-        } else {
-          httpParams = httpParams.set(key, value);
-        }
+    return this.http.get<PageResponse<ClientResponse>>(
+      this.BASE,
+      {
+        params: buildHttpParams(params)
       }
-    });
-
-    return this.http.get<PageResponse<ClientResponse>>(this.BASE, { params: httpParams });
+    );
   }
 
   getById(id: number): Observable<ClientResponse> {
@@ -45,7 +39,6 @@ export class ClientService {
     return this.http.put<ClientResponse>(`${this.BASE}/${id}`, body);
   }
 
-  /** DELETE /api/clients/{id} */
   deactivate(id: number): Observable<ClientResponse> {
     return this.http.delete<ClientResponse>(`${this.BASE}/${id}`);
   }
@@ -55,10 +48,16 @@ export class ClientService {
   }
 
   linkUser(clientId: number, userId: number): Observable<void> {
-    return this.http.patch<void>(`${this.BASE}/${clientId}/link-user/${userId}`, {});
+    return this.http.patch<void>(
+      `${this.BASE}/${clientId}/link-user/${userId}`,
+      {}
+    );
   }
 
   unlinkUser(clientId: number): Observable<void> {
-    return this.http.patch<void>(`${this.BASE}/${clientId}/unlink-user`, {});
+    return this.http.patch<void>(
+      `${this.BASE}/${clientId}/unlink-user`,
+      {}
+    );
   }
 }

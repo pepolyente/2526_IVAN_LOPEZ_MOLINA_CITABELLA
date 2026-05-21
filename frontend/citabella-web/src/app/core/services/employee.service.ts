@@ -3,6 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { EmployeeRequest, EmployeeResponse } from '../../shared/models/employee.model';
 import { PageResponse } from '../../shared/models/page-response.model';
+import {SearchableQueryParams} from '../../shared/models/query-params.model';
+import {buildHttpParams} from '../utils/http-params.util';
 
 @Injectable({ providedIn: 'root' })
 export class EmployeeService {
@@ -11,26 +13,16 @@ export class EmployeeService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(params?: {
-    page?: number;
-    size?: number;
-    sort?: string[];
-    active?: boolean;
-  }): Observable<PageResponse<EmployeeResponse>> {
+  getAll(
+    params?: SearchableQueryParams
+  ): Observable<PageResponse<EmployeeResponse>> {
 
-    let httpParams = new HttpParams();
-
-    Object.entries(params || {}).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        if (Array.isArray(value)) {
-          value.forEach(v => httpParams = httpParams.append(key, v));
-        } else {
-          httpParams = httpParams.set(key, value);
-        }
+    return this.http.get<PageResponse<EmployeeResponse>>(
+      this.BASE,
+      {
+        params: buildHttpParams(params)
       }
-    });
-
-    return this.http.get<PageResponse<EmployeeResponse>>(this.BASE, { params: httpParams });
+    );
   }
 
   getById(id: number): Observable<EmployeeResponse> {

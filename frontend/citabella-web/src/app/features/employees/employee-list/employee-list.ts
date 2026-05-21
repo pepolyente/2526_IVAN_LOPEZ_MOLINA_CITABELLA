@@ -13,6 +13,23 @@ import { ConfirmService } from '../../../core/services/confirm.service';
       <h2>Empleados</h2>
       <button class="btn-primary" (click)="router.navigate(['/panel/employees/new'])">+ Nuevo empleado</button>
     </div>
+    <div class="filters-bar">
+      <div class="filter-group search-group">
+        <label>Buscar empleado</label>
+        <div class="search-wrapper">
+          <input type="text"
+                 [(ngModel)]="searchTerm"
+                 placeholder="Nombre o puesto..."
+                 (keyup.enter)="onSearch()"
+                 class="inline-input" />
+          <button class="btn-outline" (click)="onSearch()">Buscar</button>
+          @if (searchTerm) {
+            <button class="btn-outline" (click)="clearSearch()">✕</button>
+          }
+        </div>
+      </div>
+      <span class="total-hint">{{ employees.length }} empleado(s)</span>
+    </div>
     @if (loading) {
       <div class="skeleton-table">
         @for (i of [1,2,3,4,5]; track i) {
@@ -81,6 +98,7 @@ export class EmployeeList implements OnInit {
   loading = true;
   editingId: number | null = null;
   editForm: EmployeeRequest = { name: '', position: '' };
+  searchTerm = '';
 
   constructor(
     private svc: EmployeeService,
@@ -94,7 +112,7 @@ export class EmployeeList implements OnInit {
 
   load(): void {
     this.loading = true;
-    this.svc.getAll({ page: 0, size: 200 }).subscribe({
+    this.svc.getAll({ page: 0, size: 200 ,search: this.searchTerm || undefined}).subscribe({
       next: data => {
         this.employees = data.content;
         this.loading = false;
@@ -105,6 +123,15 @@ export class EmployeeList implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  onSearch(): void {
+    this.load();
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.onSearch();
   }
 
   startEdit(employee: EmployeeResponse): void {

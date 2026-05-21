@@ -75,6 +75,22 @@ import { ConfirmService } from '../../../core/services/confirm.service';
           <option [ngValue]="false">Inactivos</option>
         </select>
       </div>
+
+      <div class="filter-group search-group">
+        <label>Buscar producto</label>
+        <div class="search-wrapper">
+          <input type="text"
+                 [(ngModel)]="searchTerm"
+                 placeholder="Nombre o categoría..."
+                 (keyup.enter)="onSearch()"
+                 class="inline-input" />
+          <button class="btn-outline" (click)="onSearch()">Buscar</button>
+          @if (searchTerm) {
+            <button class="btn-outline" (click)="clearSearch()">✕</button>
+          }
+        </div>
+      </div>
+
       <span class="total-hint">{{ totalElements }} producto(s)</span>
     </div>
 
@@ -161,6 +177,7 @@ export class ProductList implements OnInit {
   totalPages     = 0;
   totalElements  = 0;
   filterActive: boolean | undefined = undefined;
+  searchTerm = '';
 
   showCreateForm = false;
   newProduct: ProductRequest = { name: '' };
@@ -180,7 +197,7 @@ export class ProductList implements OnInit {
 
   load(): void {
     this.loading = true;
-    this.svc.getAdmin({ page: this.page, size: this.size, active: this.filterActive }).subscribe({
+    this.svc.getAdmin({ page: this.page, size: this.size, active: this.filterActive, search: this.searchTerm || undefined }).subscribe({
       next: (p: any) => {
         this.products      = p.content;
         this.totalPages    = p.totalPages;
@@ -190,6 +207,16 @@ export class ProductList implements OnInit {
       },
       error: () => { this.loading = false; this.changeDetectorRef.detectChanges(); },
     });
+  }
+
+  onSearch(): void {
+    this.page = 0;
+    this.load();
+  }
+
+  clearSearch(): void {
+    this.searchTerm = '';
+    this.onSearch();
   }
 
   applyFilter(): void { this.page = 0; this.load(); }

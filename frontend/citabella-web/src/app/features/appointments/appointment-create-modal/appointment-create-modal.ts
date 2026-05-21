@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { AppointmentService } from '../../../core/services/appointment.service';
 import { ClientService } from '../../../core/services/client.service';
 import { EmployeeService } from '../../../core/services/employee.service';
@@ -22,99 +22,161 @@ export class AppointmentCreateModal implements OnInit {
 
   step = 1;
 
-  clients:    ClientResponse[]    = [];
-  employees:  EmployeeResponse[]  = [];
-  treatments: TreatmentResponse[] = [];
+  clientResults: ClientResponse[] = [];
+  employeeResults: EmployeeResponse[] = [];
+  treatmentResults: TreatmentResponse[] = [];
+
+  clientSearchTerm = '';
+  employeeSearchTerm = '';
+  treatmentSearchTerm = '';
+
+  selectedClient: ClientResponse | null = null;
+  selectedEmployee: EmployeeResponse | null = null;
+
+  selectedTreatments: TreatmentResponse[] = [];
 
   form: CreateAppointmentRequest = {
+    clientId: undefined,
+    employeeId: undefined,
     treatmentsIds: [],
     startAt: '',
-    endAt:   '',
+    endAt: '',
   };
 
   loading = false;
-  error   = '';
+  error = '';
 
   constructor(
     private appointmentSvc: AppointmentService,
-    private clientSvc:      ClientService,
-    private employeeSvc:    EmployeeService,
-    private treatmentSvc:   TreatmentService,
+    private clientSvc: ClientService,
+    private employeeSvc: EmployeeService,
+    private treatmentSvc: TreatmentService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.form.startAt = this.toLocalDatetime(this.initialStart);
     this.form.endAt   = this.toLocalDatetime(this.initialEnd);
-
-    this.clientSvc.getAll({ page: 0, size: 200 }).subscribe(d => this.clients = d.content);
-    this.employeeSvc.getAll({ page: 0, size: 200 }).subscribe(d => this.employees = d.content);
-    this.treatmentSvc.getAll({ page: 0, size: 200 }).subscribe(d => this.treatments = d.content);
   }
 
-  toggleTreatment(id: number): void {
-    const idx = this.form.treatmentsIds.indexOf(id);
-    if (idx === -1) this.form.treatmentsIds.push(id);
-    else this.form.treatmentsIds.splice(idx, 1);
+  searchClients(): void {
+    if (!this.clientSearchTerm.trim()) {
+      this.clientResults = [];
+      return;
+    }
+    this.clientSvc.getAll({ page: 0, size: 10, search: this.clientSearchTerm })
+      .subscribe({
+        next: page => {this.clientResults = page.content;this.cdr.detectChanges();},
+        error: () => this.clientResults = []
+      });
   }
 
-  isSelected(id: number): boolean {
+  searchEmployees(): void {
+    if (!this.employeeSearchTerm.trim()) {
+      this.employeeResults = [];
+      return;
+    }
+    this.employeeSvc.getAll({ page: 0, size: 10, search: this.employeeSearchTerm })
+      .subscribe({
+        next: page =>{ this.employeeResults = page.content;this.cdr.detectChanges();},
+        error: () => this.employeeResults = []
+      });
+  }
+
+  searchTreatments(): void {
+    if (!this.treatmentSearchTerm.trim()) {
+      this.treatmentResults = [];
+      return;
+    }
+    this.treatmentSvc.getDetailed({ page: 0, size: 20, search: this.treatmentSearchTerm, active: true })
+      .subscribe({
+        next: page => {this.treatmentResults = page.content;this.cdr.detectChanges();},
+        error: () => this.treatmentResults = []
+      });
+  }
+
+  selectClient(client: ClientResponse): void {
+    this.selectedClient = client;
+    this.form.clientId = client.id;
+    this.clientResults = [];
+    this.clientSearchTerm = '';
+  }
+
+  clearClient(): void {
+    this.selectedClient = null;
+    this.form.clientId = undefined;
+  }
+
+  selectEmployee(employee: EmployeeResponse): void {
+    this.selectedEmployee = employee;
+    this.form.employeeId = employee.id;
+    this.employeeResults = [];
+    this.employeeSearchTerm = '';
+  }
+
+  clearEmployee(): void {
+    this.selectedEmployee = null;
+    this.form.employeeId = undefined;
+  }
+
+  toggleTreatment(treatment: TreatmentResponse): void {
+    const index = this.form.treatmentsIds.indexOf(treatment.id);
+    if (index === -1) {
+      this.form.treatmentsIds.push(treatment.id);
+      this.selectedTreatments.push(treatment);
+    } else {
+      this.form.treatmentsIds.splice(index, 1);
+      this.selectedTreatments = this.selectedTreatments.filter(t => t.id !== treatment.id);
+    }
+  }
+
+  isTreatmentSelected(id: number): boolean {
     return this.form.treatmentsIds.includes(id);
   }
 
-  nextStep(): void { this.step = Math.min(this.step + 1, 3); }
+  nextStep(): void {
+    if (this.step === 1 && !this.form.clientId) {
+      this.error = 'Debes seleccionar un cliente';
+      return;
+    }
+    this.error = '';
+    this.step = Math.min(this.step + 1, 3);
+  }
+
   prevStep(): void { this.step = Math.max(this.step - 1, 1); }
 
   canGoNext(): boolean {
-    if (this.step === 1) return true;
-    if (this.step === 2) return this.form.treatmentsIds.length > 0;
+    if (this.step === 1) return !!this.form.clientId;
+    if (this.step === 2) return this.form.treatmentsIds.length > 0 && !!this.form.employeeId;
     return true;
   }
 
   submit(): void {
-    const validationError = this.validateForm();
-    if (validationError) {
-      this.error = validationError;
+    if (!this.form.clientId || !this.form.employeeId || this.form.treatmentsIds.length === 0) {
+      this.error = 'Completa todos los datos';
       return;
     }
-
     this.loading = true;
     this.error = '';
-
-    this.appointmentSvc.create(this.form as CreateAppointmentRequest).subscribe({
+    this.appointmentSvc.create(this.form).subscribe({
       next: () => {
         this.loading = false;
         this.created.emit();
+        this.cdr.detectChanges();
       },
       error: err => {
         this.error = err.error?.message ?? 'Error al crear la cita';
         this.loading = false;
+        this.cdr.detectChanges();
       },
     });
   }
-
-  /** Formatea un Date al string que espera datetime-local input */
   private toLocalDatetime(date: Date): string {
     const pad = (n: number) => String(n).padStart(2, '0');
     return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
   }
 
-  /** Extrae HH:mm de un string datetime-local para mostrar en el resumen */
   formatTime(dt: string): string {
     return dt ? dt.slice(11, 16) : '';
-  }
-
-  private validateForm(): string | null {
-    if (!this.form.clientId) return 'Debes seleccionar un cliente';
-    if (!this.form.employeeId) return 'Debes seleccionar un empleado';
-    if (!this.form.treatmentsIds || this.form.treatmentsIds.length === 0)
-      return 'Debes seleccionar al menos un servicio';
-    if (!this.form.startAt || !this.form.endAt)
-      return 'Debes seleccionar fecha y hora';
-
-    return null;
-  }
-
-  isFormValid(): boolean {
-    return this.validateForm() === null;
   }
 }
