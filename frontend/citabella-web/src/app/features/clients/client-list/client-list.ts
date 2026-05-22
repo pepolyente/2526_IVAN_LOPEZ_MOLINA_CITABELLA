@@ -13,7 +13,9 @@ import { ConfirmService } from '../../../core/services/confirm.service';
   template: `
     <div class="page-header">
       <h2>Clientes</h2>
-      <button class="btn-primary" (click)="router.navigate(['/panel/clients/new'])">+ Nuevo cliente</button>
+      <button class="btn-primary" (click)="router.navigate(['/panel/clients/new'])">
+        <span class="material-symbols-outlined">add</span>
+      </button>
     </div>
 
     <div class="filters-bar">
@@ -40,9 +42,9 @@ import { ConfirmService } from '../../../core/services/confirm.service';
           }
         </div>
       </div>
-      <span class="total-hint">{{ totalElements }} cliente(s)</span>
-    </div>
 
+    </div>
+    <span class="total-hint">{{ totalElements }} cliente(s)</span>
     @if (loading) {
       <div class="skeleton-table">
         @for (i of [1,2,3,4,5]; track i) {
@@ -71,9 +73,9 @@ import { ConfirmService } from '../../../core/services/confirm.service';
             @for (client of clients; track client.id) {
               <tr [class.row-inactive]="!client.active">
                 @if (editingId === client.id) {
-                  <td><input [(ngModel)]="editForm.name" class="inline-input" /></td>
-                  <td><input [(ngModel)]="editForm.phoneNumber" class="inline-input" /></td>
-                  <td>
+                  <td data-label="Nombre"><input [(ngModel)]="editForm.name" class="inline-input" /></td>
+                  <td data-label="Teléfono"><input [(ngModel)]="editForm.phoneNumber" class="inline-input" /></td>
+                  <td data-label="Género">
                     <select [(ngModel)]="editForm.gender" class="inline-input">
                       <option value="">—</option>
                       <option value="MALE">Hombre</option>
@@ -81,23 +83,23 @@ import { ConfirmService } from '../../../core/services/confirm.service';
                       <option value="OTHER">Otro</option>
                     </select>
                   </td>
-                  <td>{{ client.linkedUsername ?? '—' }}</td>
-                  <td class="actions-cell">
+                  <td data-label="Usuario">{{ client.linkedUsername ?? '—' }}</td>
+                  <td data-label="Acciones" class="actions-cell">
                     <button class="btn-xs btn-success" (click)="saveEdit(client.id)">✓</button>
                     <button class="btn-xs btn-outline" (click)="cancelEdit()">✕</button>
                   </td>
                 } @else {
-                  <td>{{ client.name }}</td>
-                  <td>{{ client.phoneNumber }}</td>
-                  <td>{{ client.gender ?? '–' }}</td>
-                  <td>
+                  <td data-label="Nombre">{{ client.name }}</td>
+                  <td data-label="Teléfono">{{ client.phoneNumber }}</td>
+                  <td data-label="Género">{{ client.gender ?? '–' }}</td>
+                  <td data-label="Usuario">
                     @if (client.linkedUsername) {
                       <span class="badge badge-confirmed">{{ client.linkedUsername }}</span>
                     } @else {
                       <span class="badge badge-cancelled">Sin cuenta</span>
                     }
                   </td>
-                  <td class="actions-cell">
+                  <td data-label="Acciones" class="actions-cell">
                     <button class="btn-xs btn-outline" (click)="startEdit(client)" title="Editar">
                       <span class="material-symbols-outlined">edit</span>
                     </button>

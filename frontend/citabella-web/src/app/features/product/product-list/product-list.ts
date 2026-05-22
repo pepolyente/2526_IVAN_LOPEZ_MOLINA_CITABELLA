@@ -91,9 +91,9 @@ import { ConfirmService } from '../../../core/services/confirm.service';
         </div>
       </div>
 
-      <span class="total-hint">{{ totalElements }} producto(s)</span>
-    </div>
 
+    </div>
+    <span class="total-hint">{{ totalElements }} producto(s)</span>
     @if (loading) {
       <div class="skeleton-table">
         @for (i of [1,2,3,4,5]; track i) {
@@ -125,30 +125,34 @@ import { ConfirmService } from '../../../core/services/confirm.service';
             @for (p of products; track p.id) {
               <tr [class.row-inactive]="!p.active">
                 @if (editingId === p.id) {
-                  <td><input [(ngModel)]="editForm.name" class="inline-input" /></td>
-                  <td><input [(ngModel)]="editForm.category" class="inline-input" /></td>
-                  <td><input type="number" step="0.01" [(ngModel)]="editForm.purchasePrice" class="inline-input" /></td>
-                  <td><input type="number" step="0.01" [(ngModel)]="editForm.salePrice" class="inline-input" /></td>
-                  <td><input [(ngModel)]="editForm.supplier" class="inline-input" /></td>
-                  <td class="cell-center">{{ p.isCritical ? '⚠️' : '' }}</td>
-                  <td><span class="badge" [class.badge-confirmed]="p.active" [class.badge-cancelled]="!p.active">{{ p.active ? 'Activo' : 'Inactivo' }}</span></td>
-                  <td class="actions-cell">
+                  <td data-label="Nombre"><input [(ngModel)]="editForm.name" class="inline-input" /></td>
+                  <td data-label="Categoría"><input [(ngModel)]="editForm.category" class="inline-input" /></td>
+                  <td data-label="P. Compra"><input type="number" step="0.01" [(ngModel)]="editForm.purchasePrice" class="inline-input" /></td>
+                  <td data-label="P. Venta"><input type="number" step="0.01" [(ngModel)]="editForm.salePrice" class="inline-input" /></td>
+                  <td data-label="Proveedor"><input [(ngModel)]="editForm.supplier" class="inline-input" /></td>
+                  <td data-label="Crítico" class="cell-center">{{ p.isCritical ? '⚠️' : '' }}</td>
+                  <td data-label="Activo">
+                  <span class="badge" [class.badge-confirmed]="p.active" [class.badge-cancelled]="!p.active">
+                    {{ p.active ? 'Activo' : 'Inactivo' }}
+                  </span>
+                  </td>
+                  <td data-label="Acciones" class="actions-cell">
                     <button class="btn-xs btn-success" (click)="saveEdit(p.id)">✓</button>
                     <button class="btn-xs btn-outline" (click)="cancelEdit()">✕</button>
                   </td>
                 } @else {
-                  <td>{{ p.name }}</td>
-                  <td>{{ p.category }}</td>
-                  <td>{{ p.purchasePrice }}</td>
-                  <td>{{ p.salePrice }}</td>
-                  <td>{{ p.supplier }}</td>
-                  <td class="cell-center">{{ p.isCritical ? '⚠️' : '' }}</td>
-                  <td>
-                    <span class="badge" [class.badge-confirmed]="p.active" [class.badge-cancelled]="!p.active">
-                      {{ p.active ? 'Activo' : 'Inactivo' }}
-                    </span>
+                  <td data-label="Nombre">{{ p.name }}</td>
+                  <td data-label="Categoría">{{ p.category }}</td>
+                  <td data-label="P. Compra">{{ p.purchasePrice }}</td>
+                  <td data-label="P. Venta">{{ p.salePrice }}</td>
+                  <td data-label="Proveedor">{{ p.supplier }}</td>
+                  <td data-label="Crítico" class="cell-center">{{ p.isCritical ? '⚠️' : '' }}</td>
+                  <td data-label="Activo">
+                  <span class="badge" [class.badge-confirmed]="p.active" [class.badge-cancelled]="!p.active">
+                    {{ p.active ? 'Activo' : 'Inactivo' }}
+                  </span>
                   </td>
-                  <td class="actions-cell">
+                  <td data-label="Acciones" class="actions-cell">
                     <button class="btn-xs btn-outline" (click)="startEdit(p)"><span class="material-symbols-outlined">edit</span></button>
                     @if (p.active) {
                       <button class="btn-xs btn-danger" (click)="deactivate(p.id)"><span class="material-symbols-outlined">person_off</span></button>

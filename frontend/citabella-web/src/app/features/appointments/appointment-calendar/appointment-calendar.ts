@@ -77,7 +77,7 @@ export class AppointmentCalendar implements OnInit {
 
   onAppointmentUpdated(): void {
     this.closeDetailModal();
-    this.loadAppointments();
+    this.loadAppointments(this.filterStatus);
   }
 
   // ── Modal: crear desde hueco ────────────────────────────────────────
@@ -89,7 +89,7 @@ export class AppointmentCalendar implements OnInit {
 
   onAppointmentCreated(): void {
     this.closeCreateModal();
-    this.loadAppointments();
+    this.loadAppointments(this.filterStatus);
   }
 
   // ── Handlers de FullCalendar ────────────────────────────────────────
@@ -121,7 +121,7 @@ export class AppointmentCalendar implements OnInit {
       html: `
         <div class="cb-event-inner">
           <div class="cb-event-title">${clientName}${overlap}</div>
-          <div class="cb-event-sub">${arg.event.title}</div>
+
           <div class="cb-event-employee">${employeeName}</div>
         </div>
       `,
@@ -129,18 +129,22 @@ export class AppointmentCalendar implements OnInit {
   }
 
   // ── Carga de datos ──────────────────────────────────────────────────
-
-  loadAppointments(): void {
-    this.appointmentSvc.getAll({ page: 0, size: 200 }).subscribe({
+  loadAppointments(status?: AppointmentStatus | ''): void {
+    const params: any = { page: 0, size: 200 };
+    if (status) {
+      params.status = status;
+    }
+    this.appointmentSvc.getAll(params).subscribe({
       next: page => {
         const events = page.content.map(ap => ({
           id:    String(ap.id),
           title: ap.treatments?.map(t => t.name).join(', ') ?? '',
           start: ap.startAt,
           end:   ap.endAt,
-          backgroundColor: STATUS_COLORS[ap.status] ?? '#3B82F6',
-          borderColor:     STATUS_COLORS[ap.status] ?? '#3B82F6',
-          classNames: ap.hasOverlap ? ['event-overlap'] : [],
+          classNames: [
+            `fc-status-${ap.status.toLowerCase()}`,
+            ...(ap.hasOverlap ? ['event-overlap'] : [])
+          ],
           extendedProps: { raw: ap },
         }));
         this.calendarOptions = { ...this.calendarOptions, events };
@@ -181,6 +185,6 @@ export class AppointmentCalendar implements OnInit {
   }
 
   applyFilter(): void {
-    this.loadAppointments();
+    this.loadAppointments(this.filterStatus);
   }
 }

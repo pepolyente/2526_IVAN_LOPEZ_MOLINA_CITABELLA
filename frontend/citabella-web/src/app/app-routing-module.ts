@@ -4,12 +4,10 @@ import { MainLayout } from './layout/main-layout/main-layout';
 import { PublicLayout } from './layout/public-layout/public-layout';
 import { AuthGuard } from './core/guards/auth.guard';
 import { RoleGuard } from './core/guards/role.guard';
-import {Register} from './features/auth/register/register';
-import {Login} from './features/auth/login/login';
 
 const routes: Routes = [
 
-  // ─── PUBLIC ZONE ────────────────────────────────────────────────────────
+  // ─── PUBLIC ZONE ─────────────────────────────────────────────────────────
   {
     path: '',
     component: PublicLayout,
@@ -31,7 +29,7 @@ const routes: Routes = [
   {
     path: 'register',
     loadChildren: () =>
-      import('./features/auth/auth-module').then(m => m.AuthModule),
+      import('./features/auth/register-module').then(m => m.RegisterModule),
   },
 
   // ─── PRIVATE PANEL ───────────────────────────────────────────────────────
@@ -41,7 +39,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
 
-      // ─── ADMIN + EMPLOYEE ───────────────────────────────────────────────────────
+      // ─── ADMIN + EMPLOYEE ──────────────────────────────────────────────
       {
         path: 'appointments',
         canActivate: [RoleGuard],
@@ -59,7 +57,7 @@ const routes: Routes = [
             .then(m => m.ClientsModule),
       },
 
-      // ─── ADMIN ───────────────────────────────────────────────────────
+      // ─── ADMIN ────────────────────────────────────────────────────────
       {
         path: 'employees',
         canActivate: [RoleGuard],
@@ -92,21 +90,21 @@ const routes: Routes = [
           import('./features/admin/admin-module').then(m => m.AdminModule),
       },
 
-      // ──── CLIENT ───────────────────────────────────────────────────────
+      // ─── CLIENT ───────────────────────────────────────────────────────
       {
         path: 'my-appointments',
         canActivate: [RoleGuard],
         data: { roles: ['CLIENT'] },
         loadChildren: () =>
-          import('./features/appointments/appointments-module')
-            .then(m => m.AppointmentsModule),
+          import('./features/appointments/my-appointments.module')
+            .then(m => m.MyAppointmentsModule)
       },
 
       { path: '', redirectTo: 'appointments', pathMatch: 'full' },
     ],
   },
 
-  // ─── UNAUTHORIZED ────────────────────────────────────────────────────────
+  // ─── UNAUTHORIZED ─────────────────────────────────────────────────────────
   {
     path: 'unauthorized',
     redirectTo: '/',

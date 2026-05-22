@@ -11,7 +11,9 @@ import { ConfirmService } from '../../../core/services/confirm.service';
   template: `
     <div class="page-header">
       <h2>Tratamientos</h2>
-      <button class="btn-primary" (click)="router.navigate(['/panel/treatments/new'])">+ Nuevo</button>
+      <button class="btn-primary" (click)="router.navigate(['/panel/treatments/new'])">
+        <span class="material-symbols-outlined">add</span>
+      </button>
     </div>
 
     <div class="filters-bar">
@@ -39,9 +41,9 @@ import { ConfirmService } from '../../../core/services/confirm.service';
         </div>
       </div>
 
-      <span class="total-hint">{{ totalElements }} tratamiento(s)</span>
-    </div>
 
+    </div>
+    <span class="total-hint">{{ totalElements }} tratamiento(s)</span>
     @if (loading) {
       <div class="skeleton-table">
         @for (i of [1,2,3,4,5]; track i) {
@@ -55,48 +57,54 @@ import { ConfirmService } from '../../../core/services/confirm.service';
     } @else if (treatments.length === 0) {
       <p class="empty-state">No hay tratamientos.</p>
     } @else {
-      <table class="simple-table">
-        <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Duración mín.</th>
-          <th>Precio</th>
-          <th>Activo</th>
-          <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-          @for (t of treatments; track t.id) {
-            <tr [class.row-inactive]="!t.active">
-              @if (editingId === t.id) {
-                <td><input [(ngModel)]="editForm.name" class="inline-input" /></td>
-                <td><input type="number" [(ngModel)]="editForm.minimumDuration" class="inline-input" /></td>
-                <td><input type="number" step="0.01" [(ngModel)]="editForm.price" class="inline-input" /></td>
-                <td><span class="badge" [class.badge-confirmed]="t.active" [class.badge-cancelled]="!t.active">{{ t.active ? 'Activo' : 'Inactivo' }}</span></td>
-                <td class="actions-cell">
-                  <button class="btn-xs btn-success" (click)="saveEdit(t.id)">✓</button>
-                  <button class="btn-xs btn-outline" (click)="cancelEdit()">✕</button>
-                </td>
-              } @else {
-                <td><strong>{{ t.name }}</strong></td>
-                <td>{{ t.minimumDuration }} min</td>
-                <td>{{ t.price | currency:'EUR' }}</td>
-                <td>
+      <div class="table-wrapper">
+        <table class="simple-table">
+          <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Duración mín.</th>
+            <th>Precio</th>
+            <th>Activo</th>
+            <th>Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (t of treatments; track t.id) {
+              <tr [class.row-inactive]="!t.active">
+                @if (editingId === t.id) {
+                  <td data-label="Nombre"><input [(ngModel)]="editForm.name" class="inline-input" /></td>
+                  <td data-label="Duración"><input type="number" [(ngModel)]="editForm.minimumDuration" class="inline-input" /></td>
+                  <td data-label="Precio"><input type="number" step="0.01" [(ngModel)]="editForm.price" class="inline-input" /></td>
+                  <td data-label="Activo">
                   <span class="badge" [class.badge-confirmed]="t.active" [class.badge-cancelled]="!t.active">
                     {{ t.active ? 'Activo' : 'Inactivo' }}
                   </span>
-                </td>
-                <td class="actions-cell">
-                  <button class="btn-xs btn-outline" (click)="startEdit(t)"><span class="material-symbols-outlined">edit</span></button>
-                  @if (t.active) {
-                    <button class="btn-xs btn-danger" (click)="deactivate(t.id)"><span class="material-symbols-outlined">person_off</span></button>
-                  }
-                </td>
-              }
-            </tr>
-          }
-        </tbody>
-      </table>
+                  </td>
+                  <td data-label="Acciones" class="actions-cell">
+                    <button class="btn-xs btn-success" (click)="saveEdit(t.id)">✓</button>
+                    <button class="btn-xs btn-outline" (click)="cancelEdit()">✕</button>
+                  </td>
+                } @else {
+                  <td data-label="Nombre"><strong>{{ t.name }}</strong></td>
+                  <td data-label="Duración">{{ t.minimumDuration }} min</td>
+                  <td data-label="Precio">{{ t.price | currency:'EUR' }}</td>
+                  <td data-label="Activo">
+                  <span class="badge" [class.badge-confirmed]="t.active" [class.badge-cancelled]="!t.active">
+                    {{ t.active ? 'Activo' : 'Inactivo' }}
+                  </span>
+                  </td>
+                  <td data-label="Acciones" class="actions-cell">
+                    <button class="btn-xs btn-outline" (click)="startEdit(t)"><span class="material-symbols-outlined">edit</span></button>
+                    @if (t.active) {
+                      <button class="btn-xs btn-danger" (click)="deactivate(t.id)"><span class="material-symbols-outlined">person_off</span></button>
+                    }
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
 
       <div class="paginator">
         <button class="btn-outline" (click)="prevPage()" [disabled]="page === 0">← Anterior</button>

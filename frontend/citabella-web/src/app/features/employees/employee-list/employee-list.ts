@@ -11,7 +11,9 @@ import { ConfirmService } from '../../../core/services/confirm.service';
   template: `
     <div class="page-header">
       <h2>Empleados</h2>
-      <button class="btn-primary" (click)="router.navigate(['/panel/employees/new'])">+ Nuevo empleado</button>
+      <button class="btn-primary" (click)="router.navigate(['/panel/employees/new'])">
+        <span class="material-symbols-outlined">add</span>
+      </button>
     </div>
     <div class="filters-bar">
       <div class="filter-group search-group">
@@ -28,8 +30,9 @@ import { ConfirmService } from '../../../core/services/confirm.service';
           }
         </div>
       </div>
-      <span class="total-hint">{{ employees.length }} empleado(s)</span>
+
     </div>
+    <span class="total-hint">{{ employees.length }} empleado(s)</span>
     @if (loading) {
       <div class="skeleton-table">
         @for (i of [1,2,3,4,5]; track i) {
@@ -43,53 +46,55 @@ import { ConfirmService } from '../../../core/services/confirm.service';
     } @else if (employees.length === 0) {
       <p class="empty-state">No hay empleados registrados.</p>
     } @else {
-      <table class="simple-table">
-        <thead>
-        <tr>
-          <th>Nombre</th>
-          <th>Puesto</th>
-          <th>Estado</th>
-          <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-          @for (employee of employees; track employee.id) {
-            <tr [class.row-inactive]="!employee.active">
-              @if (editingId === employee.id) {
-                <td><input [(ngModel)]="editForm.name" class="inline-input" /></td>
-                <td><input [(ngModel)]="editForm.position" class="inline-input" /></td>
-                <td>
+      <div class="table-wrapper">
+        <table class="simple-table">
+          <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Puesto</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (employee of employees; track employee.id) {
+              <tr [class.row-inactive]="!employee.active">
+                @if (editingId === employee.id) {
+                  <td data-label="Nombre"><input [(ngModel)]="editForm.name" class="inline-input" /></td>
+                  <td data-label="Puesto"><input [(ngModel)]="editForm.position" class="inline-input" /></td>
+                  <td data-label="Estado">
                   <span class="badge" [class.badge-confirmed]="employee.active" [class.badge-cancelled]="!employee.active">
                     {{ employee.active ? 'Activo' : 'Inactivo' }}
                   </span>
-                </td>
-                <td class="actions-cell">
-                  <button class="btn-xs btn-success" (click)="saveEdit(employee.id)">✓</button>
-                  <button class="btn-xs btn-outline" (click)="cancelEdit()">✕</button>
-                </td>
-              } @else {
-                <td>{{ employee.name }}</td>
-                <td>{{ employee.position }}</td>
-                <td>
+                  </td>
+                  <td data-label="Acciones" class="actions-cell">
+                    <button class="btn-xs btn-success" (click)="saveEdit(employee.id)">✓</button>
+                    <button class="btn-xs btn-outline" (click)="cancelEdit()">✕</button>
+                  </td>
+                } @else {
+                  <td data-label="Nombre">{{ employee.name }}</td>
+                  <td data-label="Puesto">{{ employee.position }}</td>
+                  <td data-label="Estado">
                   <span class="badge" [class.badge-confirmed]="employee.active" [class.badge-cancelled]="!employee.active">
                     {{ employee.active ? 'Activo' : 'Inactivo' }}
                   </span>
-                </td>
-                <td class="actions-cell">
-                  <button class="btn-xs btn-outline" (click)="startEdit(employee)" title="Editar">
-                    <span class="material-symbols-outlined">edit</span>
-                  </button>
-                  @if (employee.active) {
-                    <button class="btn-xs btn-danger" (click)="deactivate(employee.id)"><span class="material-symbols-outlined">person_off</span></button>
-                  } @else {
-                    <button class="btn-xs btn-success" (click)="activate(employee.id)">Activar</button>
-                  }
-                </td>
-              }
-            </tr>
-          }
-        </tbody>
-      </table>
+                  </td>
+                  <td data-label="Acciones" class="actions-cell">
+                    <button class="btn-xs btn-outline" (click)="startEdit(employee)" title="Editar">
+                      <span class="material-symbols-outlined">edit</span>
+                    </button>
+                    @if (employee.active) {
+                      <button class="btn-xs btn-danger" (click)="deactivate(employee.id)"><span class="material-symbols-outlined">person_off</span></button>
+                    } @else {
+                      <button class="btn-xs btn-success" (click)="activate(employee.id)">Activar</button>
+                    }
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
     }
   `,
 })

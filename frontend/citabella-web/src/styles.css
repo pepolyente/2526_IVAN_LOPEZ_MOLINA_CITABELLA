@@ -74,7 +74,7 @@ html, body {
   gap: 16px;
 }
 
-/* ── Tablas ── */
+/* ── Tablas unificadas y limpias ────────────────────────────────────── */
 .simple-table {
   width: 100%;
   border-collapse: separate;
@@ -83,14 +83,16 @@ html, body {
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow);
+  margin-top: 10px;
 }
 
 .simple-table th,
 .simple-table td {
   padding: 14px 16px;
   border-bottom: 1px solid var(--color-border);
-  text-align: left;
   background-color: var(--color-surface);
+  text-align: center;
+  justify-content: center;
 }
 
 .simple-table th {
@@ -98,27 +100,43 @@ html, body {
   font-size: 12px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: var(--color-text-muted);
-  background: var(--color-surface-alt);
+  color: var(--color-bg);
+  text-align: center;
+  background-color: var(--color-primary-dark);
 }
 
 .simple-table td {
   word-break: break-word;
-  max-width: 300px;
-}
-
-.simple-table tbody tr {
-  transition: all var(--transition-fast);
-}
-
-.simple-table tbody tr {
-  width: 100%;
+  /* No se aplica max-width para que ocupe todo el ancho */
 }
 
 .simple-table tbody tr:hover {
   background-color: var(--color-surface-alt);
-  transform: scale(1.01);
+  /* Se eliminó transform: scale(1.01) para evitar desbordamiento */
   box-shadow: var(--shadow-sm);
+}
+
+/* ── Celdas de acciones (botones) ───────────────────────────────────── */
+.actions-cell {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-start;
+}
+
+/* ── Wrapper para scroll horizontal en escritorio ──────────────────── */
+.table-wrapper {
+  overflow-x: auto;
+  width: 100%;
+  border-radius: var(--radius-lg);
+}
+
+/* Solo en escritorio se sugiere un ancho mínimo para que no se comprima demasiado */
+@media (min-width: 768px) {
+  .table-wrapper .simple-table {
+    min-width: 600px;
+  }
 }
 
 /* ── Badges ── */
@@ -157,6 +175,7 @@ html, body {
   color: var(--color-text);
   transition: background var(--transition-fast), border-color var(--transition-fast);
   text-decoration: none;
+  max-width: max-content;
 }
 
 .btn-outline:hover {
@@ -169,7 +188,7 @@ html, body {
   color: var(--color-text-inverted);
   border: none;
   border-radius: var(--radius-md);
-  padding: 10px 20px;
+  padding: 5px 10px;
   font-weight: 600;
   transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
@@ -573,11 +592,6 @@ html, body {
   margin-left: auto;
 }
 
-.actions-cell {
-  display: flex;
-  gap: 6px;
-}
-
 .paginator {
   display: flex;
   align-items: center;
@@ -589,12 +603,6 @@ html, body {
 .page-info {
   font-size: 13px;
   color: var(--color-text-muted);
-}
-
-.table-wrapper {
-  overflow-x: auto;
-  width: 100%;
-  border-radius: var(--radius-lg);
 }
 
 .row-inactive td { opacity: 0.55; }
@@ -1146,45 +1154,81 @@ button, a, input, select, textarea, label {
     width: 90%;
   }
 
+  /* Responsive para tablas en modo tarjeta */
   .simple-table {
     display: block;
+    width: 100%;
+  }
 
-    thead { display: none; }
+  .simple-table thead {
+    display: none;
+  }
 
-    tbody, tr, td {
-      display: block;
-    }
+  .simple-table tbody,
+  .simple-table tr,
+  .simple-table td {
+    display: block;
+  }
 
-    tr {
-      margin-bottom: 16px;
-      border: 1px solid var(--color-border);
-      border-radius: var(--radius-lg);
-      padding: 12px;
-      background: var(--color-surface);
-      box-shadow: var(--shadow);
-    }
+  .simple-table tr {
+    margin-bottom: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 12px;
+    background: var(--color-surface);
+    box-shadow: var(--shadow);
+  }
 
-    td {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 0;
-      border-bottom: 1px solid var(--color-border);
-      font-size: 13px;
-    }
+  .simple-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 13px;
+    width: 100%;
+    max-width: none;
+  }
 
-    td:last-child { border-bottom: none; }
+  .simple-table td:last-child {
+    border-bottom: none;
+  }
 
-    td::before {
-      content: attr(data-label);
-      font-weight: 600;
-      color: var(--color-text-muted);
-      margin-right: 8px;
-      white-space: nowrap;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
+  .simple-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin-right: 8px;
+    white-space: nowrap;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  /* Celda de acciones en modo tarjeta: etiqueta arriba, botones abajo en fila */
+  .simple-table td.actions-cell {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .simple-table td.actions-cell::before {
+    content: attr(data-label);
+    margin-bottom: 4px;
+  }
+
+  /* Los botones se envuelven y centran */
+  .actions-cell {
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .actions-cell .btn-xs,
+  .actions-cell .btn-outline,
+  .actions-cell .btn-danger {
+    flex: 0 0 auto;
   }
 
   .calendar-wrapper {
@@ -1224,6 +1268,7 @@ button, a, input, select, textarea, label {
     grid-column: 1 / -1;
   }
 }
+
 .public-content {
   overflow-x: hidden;
   width: 100%;
@@ -1245,12 +1290,6 @@ button, a, input, select, textarea, label {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px var(--color-primary-focus);
   outline: none;
-}
-
-.actions-cell {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
 }
 
 /* ── Stat cards (dashboard) ── */
@@ -1541,7 +1580,6 @@ button, a, input, select, textarea, label {
   color: var(--badge-pending-text);
 }
 
-
 /* ── Responsive panel ── */
 @media (max-width: 767px) {
   .stat-cards {
@@ -1564,11 +1602,8 @@ button, a, input, select, textarea, label {
     gap: 24px;
   }
 }
-@media (max-width: 640px) {
-  .simple-table td {
-    max-width: 200px;
-  }
-}
+
+/* No se aplica max-width a celdas en ningún breakpoint */
 
 /* ── HOME CSS ── */
 
@@ -3222,8 +3257,6 @@ button, a, input, select, textarea, label {
 
 .search-group {
   display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
 }
 
 .search-group input {
@@ -3357,4 +3390,122 @@ button, a, input, select, textarea, label {
   .pub-nav a { padding: 6px 10px; }
 }
 
-/* ────────────────────────────────────────────────────────────────────── */
+/* ============================================================
+   Integración de FullCalendar v6 con los Design Tokens
+   ============================================================ */
+
+/* Sobrescribimos las variables nativas de FullCalendar v6 usando tus tokens */
+.fc {
+  font-family: 'Inter', sans-serif !important; /* Mantenemos la fuente de tu app */
+
+  /* Fondos y Bordes de la cuadrícula del calendario */
+  --fc-page-bg-color: var(--color-surface) !important;
+  --fc-neutral-bg-color: var(--color-surface-alt) !important;
+  --fc-border-color: var(--color-border) !important;
+
+  /* Color del día actual ('Hoy') */
+  --fc-today-bg-color: var(--color-surface-hover) !important;
+
+  /* Estilo base para Eventos estándar (Color primario Navy de tu app) */
+  --fc-event-bg-color: var(--color-primary) !important;
+  --fc-event-border-color: var(--color-primary-dark) !important;
+  --fc-event-text-color: var(--color-text-clean) !important;
+
+  /* Botones superiores (Mes, Semana, Día, Hoy, Flechas...) */
+  --fc-button-bg-color: var(--color-primary) !important;
+  --fc-button-border-color: var(--color-primary-dark) !important;
+  --fc-button-hover-bg-color: var(--color-primary-dark) !important;
+  --fc-button-hover-border-color: var(--color-primary-dark) !important;
+  --fc-button-active-bg-color: var(--color-primary-dark) !important;
+  --fc-button-active-border-color: var(--color-primary-dark) !important;
+}
+
+/* ── Ajustes finos de tipografía y UI ── */
+
+/* Título principal de la cabecera (ej: "mayo de 2026") */
+.fc .fc-toolbar-title {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: var(--color-text) !important;
+  letter-spacing: -0.01em;
+}
+
+/* Modificar el texto de los números de los días y cabeceras de la semana */
+.fc .fc-daygrid-day-number,
+.fc .fc-col-header-cell-cushion {
+  color: var(--color-text) !important;
+  text-decoration: none !important;
+  font-weight: 500;
+}
+
+/* Efecto hover al pasar el cursor por encima del número del día */
+.fc .fc-daygrid-day-number:hover {
+  color: var(--color-primary) !important;
+}
+
+/* Hacer juego con el redondeado de tus tarjetas (.card) */
+.fc-view-harness {
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+/* Estilo por defecto de las pastillas de eventos */
+.fc-event {
+  border-radius: 8px !important;
+  border: 1px solid rgba(0, 0, 0, 0.2) !important;   /* Borde completo sutil */
+  border-left-width: 3px !important;                  /* Mantiene el grosor del estado */
+  cursor: pointer;
+  transition: filter var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.10) !important;
+  border: 1px solid rgba(0, 0, 0, 0.3) !important;
+  border-left-width: 3px !important;
+}
+.fc-event.event-overlap {
+  border: 2px solid rgba(0, 0, 0, 0.35) !important;
+  border-left-width: 3px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2) !important;
+}
+/* Eventos personalizados según el estado (Sincronizado con tus .badge) */
+.fc-event.fc-status-pending {
+  background-color: #F59E0B !important;
+  border-color: #F59E0B !important;
+  color: #FFFFFF !important;
+}
+.fc-event.fc-status-confirmed {
+  background-color: #3B82F6 !important;
+  border-color: #3B82F6 !important;
+  color: #FFFFFF !important;
+}
+.fc-event.fc-status-in-progress {
+  background-color: #8B5CF6 !important;
+  border-color: #8B5CF6 !important;
+  color: #FFFFFF !important;
+}
+.fc-event.fc-status-completed {
+  background-color: #10B981 !important;
+  border-color: #10B981 !important;
+  color: #FFFFFF !important;
+}
+.fc-event.fc-status-cancelled {
+  background-color: #EF4444 !important;
+  border-color: #EF4444 !important;
+  color: #FFFFFF !important;
+}
+.fc-event.fc-status-no-show {
+  background-color: #6B7280 !important;
+  border-color: #6B7280 !important;
+  color: #FFFFFF !important;
+}
+.fc-daygrid-event .cb-event-inner {
+  padding: 2px 4px !important;
+  gap: 0 !important;
+}
+.fc-daygrid-event .cb-event-title {
+  font-size: 11px !important;
+  white-space: nowrap !important;
+}
+.fc-daygrid-event .cb-event-employee {
+  display: none !important;
+}
+
