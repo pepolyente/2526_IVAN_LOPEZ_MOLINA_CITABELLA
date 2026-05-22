@@ -1,6 +1,7 @@
 package com.citabella.citabellaapi.repository;
 
 import com.citabella.citabellaapi.entity.appointment.Appointment;
+import com.citabella.citabellaapi.entity.client.Client;
 import com.citabella.citabellaapi.entity.enums.AppointmentStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,7 +26,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
 
         List<Appointment> findByEmployee_Id(Integer id);
 
-        List<Appointment> findByClient_Id(Integer id);
+        Page<Appointment> findByClient(Client client, Pageable pageable);
 
         Page<Appointment> findAllByStatus(AppointmentStatus status, Pageable pageable);
 
