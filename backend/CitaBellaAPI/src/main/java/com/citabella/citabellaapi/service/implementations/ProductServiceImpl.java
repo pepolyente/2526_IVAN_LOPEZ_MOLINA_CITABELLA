@@ -110,4 +110,15 @@ public class ProductServiceImpl implements ProductService {
         product.setActive(false);
         return ProductMapper.toPrivateResponse(productRepository.save(product));
     }
+
+    @Override
+    public ProductPrivateResponse activate(Integer id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        if (product.getActive()) {
+            throw new BadRequestException("Product is already active");
+        }
+        product.setActive(true);
+        return ProductMapper.toPrivateResponse(productRepository.save(product));
+    }
 }

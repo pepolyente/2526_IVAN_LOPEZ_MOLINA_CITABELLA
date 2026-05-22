@@ -88,4 +88,11 @@ public class TreatmentController {
 
         return ResponseEntity.ok(treatmentService.deactivate(id));
     }
+
+    @Operation(summary = "Activate treatment", description = ApiSecurityDocs.ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/activate")
+    public ResponseEntity<TreatmentResponse> activate(@PathVariable Integer id) {
+        return ResponseEntity.ok(treatmentService.activate(id));
+    }
 }

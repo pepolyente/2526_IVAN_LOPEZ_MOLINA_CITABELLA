@@ -22,6 +22,8 @@ public interface ProductService {
 
     ProductPrivateResponse deactivate(Integer id);
 
+    ProductPrivateResponse activate(Integer id);
+
     // Público (sin auth)
     List<ProductPublicResponse> findAllActive();
 }

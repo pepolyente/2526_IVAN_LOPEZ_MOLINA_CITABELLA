@@ -86,4 +86,11 @@ public class ProductController {
         
         return ResponseEntity.ok(productService.deactivate(id));
     }
+
+    @Operation(summary = "Activate product", description = ApiSecurityDocs.ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/activate")
+    public ResponseEntity<ProductPrivateResponse> activate(@PathVariable Integer id) {
+        return ResponseEntity.ok(productService.activate(id));
+    }
 }
