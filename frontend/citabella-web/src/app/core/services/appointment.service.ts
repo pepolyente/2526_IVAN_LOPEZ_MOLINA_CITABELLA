@@ -59,4 +59,11 @@ export class AppointmentService {
   cancel(id: number): Observable<AppointmentResponse> {
     return this.http.delete<AppointmentResponse>(`${this.BASE}/${id}`);
   }
+
+  getMyAppointments(params?: { page?: number; size?: number }): Observable<PageResponse<AppointmentResponse>> {
+    let httpParams = new HttpParams();
+    if (params?.page !== undefined) httpParams = httpParams.set('page', params.page);
+    if (params?.size !== undefined) httpParams = httpParams.set('size', params.size);
+    return this.http.get<PageResponse<AppointmentResponse>>(`${this.BASE}/my`, { params: httpParams });
+  }
 }

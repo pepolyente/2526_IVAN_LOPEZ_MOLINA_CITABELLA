@@ -65,9 +65,9 @@ import { ConfirmService } from '../../../core/services/confirm.service';
         </div>
       </div>
 
-      <span class="total-hint">{{ totalElements }} usuario(s)</span>
-    </div>
 
+    </div>
+    <span class="total-hint">{{ totalElements }} usuario(s)</span>
     @if (loading) {
       <div class="skeleton-table">
         @for (i of [1,2,3,4,5]; track i) {
@@ -81,64 +81,64 @@ import { ConfirmService } from '../../../core/services/confirm.service';
     } @else if (users.length === 0) {
       <p class="empty-state">No hay usuarios con los filtros aplicados.</p>
     } @else {
-      <table class="simple-table">
-        <thead>
-        <tr>
-          <th>Usuario</th>
-          <th>Email</th>
-          <th>Rol</th>
-          <th>Estado cuenta</th>
-          <th>Perfil</th>
-          <th>Acciones</th>
-        </tr>
-        </thead>
-        <tbody>
-          @for (u of users; track u.id) {
-            <tr>
-              <td>{{ u.username }}</td>
-              <td>{{ u.email }}</td>
-              <td>
-                <span class="badge">{{ u.role }}</span>
-              </td>
-              <td>
+      <div class="table-wrapper">
+        <table class="simple-table">
+          <thead>
+          <tr>
+            <th>Usuario</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Estado cuenta</th>
+            <th>Perfil</th>
+            <th>Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+            @for (u of users; track u.id) {
+              <tr>
+                <td data-label="Usuario">{{ u.username }}</td>
+                <td data-label="Email">{{ u.email }}</td>
+                <td data-label="Rol"><span class="badge">{{ u.role }}</span></td>
+                <td data-label="Estado cuenta">
                 <span class="badge"
                       [class.badge-confirmed]="u.accountStatus === 'ACTIVE'"
                       [class.badge-pending]="u.accountStatus === 'PENDING'"
                       [class.badge-cancelled]="u.accountStatus === 'LOCKED'">
                   {{ u.accountStatus }}
                 </span>
-              </td>
-              <td>
+                </td>
+                <td data-label="Perfil">
                 <span class="badge"
                       [class.badge-in_progress]="u.profileType === 'EMPLOYEE'"
                       [class.badge-completed]="u.profileType === 'CLIENT'">
                   {{ u.profileType }}
                 </span>
-              </td>
-              <td class="actions-cell">
-                @if (swapRoleId === u.id) {
-                  <div class="inline-action">
-                    <select [(ngModel)]="swapRoleName">
-                      <option value="">-- rol --</option>
-                      <option value="ADMIN">ADMIN</option>
-                      <option value="EMPLOYEE">EMPLOYEE</option>
-                      <option value="CLIENT">CLIENT</option>
-                      <option value="USER">USER</option>
-                    </select>
-                    <button class="btn-xs btn-success" (click)="confirmSwapRole(u.id)" [disabled]="!swapRoleName">✓</button>
-                    <button class="btn-xs btn-outline" (click)="cancelSwapRole()">✕</button>
-                  </div>
-                } @else {
-                  <button class="btn-xs btn-outline" (click)="startSwapRole(u.id)">Rol</button>
-                }
-                @if (u.accountStatus !== 'LOCKED') {
-                  <button class="btn-xs btn-danger" (click)="deactivate(u.id)"><span class="material-symbols-outlined">person_off</span></button>
-                }
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+                </td>
+                <td data-label="Acciones" class="actions-cell">
+                  @if (swapRoleId === u.id) {
+                    <div class="inline-action">
+                      <select [(ngModel)]="swapRoleName">
+                        <option value="">-- rol --</option>
+                        <option value="ADMIN">ADMIN</option>
+                        <option value="EMPLOYEE">EMPLOYEE</option>
+                        <option value="CLIENT">CLIENT</option>
+                        <option value="USER">USER</option>
+                      </select>
+                      <button class="btn-xs btn-success" (click)="confirmSwapRole(u.id)" [disabled]="!swapRoleName">✓</button>
+                      <button class="btn-xs btn-outline" (click)="cancelSwapRole()">✕</button>
+                    </div>
+                  } @else {
+                    <button class="btn-xs btn-outline" (click)="startSwapRole(u.id)">Rol</button>
+                  }
+                  @if (u.accountStatus !== 'LOCKED') {
+                    <button class="btn-xs btn-danger" (click)="deactivate(u.id)"><span class="material-symbols-outlined">person_off</span></button>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
 
       <div class="paginator">
         <button class="btn-outline" (click)="prevPage()" [disabled]="page === 0">← Anterior</button>

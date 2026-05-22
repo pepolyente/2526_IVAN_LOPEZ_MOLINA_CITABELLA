@@ -1,0 +1,19 @@
+<div class="calendar-page">
+  <div class="cal-page-header">
+    <div class="cal-page-header-left">
+      <h2 class="cal-title">Mis citas</h2>
+      <p class="cal-subtitle">Visualiza tus próximas citas</p>
+    </div>
+  </div>
+
+  <div class="calendar-wrapper">
+    <full-calendar [options]="calendarOptions"></full-calendar>
+  </div>
+
+  @if (showDetailModal && selectedAppointment) {
+    <app-my-appointment-modal
+      [appointment]="selectedAppointment"
+      (close)="closeDetailModal()">
+    </app-my-appointment-modal>
+  }
+</div>
