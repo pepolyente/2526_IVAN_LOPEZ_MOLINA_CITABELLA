@@ -22,7 +22,9 @@ public interface UserService {
 
     UserResponse update(Integer id, UserUpdateRequest request);
 
-    UserResponse deactivate(Integer id);   // accountStatus → LOCKED
+    UserResponse deactivate(Integer id);
+
+    UserResponse activate(Integer id);
 
     boolean hasClient(Integer userId);
 

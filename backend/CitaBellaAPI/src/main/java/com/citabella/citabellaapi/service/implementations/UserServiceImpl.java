@@ -125,13 +125,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserResponse activate(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        if (user.getAccountStatus() == AccountStatus.ACTIVE) {
+            throw new BadRequestException("User is already active");
+        }
+        user.setAccountStatus(AccountStatus.ACTIVE);
+        return UserMapper.toResponse(userRepository.save(user));
+    }
+
+    @Override
     public UserResponse deactivate(Integer id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
-
-        if (user.getAccountStatus() == AccountStatus.LOCKED) {
-            throw new BadRequestException("User is already locked");
-        }
         user.setAccountStatus(AccountStatus.LOCKED);
         return UserMapper.toResponse(userRepository.save(user));
     }

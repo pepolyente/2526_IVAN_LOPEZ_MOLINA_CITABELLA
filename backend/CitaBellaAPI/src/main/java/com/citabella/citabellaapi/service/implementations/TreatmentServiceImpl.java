@@ -116,4 +116,15 @@ public class TreatmentServiceImpl implements TreatmentService {
         treatment.setActive(false);
         return TreatmentMapper.toResponse(treatmentRepository.save(treatment));
     }
+
+    @Override
+    public TreatmentResponse activate(Integer id) {
+        Treatment treatment = treatmentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Treatment not found"));
+        if (treatment.getActive()) {
+            throw new BadRequestException("Treatment is already active");
+        }
+        treatment.setActive(true);
+        return TreatmentMapper.toResponse(treatmentRepository.save(treatment));
+    }
 }

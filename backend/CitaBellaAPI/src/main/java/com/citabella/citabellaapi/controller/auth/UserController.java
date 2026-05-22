@@ -78,6 +78,13 @@ public class UserController {
         return ResponseEntity.ok(userService.deactivate(id));
     }
 
+    @Operation(summary = "Activate user (unlock)", description = ApiSecurityDocs.ADMIN)
+    @PreAuthorize("hasRole('ADMIN')")
+    @PatchMapping("/{id}/activate")
+    public ResponseEntity<UserResponse> activate(@PathVariable Integer id) {
+        return ResponseEntity.ok(userService.activate(id));
+    }
+
     @Operation(summary = "Swap role of a user", description = ApiSecurityDocs.ADMIN)
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}/swap-role/{name}")

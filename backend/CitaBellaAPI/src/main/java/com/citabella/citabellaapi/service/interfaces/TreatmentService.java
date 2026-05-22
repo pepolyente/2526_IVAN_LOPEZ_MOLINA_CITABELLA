@@ -23,5 +23,7 @@ public interface TreatmentService {
 
     TreatmentResponse deactivate(Integer id);
 
+    TreatmentResponse activate(Integer id);
+
     List<TreatmentResponse> findAllActive();
 }
