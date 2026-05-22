@@ -69,6 +69,10 @@ export class TreatmentService {
     return this.http.delete<TreatmentResponse>(`${this.BASE}/${id}`);
   }
 
+  activate(id: number): Observable<TreatmentResponse> {
+    return this.http.patch<TreatmentResponse>(`${this.BASE}/${id}/activate`, {});
+  }
+
   delete(id: number): Observable<TreatmentResponse> {
     return this.http.delete<TreatmentResponse>(`${this.BASE}/${id}`);
   }

@@ -28,10 +28,15 @@
         <span class="user-avatar">{{ auth.getName().charAt(0) | uppercase }}</span>
         <span class="user-name">{{ auth.getName() }}</span>
       </span>
-      <button class="btn-solid-sm" (click)="goToPanel()">
-        <span class="material-symbols-outlined">dashboard</span>
-        Mi panel
-      </button>
+
+      <!-- El botón "Mi panel" solo se muestra si el usuario tiene un rol autorizado -->
+      @if (auth.hasPanelAccess()) {
+        <button class="btn-solid-sm" (click)="goToPanel()">
+          <span class="material-symbols-outlined">dashboard</span>
+          Mi panel
+        </button>
+      }
+
       <button class="btn-danger-sm" (click)="logout()">
         <span class="material-symbols-outlined">logout</span>
       </button>
@@ -84,10 +89,16 @@
         <span class="user-avatar">{{ auth.getName().charAt(0) | uppercase }}</span>
         <div>
           <div class="mobile-user-name">{{ auth.getName() }}</div>
-          <div class="mobile-user-role">Usuario activo</div>
+          <!-- Se muestra el rol real en lugar de "Usuario activo" -->
+          <div class="mobile-user-role">{{ auth.getRole() || 'Usuario activo' }}</div>
         </div>
       </div>
-      <button class="mobile-btn-primary" (click)="goToPanel()">Mi panel</button>
+
+      <!-- El botón de panel solo se muestra si el rol lo permite -->
+      @if (auth.hasPanelAccess()) {
+        <button class="mobile-btn-primary" (click)="goToPanel()">Mi panel</button>
+      }
+
       <button class="mobile-btn-danger" (click)="logout()">Cerrar sesión</button>
     }
   </nav>

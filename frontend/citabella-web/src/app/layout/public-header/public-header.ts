@@ -11,7 +11,7 @@ import { ThemeService } from '../../core/services/theme.service';
 })
 export class PublicHeader implements OnInit {
   isMenuOpen = false;
-  isMobile = false;
+  isMobile   = false;
   isScrolled = false;
 
   constructor(
@@ -41,14 +41,16 @@ export class PublicHeader implements OnInit {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
+  /**
+   * Redirige al panel correspondiente al rol del usuario.
+   * Si el usuario no tiene un rol reconocido con acceso al panel,
+   * no realiza ninguna navegación (el botón ya no se mostrará en la plantilla,
+   * pero esta comprobación actúa como segunda línea de defensa).
+   */
   goToPanel(): void {
-    const role = this.auth.getRole();
-    if (role === 'ADMIN' || role === 'EMPLOYEE') {
-      this.router.navigate(['/panel/appointments']);
-    } else if (role === 'CLIENT') {
-      this.router.navigate(['/panel/my-appointments']);
-    } else {
-      this.router.navigate(['/panel/appointments']);
+    const panelRoute = this.auth.getPanelRoute();
+    if (panelRoute) {
+      this.router.navigate([panelRoute]);
     }
     this.isMenuOpen = false;
   }

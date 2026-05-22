@@ -96,7 +96,13 @@ import { ConfirmService } from '../../../core/services/confirm.service';
                   <td data-label="Acciones" class="actions-cell">
                     <button class="btn-xs btn-outline" (click)="startEdit(t)"><span class="material-symbols-outlined">edit</span></button>
                     @if (t.active) {
-                      <button class="btn-xs btn-danger" (click)="deactivate(t.id)"><span class="material-symbols-outlined">person_off</span></button>
+                      <button class="btn-xs btn-danger" (click)="deactivate(t.id)">
+                        <span class="material-symbols-outlined">person_off</span>
+                      </button>
+                    } @else {
+                      <button class="btn-xs btn-success" (click)="activate(t.id)">
+                        <span class="material-symbols-outlined">person_add</span>
+                      </button>
                     }
                   </td>
                 }
@@ -168,6 +174,16 @@ export class TreatmentList implements OnInit {
     this.svc.deactivate(id).subscribe({
       next: () => { this.toast.show('Tratamiento desactivado'); this.load(); },
       error: () => this.toast.show('Error', 'error'),
+    });
+  }
+
+  activate(id: number): void {
+    this.svc.activate(id).subscribe({
+      next: () => {
+        this.toast.show('Tratamiento activado');
+        this.load();
+      },
+      error: () => this.toast.show('Error al activar', 'error')
     });
   }
 

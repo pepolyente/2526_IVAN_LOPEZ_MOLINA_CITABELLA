@@ -11,6 +11,10 @@ import {
 
 const SESSION_KEYS = ['token', 'role', 'username', 'userId'] as const;
 
+/** Roles que conceden acceso al panel privado de la aplicación. */
+const PANEL_ROLES = ['CLIENT', 'EMPLOYEE', 'ADMIN'] as const;
+type PanelRole = typeof PANEL_ROLES[number];
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
 
@@ -50,9 +54,9 @@ export class AuthService {
   // ── Getters ──────────────────────────────────────────────────────────────
 
   getToken(): string | null { return localStorage.getItem('token'); }
-  getRole(): string { return localStorage.getItem('role')     ?? ''; }
-  getUsername(): string { return localStorage.getItem('username') ?? ''; }
-  getName(): string { return this.getUsername(); }
+  getRole(): string         { return localStorage.getItem('role')     ?? ''; }
+  getUsername(): string     { return localStorage.getItem('username') ?? ''; }
+  getName(): string         { return this.getUsername(); }
 
   isLogged(): boolean { return !!this.getToken(); }
 
@@ -60,12 +64,34 @@ export class AuthService {
     return roles.includes(this.getRole());
   }
 
+  /**
+   * Devuelve `true` si el usuario tiene uno de los roles reconocidos
+   * que permiten acceder al panel privado (CLIENT, EMPLOYEE, ADMIN).
+   *
+   * Úsalo para condicionar el botón "Panel" en la cabecera pública
+   * y para las redirecciones post-login.
+   */
+  hasPanelAccess(): boolean {
+    return (PANEL_ROLES as readonly string[]).includes(this.getRole());
+  }
+
+  /**
+   * Devuelve la ruta del panel correspondiente al rol del usuario.
+   * Retorna `null` si el usuario no tiene un rol con acceso al panel.
+   */
+  getPanelRoute(): string | null {
+    const role = this.getRole() as PanelRole | string;
+    if (role === 'ADMIN' || role === 'EMPLOYEE') return '/panel/appointments';
+    if (role === 'CLIENT')                       return '/panel/my-appointments';
+    return null;
+  }
+
   // ── Session management ────────────────────────────────────────────────────
 
   /**
    * Elimina todos los datos de sesión del localStorage.
-   * Llamado tanto desde el botón de logout manual como desde
-   * AuthInterceptor al recibir un 401/403.
+   * Llamado desde el botón de logout manual.
+   * El interceptor lo invoca inline para evitar dependencia circular.
    */
   logout(): void {
     SESSION_KEYS.forEach(key => localStorage.removeItem(key));

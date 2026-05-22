@@ -39,14 +39,15 @@ export class Login {
     }).subscribe({
       next: (response) => {
         this.toast.show(`Bienvenido, ${response.username}`, 'success');
+
         setTimeout(() => {
-          const role = this.auth.getRole();
-          if (role === 'ADMIN' || role === 'EMPLOYEE') {
-            this.router.navigate(['/panel/appointments']);
-          } else if (role === 'CLIENT') {
-            this.router.navigate(['/panel/my-appointments']);
+          // getPanelRoute() devuelve null si el rol no tiene acceso al panel.
+          // En ese caso se redirige a la página principal sin cerrar la sesión.
+          const panelRoute = this.auth.getPanelRoute();
+          if (panelRoute) {
+            this.router.navigate([panelRoute]);
           } else {
-            this.router.navigate(['/panel/appointments']);
+            this.router.navigate(['/']);
           }
         }, 1000);
       },

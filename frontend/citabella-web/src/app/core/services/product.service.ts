@@ -52,6 +52,10 @@ export class ProductService {
     return this.http.delete<ProductPrivateResponse>(`${this.BASE}/${id}`);
   }
 
+  activate(id: number): Observable<ProductPrivateResponse> {
+    return this.http.patch<ProductPrivateResponse>(`${this.BASE}/${id}/activate`, {});
+  }
+
   delete(id: number): Observable<ProductPrivateResponse> {
     return this.http.delete<ProductPrivateResponse>(`${this.BASE}/${id}`);
   }

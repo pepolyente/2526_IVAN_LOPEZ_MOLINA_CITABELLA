@@ -72,12 +72,10 @@ export class MyAppointmentsCalendar implements OnInit {
 
   renderEventContent(arg: EventContentArg): { html: string } {
     const ap = arg.event.extendedProps?.['raw'];
-    const clientName = ap?.client?.name ?? '—';
     const employeeName = ap?.employee?.name ?? '—';
     return {
       html: `
         <div class="cb-event-inner">
-          <div class="cb-event-title">${clientName}</div>
           <div class="cb-event-employee">${employeeName}</div>
         </div>
       `
