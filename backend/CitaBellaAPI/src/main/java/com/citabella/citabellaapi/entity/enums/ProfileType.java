@@ -1,5 +1,5 @@
 package com.citabella.citabellaapi.entity.enums;
 
 public enum ProfileType {
-    NONE, CLIENT, EMPLOYEE
+    NONE, CLIENT, EMPLOYEE, ADMIN
 }

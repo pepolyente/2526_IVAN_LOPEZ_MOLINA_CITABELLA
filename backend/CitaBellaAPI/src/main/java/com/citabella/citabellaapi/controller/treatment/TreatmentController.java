@@ -58,7 +58,7 @@ public class TreatmentController {
     @Operation(
             summary = "Get all treatments detailed (paginated, filterable by active)",
             description = ApiSecurityDocs.ADMIN)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @GetMapping("/detail")
     public ResponseEntity<PageResponse<TreatmentDetailedResponse>> findAllDetailed(
             @ParameterObject Pageable pageable,
