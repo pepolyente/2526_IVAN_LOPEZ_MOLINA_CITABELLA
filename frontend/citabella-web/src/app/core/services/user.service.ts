@@ -43,6 +43,10 @@ export class UserService {
     return this.http.delete<UserResponse>(`${this.BASE}/${id}`);
   }
 
+  activate(id: number): Observable<UserResponse> {
+    return this.http.patch<UserResponse>(`${this.BASE}/${id}/activate`, {});
+  }
+
   delete(id: number): Observable<UserResponse> {
     return this.http.delete<UserResponse>(`${this.BASE}/${id}`);
   }

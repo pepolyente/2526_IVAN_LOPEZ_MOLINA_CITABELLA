@@ -155,7 +155,13 @@ import { ConfirmService } from '../../../core/services/confirm.service';
                   <td data-label="Acciones" class="actions-cell">
                     <button class="btn-xs btn-outline" (click)="startEdit(p)"><span class="material-symbols-outlined">edit</span></button>
                     @if (p.active) {
-                      <button class="btn-xs btn-danger" (click)="deactivate(p.id)"><span class="material-symbols-outlined">person_off</span></button>
+                      <button class="btn-xs btn-danger" (click)="deactivate(p.id)">
+                        <span class="material-symbols-outlined">person_off</span>
+                      </button>
+                    } @else {
+                      <button class="btn-xs btn-success" (click)="activate(p.id)">
+                        <span class="material-symbols-outlined">person_add</span>
+                      </button>
                     }
                   </td>
                 }
@@ -249,6 +255,16 @@ export class ProductList implements OnInit {
     const ok = await this.confirmSvc.confirm('¿Desactivar este producto?');
     if (!ok) return;
     this.svc.deactivate(id).subscribe({ next: () => this.load() });
+  }
+
+  activate(id: number): void {
+    this.svc.activate(id).subscribe({
+      next: () => {
+        this.toast.show('Producto activado');
+        this.load();
+      },
+      error: () => this.toast.show('Error al activar', 'error')
+    });
   }
 
   startEdit(p: ProductPrivateResponse): void {

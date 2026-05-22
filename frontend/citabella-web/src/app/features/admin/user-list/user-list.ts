@@ -131,7 +131,13 @@ import { ConfirmService } from '../../../core/services/confirm.service';
                     <button class="btn-xs btn-outline" (click)="startSwapRole(u.id)">Rol</button>
                   }
                   @if (u.accountStatus !== 'LOCKED') {
-                    <button class="btn-xs btn-danger" (click)="deactivate(u.id)"><span class="material-symbols-outlined">person_off</span></button>
+                    <button class="btn-xs btn-danger" (click)="deactivate(u.id)">
+                      <span class="material-symbols-outlined">person_off</span>
+                    </button>
+                  } @else {
+                    <button class="btn-xs btn-success" (click)="activate(u.id)">
+                      <span class="material-symbols-outlined">person_add</span>
+                    </button>
                   }
                 </td>
               </tr>
@@ -226,6 +232,16 @@ export class UserList implements OnInit {
     if (!ok) return;
     this.svc.deactivate(id).subscribe({
       next: () => { this.toast.show('Usuario bloqueado correctamente'); this.load(); }
+    });
+  }
+
+  activate(id: number): void {
+    this.svc.activate(id).subscribe({
+      next: () => {
+        this.toast.show('Usuario activado correctamente');
+        this.load();
+      },
+      error: () => this.toast.show('Error al activar usuario', 'error')
     });
   }
 
