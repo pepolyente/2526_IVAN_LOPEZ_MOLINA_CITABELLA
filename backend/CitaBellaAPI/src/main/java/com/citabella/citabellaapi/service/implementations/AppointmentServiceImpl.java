@@ -3,10 +3,12 @@ package com.citabella.citabellaapi.service.implementations;
 import com.citabella.citabellaapi.dto.appointment.*;
 import com.citabella.citabellaapi.dto.client.ClientResponse;
 import com.citabella.citabellaapi.dto.employee.EmployeeResponse;
+import com.citabella.citabellaapi.dto.page.PageResponse;
 import com.citabella.citabellaapi.dto.treatment.TreatmentResponse;
 import com.citabella.citabellaapi.entity.appointment.Appointment;
 import com.citabella.citabellaapi.entity.client.Client;
 import com.citabella.citabellaapi.entity.employee.Employee;
+import com.citabella.citabellaapi.entity.security.User;
 import com.citabella.citabellaapi.entity.treatment.Treatment;
 import com.citabella.citabellaapi.entity.enums.AppointmentStatus;
 import com.citabella.citabellaapi.entity.sale.Sale;
@@ -34,6 +36,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final EmployeeRepository employeeRepository;
     private final TreatmentRepository treatmentRepository;
     private final EmployeeTreatmentRepository employeeTreatmentRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Page<AppointmentResponse> findAll(Pageable pageable, AppointmentStatus status) {
@@ -171,8 +174,17 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public List<Appointment> getAllByClientId(Integer clientId) {
-        return appointmentRepository.findByClient_Id(clientId);
+    public PageResponse<AppointmentResponse> findByAuthenticatedClient(Pageable pageable, String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        Client client = user.getClient();
+        if (client == null) {
+            throw new BadRequestException("Authenticated user does not have a client profile linked");
+        }
+
+        return PageResponse.from(appointmentRepository.findByClient(client, pageable)
+                .map(AppointmentMapper::toResponse));
     }
 
     @Override

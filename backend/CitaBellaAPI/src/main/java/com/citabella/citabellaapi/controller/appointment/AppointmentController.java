@@ -17,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -37,6 +38,17 @@ public class AppointmentController {
 
         return ResponseEntity.ok(PageResponse.from(
                 appointmentService.findAll(pageable, status)));
+    }
+
+    @Operation(summary = "Get my appointments (for client)", description = "Obtiene las citas del cliente autenticado")
+    @PreAuthorize("hasRole('CLIENT')")
+    @GetMapping("/my")
+    public ResponseEntity<PageResponse<AppointmentResponse>> getMyAppointments(
+            @ParameterObject Pageable pageable,
+            Authentication authentication) {
+
+        String username = authentication.getName();
+        return ResponseEntity.ok(appointmentService.findByAuthenticatedClient(pageable, username));
     }
 
     @Operation(summary = "Get appointment by ID", description = ApiSecurityDocs.ADMIN_EMPLOYEE)
