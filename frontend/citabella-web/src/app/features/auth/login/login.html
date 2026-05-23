@@ -34,8 +34,11 @@
           placeholder="••••••••"
           autocomplete="current-password"
         />
-        <button class="toggle-password" (click)="showPassword = !showPassword" type="button">
-          {{ showPassword ? '🙈' : '👁' }}
+        <button class="toggle-password" (click)="showPassword = !showPassword" type="button"
+                aria-label="{{ showPassword ? 'Ocultar contraseña' : 'Ver contraseña' }}">
+            <span class="material-symbols-outlined">
+                {{ showPassword ? 'visibility_off' : 'visibility' }}
+            </span>
         </button>
       </div>
     </div>

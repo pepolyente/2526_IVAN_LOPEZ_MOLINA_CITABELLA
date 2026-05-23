@@ -90,11 +90,13 @@ public class DemoDataInitializer {
 
         createEmployees(10);
 
-        createClients(250);
+        createClients(45);
+
+        createNormalUsers(6);
 
         createTreatments();
 
-        createProducts(120);
+        createProducts();
 
         System.out.println("=================================");
         System.out.println("DEMO DATA CARGADA");
@@ -106,6 +108,7 @@ public class DemoDataInitializer {
         createRole("ADMIN", "Administrador");
         createRole("EMPLOYEE", "Empleado");
         createRole("CLIENT", "Cliente");
+        createRole("USER", "Visitante");
     }
 
     private void createRole(String name, String description) {
@@ -149,60 +152,103 @@ public class DemoDataInitializer {
 
     private void createEmployees(int amount) {
 
-        for (int i = 0; i < amount; i++) {
+        Role employeeRole = roleRepository
+                .findByName("EMPLOYEE")
+                .orElseThrow();
 
-            String fullName = randomName();
+        String[][] employees = {
+                {"Lucia Garcia", "lucia.garcia"},
+                {"Sofia Martinez", "sofia.martinez"},
+                {"Mateo Lopez", "mateo.lopez"},
+                {"Daniel Fernandez", "daniel.fernandez"},
+                {"Hugo Ruiz", "hugo.ruiz"},
+                {"Pablo Navarro", "pablo.navarro"},
+                {"Elena Torres", "elena.torres"},
+                {"Carmen Diaz", "carmen.diaz"},
+                {"Laura Moreno", "laura.moreno"},
+                {"Andrea Sanchez", "andrea.sanchez"}
+        };
+
+        for (int i = 0; i < amount && i < employees.length; i++) {
+
+            String fullName = employees[i][0];
+
+            String username = employees[i][1];
+
+            User user = new User();
+
+            user.setUsername(username);
+
+            user.setEmail(
+                    username + "@citabella.com"
+            );
+
+            user.setPasswordHash(
+                    passwordEncoder.encode(adminPassword)
+            );
+
+            user.setProfileType(ProfileType.EMPLOYEE);
+
+            user.setAccountStatus(AccountStatus.ACTIVE);
+
+            user.setRole(employeeRole);
+
+            userRepository.save(user);
 
             Employee employee = new Employee();
 
             employee.setName(fullName);
 
             employee.setPosition(
-                    randomPosition()
+                    EMPLOYEE_POSITIONS[
+                            i % EMPLOYEE_POSITIONS.length
+                            ]
             );
 
             employee.setCommission(
                     BigDecimal.valueOf(
-                            5 + random.nextInt(15)
+                            5 + (i % 15)
                     )
             );
 
-            employeeRepository.save(employee);
+            employee.setUser(user);
 
-            createEmployeeUser(fullName, i);
+            employee.setActive(true);
+
+            employeeRepository.save(employee);
         }
     }
 
-    private void createEmployeeUser(
-            String fullName,
-            int index
-    ) {
+    private void createNormalUsers(int amount) {
 
-        Role employeeRole = roleRepository
-                .findByName("EMPLOYEE")
+        Role userRole = roleRepository
+                .findByName("USER")
                 .orElseThrow();
 
-        User user = new User();
+        for (int i = 0; i < amount; i++) {
 
-        user.setUsername(
-                "employee" + index
-        );
+            User user = new User();
 
-        user.setEmail(
-                "employee" + index + "@citabella.com"
-        );
+            user.setUsername(
+                    "user" + (i + 1)
+            );
 
-        user.setPasswordHash(
-                passwordEncoder.encode(adminPassword)
-        );
+            user.setEmail(
+                    "user" + (i + 1) + "@gmail.com"
+            );
 
-        user.setProfileType(ProfileType.EMPLOYEE);
+            user.setPasswordHash(
+                    passwordEncoder.encode(adminPassword)
+            );
 
-        user.setAccountStatus(AccountStatus.ACTIVE);
+            user.setProfileType(ProfileType.NONE);
 
-        user.setRole(employeeRole);
+            user.setAccountStatus(AccountStatus.ACTIVE);
 
-        userRepository.save(user);
+            user.setRole(userRole);
+
+            userRepository.save(user);
+        }
     }
 
     private void createClients(int amount) {
@@ -237,51 +283,107 @@ public class DemoDataInitializer {
 
         createTreatment(
                 "Corte de pelo",
-                "Corte clásico",
+                "Corte clásico personalizado",
                 30,
                 15
         );
 
         createTreatment(
                 "Corte degradado",
-                "Fade profesional",
+                "Fade profesional moderno",
                 45,
                 18
         );
 
         createTreatment(
                 "Balayage",
-                "Mechas balayage",
+                "Mechas balayage naturales",
                 120,
                 80
         );
 
         createTreatment(
                 "Tinte completo",
-                "Coloración completa",
+                "Coloración completa profesional",
                 90,
                 60
         );
 
         createTreatment(
                 "Peinado boda",
-                "Peinado elegante",
+                "Peinado elegante para eventos",
                 60,
                 50
         );
 
         createTreatment(
                 "Lavado premium",
-                "Lavado y masaje",
+                "Lavado hidratante con masaje capilar",
                 25,
                 12
         );
 
         createTreatment(
                 "Arreglo de barba",
-                "Perfilado profesional",
+                "Perfilado y arreglo profesional",
                 20,
                 10
+        );
+
+        createTreatment(
+                "Botox capilar",
+                "Tratamiento reparador intensivo",
+                90,
+                70
+        );
+
+        createTreatment(
+                "Alisado keratina",
+                "Alisado profesional de larga duración",
+                180,
+                150
+        );
+
+        createTreatment(
+                "Mechas clásicas",
+                "Iluminación tradicional del cabello",
+                100,
+                65
+        );
+
+        createTreatment(
+                "Corte infantil",
+                "Corte para niños",
+                20,
+                12
+        );
+
+        createTreatment(
+                "Recogido fiesta",
+                "Peinado para celebraciones",
+                50,
+                45
+        );
+
+        createTreatment(
+                "Tratamiento hidratante",
+                "Nutrición profunda capilar",
+                40,
+                30
+        );
+
+        createTreatment(
+                "Decoloración",
+                "Decoloración profesional",
+                120,
+                90
+        );
+
+        createTreatment(
+                "Moldeado",
+                "Moldeado y volumen",
+                90,
+                55
         );
     }
 
@@ -307,79 +409,287 @@ public class DemoDataInitializer {
         treatmentRepository.save(treatment);
     }
 
-    private void createProducts(int amount) {
+    private void createProducts() {
 
-        String[] productNames = {
-                "Champu Repair",
-                "Mascarilla Pro",
-                "Cera Mate",
-                "Aceite Argan",
-                "Spray Volume",
-                "Gel Fijador",
-                "Laca Premium",
-                "Peine Carbono",
-                "Secador Pro",
-                "Plancha Ceramic"
-        };
-
-        String[] brands = {
-                "Loreal",
-                "Kerastase",
-                "Revlon",
-                "Schwarzkopf",
-                "American Crew",
-                "Tahe"
-        };
-
-        String[] categories = {
+        createProduct(
+                "Champú Repair Expert",
                 "Cabello",
-                "Barberia",
+                8.50,
+                18.95,
+                UsageType.BOTH,
+                "L'Oréal Professionnel",
+                true,
+                "01_product"
+        );
+
+        createProduct(
+                "Mascarilla Nutritive",
+                "Cabello",
+                12.00,
+                24.90,
+                UsageType.BOTH,
+                "Kérastase",
+                true,
+                "02_product"
+        );
+
+        createProduct(
+                "Cera Mate Barber",
+                "Barbería",
+                4.20,
+                11.95,
+                UsageType.BOTH,
+                "American Crew",
+                false,
+                "03_product"
+        );
+
+        createProduct(
+                "Aceite de Argán Premium",
+                "Cabello",
+                6.50,
+                16.50,
+                UsageType.BOTH,
+                "Tahe",
+                false,
+                "04_product"
+        );
+
+        createProduct(
+                "Spray Protector Térmico",
+                "Cabello",
+                5.80,
+                14.95,
+                UsageType.BOTH,
+                "Revlon",
+                true,
+                "05_product"
+        );
+
+        createProduct(
+                "Gel Fijador Extra Strong",
+                "Barbería",
+                3.20,
+                9.95,
+                UsageType.BOTH,
+                "American Crew",
+                false,
+                "06_product"
+        );
+
+        createProduct(
+                "Laca Profesional Volume",
+                "Cabello",
+                5.00,
+                13.50,
+                UsageType.BOTH,
+                "Schwarzkopf",
+                false,
+                "07_product"
+        );
+
+        createProduct(
+                "Champú Anticaspa",
+                "Cabello",
+                7.20,
+                17.90,
+                UsageType.BOTH,
+                "Kérastase",
+                true,
+                "08_product"
+        );
+
+        createProduct(
+                "Tinte Rubio Ceniza",
+                "Coloración",
+                9.50,
+                22.00,
+                UsageType.INTERNAL,
+                "L'Oréal Professionnel",
+                true,
+                "09_product"
+        );
+
+        createProduct(
+                "Oxidante 20 Vol",
+                "Coloración",
+                4.00,
+                10.50,
+                UsageType.INTERNAL,
+                "Schwarzkopf",
+                true,
+                "10_product"
+        );
+
+        createProduct(
+                "Polvo Decolorante",
+                "Coloración",
+                11.00,
+                26.90,
+                UsageType.INTERNAL,
+                "Revlon",
+                true,
+                "11_product"
+        );
+
+        createProduct(
+                "Peine Profesional Carbono",
                 "Herramientas",
-                "Coloracion"
-        };
+                2.80,
+                7.50,
+                UsageType.BOTH,
+                "Eurostil",
+                false,
+                "12_product"
+        );
 
-        for (int i = 0; i < amount; i++) {
+        createProduct(
+                "Cepillo Redondo Cerámico",
+                "Herramientas",
+                4.50,
+                12.95,
+                UsageType.BOTH,
+                "Termix",
+                false,
+                "13_product"
+        );
 
-            Product product = new Product();
+        createProduct(
+                "Secador Profesional Ionic",
+                "Herramientas",
+                45.00,
+                89.95,
+                UsageType.INTERNAL,
+                "Parlux",
+                true,
+                "14_product"
+        );
 
-            product.setName(
-                    productNames[random.nextInt(productNames.length)]
-                            + " "
-                            + (100 + i)
-            );
+        createProduct(
+                "Plancha Ceramic Pro",
+                "Herramientas",
+                38.00,
+                79.95,
+                UsageType.INTERNAL,
+                "GHD",
+                true,
+                "15_product"
+        );
 
-            product.setCategory(
-                    categories[random.nextInt(categories.length)]
-            );
+        createProduct(
+                "Espuma Rizos Definidos",
+                "Cabello",
+                5.50,
+                13.90,
+                UsageType.BOTH,
+                "Tahe",
+                false,
+                "16_product"
+        );
 
-            product.setPurchasePrice(
-                    BigDecimal.valueOf(
-                            3 + random.nextInt(40)
-                    )
-            );
+        createProduct(
+                "Sérum Reparador",
+                "Cabello",
+                7.80,
+                19.95,
+                UsageType.BOTH,
+                "Kérastase",
+                false,
+                "17_product"
+        );
 
-            product.setSalePrice(
-                    BigDecimal.valueOf(
-                            10 + random.nextInt(80)
-                    )
-            );
+        createProduct(
+                "After Shave Barber",
+                "Barbería",
+                4.80,
+                12.90,
+                UsageType.BOTH,
+                "American Crew",
+                false,
+                "18_product"
+        );
 
-            product.setUsageType(
-                    random.nextBoolean()
-                            ? UsageType.BOTH
-                            : UsageType.INTERNAL
-            );
+        createProduct(
+                "Champú Silver",
+                "Cabello",
+                8.20,
+                18.50,
+                UsageType.BOTH,
+                "Schwarzkopf",
+                false,
+                "19_product"
+        );
 
-            product.setSupplier(
-                    brands[random.nextInt(brands.length)]
-            );
+        createProduct(
+                "Mascarilla Color Protect",
+                "Cabello",
+                10.50,
+                22.90,
+                UsageType.BOTH,
+                "L'Oréal Professionnel",
+                false,
+                "20_product"
+        );
 
-            product.setIsCritical(
-                    random.nextBoolean()
-            );
+        createProduct(
+                "Navaja Profesional",
+                "Barbería",
+                12.00,
+                28.90,
+                UsageType.INTERNAL,
+                "Eurostil",
+                true,
+                "21_product"
+        );
 
-            productRepository.save(product);
-        }
+        createProduct(
+                "Loción Capilar Anticaída",
+                "Cabello",
+                9.20,
+                21.95,
+                UsageType.BOTH,
+                "Tahe",
+                false,
+                "22_product"
+        );
+    }
+
+    private void createProduct(
+            String name,
+            String category,
+            Double purchasePrice,
+            Double salePrice,
+            UsageType usageType,
+            String supplier,
+            Boolean isCritical,
+            String imageKey
+    ) {
+
+        Product product = new Product();
+
+        product.setName(name);
+
+        product.setCategory(category);
+
+        product.setPurchasePrice(
+                BigDecimal.valueOf(purchasePrice)
+        );
+
+        product.setSalePrice(
+                BigDecimal.valueOf(salePrice)
+        );
+
+        product.setUsageType(usageType);
+
+        product.setSupplier(supplier);
+
+        product.setIsCritical(isCritical);
+
+        product.setImageKey(imageKey);
+
+        product.setActive(true);
+
+        productRepository.save(product);
     }
 
     private String randomName() {

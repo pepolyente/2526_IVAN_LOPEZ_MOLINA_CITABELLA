@@ -34,7 +34,7 @@ import { ProductPublicResponse } from '../../../shared/models/product.model';
             <div class="product-catalog-card">
               <div class="pcc-img-wrap">
                 <img
-                  [src]="product.imageKey || placeholder"
+                  [src]="getProductImage(product.imageKey)"
                   [alt]="product.name"
                   class="pcc-img"
                   (error)="$any($event.target).src = placeholder"
@@ -66,5 +66,13 @@ export class ProductsPage implements OnInit {
       next: data => { this.products = data; this.loading = false; this.changeDetectorRef.detectChanges(); },
       error: () => { this.loading = false; this.changeDetectorRef.detectChanges(); }
     });
+  }
+  getProductImage(imageKey?: string): string {
+
+    if (!imageKey) {
+      return this.placeholder;
+    }
+
+    return `/images/${imageKey}.webp`;
   }
 }

@@ -44,7 +44,7 @@ public class EmployeeController {
     }
 
     @Operation(summary = "Get all employees (paginated, filterable by active)", description = ApiSecurityDocs.ADMIN)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'EMPLOYEE')")
     @GetMapping
     public ResponseEntity<PageResponse<EmployeeResponse>> findAll(
             @ParameterObject Pageable pageable,

@@ -44,4 +44,12 @@ export class Home implements OnInit {
       }
     });
   }
+  getProductImage(imageKey?: string): string {
+
+    if (!imageKey) {
+      return this.placeholder;
+    }
+
+    return `/images/${imageKey}.webp`;
+  }
 }

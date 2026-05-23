@@ -261,15 +261,14 @@ export class ClientList implements OnInit {
       this.userResults = [];
       return;
     }
-    this.userSvc.getAll({ page: 0, size: 10 }).subscribe({
+    this.userSvc.getAll({ page: 0, size: 10, search: this.userSearchTerm }).subscribe({
       next: page => {
         this.userResults = page.content.filter(u =>
-          u.username.toLowerCase().includes(this.userSearchTerm.toLowerCase()) ||
-          u.email.toLowerCase().includes(this.userSearchTerm.toLowerCase())
+          u.profileType === 'NONE'
         );
         this.cdr.detectChanges();
       },
-      error: () => this.toast.show('Error al buscar usuarios', 'error'),
+      error: (err) =>{ this.toast.show('Error al buscar usuarios', 'error'); console.error(err)},
     });
   }
 

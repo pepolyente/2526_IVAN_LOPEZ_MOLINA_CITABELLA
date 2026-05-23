@@ -3,6 +3,7 @@ import { ProductService } from '../../../core/services/product.service';
 import { ProductPrivateResponse, ProductRequest } from '../../../shared/models/product.model';
 import { ToastService } from '../../../core/services/toast.service';
 import { ConfirmService } from '../../../core/services/confirm.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-list',
@@ -10,8 +11,8 @@ import { ConfirmService } from '../../../core/services/confirm.service';
   template: `
     <div class="page-header">
       <h2>Gestión de productos</h2>
-      <button class="btn-primary" (click)="showCreateForm = !showCreateForm">
-        {{ showCreateForm ? 'Cancelar' : '+ Nuevo producto' }}
+      <button class="btn-primary" (click)="router.navigate(['/panel/products/new'])">
+        <span class="material-symbols-outlined">add</span>
       </button>
     </div>
 
@@ -200,7 +201,8 @@ export class ProductList implements OnInit {
     private svc: ProductService,
     private changeDetectorRef: ChangeDetectorRef,
     private toast: ToastService,
-    private confirmSvc: ConfirmService
+    private confirmSvc: ConfirmService,
+    public router: Router
   ) {}
 
   ngOnInit(): void { this.load(); }

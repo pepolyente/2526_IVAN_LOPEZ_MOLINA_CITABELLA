@@ -9,14 +9,6 @@ import esLocale         from '@fullcalendar/core/locales/es';
 import { AppointmentService }  from '../../../core/services/appointment.service';
 import {AppointmentResponse, AppointmentStatus} from '../../../shared/models/appointment.model';
 
-const STATUS_COLORS: Record<string, string> = {
-  PENDING:     '#F59E0B',
-  CONFIRMED:   '#3B82F6',
-  IN_PROGRESS: '#8B5CF6',
-  COMPLETED:   '#10B981',
-  CANCELLED:   '#EF4444',
-  NO_SHOW:     '#6B7280',
-};
 
 @Component({
   selector: 'app-appointment-calendar',
@@ -142,7 +134,7 @@ export class AppointmentCalendar implements OnInit {
           start: ap.startAt,
           end:   ap.endAt,
           classNames: [
-            `fc-status-${ap.status.toLowerCase()}`,
+            `fc-status-${ap.status.toLowerCase().replace(/_/g, '-')}`,
             ...(ap.hasOverlap ? ['event-overlap'] : [])
           ],
           extendedProps: { raw: ap },

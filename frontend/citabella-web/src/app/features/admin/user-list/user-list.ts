@@ -3,6 +3,7 @@ import { UserService } from '../../../core/services/user.service';
 import { AccountStatus, UserResponse } from '../../../shared/models/user.model';
 import { ToastService } from '../../../core/services/toast.service';
 import { ConfirmService } from '../../../core/services/confirm.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-list',
@@ -10,8 +11,8 @@ import { ConfirmService } from '../../../core/services/confirm.service';
   template: `
     <div class="page-header">
       <h2>Usuarios del sistema</h2>
-      <button class="btn-primary" (click)="showCreateForm = !showCreateForm">
-        {{ showCreateForm ? 'Cancelar' : '+ Nuevo usuario' }}
+      <button class="btn-primary" (click)="router.navigate(['/panel/admin/users/new'])">
+        <span class="material-symbols-outlined">add</span>
       </button>
     </div>
 
@@ -176,7 +177,8 @@ export class UserList implements OnInit {
     private svc: UserService,
     private changeDetectorRef: ChangeDetectorRef,
     private toast: ToastService,
-    private confirmSvc: ConfirmService
+    private confirmSvc: ConfirmService,
+    public router: Router
   ) {}
 
   ngOnInit(): void { this.load(); }
