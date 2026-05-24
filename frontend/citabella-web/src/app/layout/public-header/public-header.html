@@ -1,0 +1,105 @@
+<header class="pub-header" [class.scrolled]="isScrolled">
+  <a routerLink="/" class="pub-brand">
+    <span class="pub-logo">
+      <img alt="CitaBella" src="/images/CitaBellaLogoFondoTransparente.png">
+    </span>
+    <span class="pub-title">CitaBella</span>
+  </a>
+
+  <nav class="pub-nav hide-on-mobile" aria-label="Navegación principal">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}">Inicio</a>
+    <a routerLink="/servicios" routerLinkActive="active">Servicios</a>
+    <a routerLink="/productos" routerLinkActive="active">Productos</a>
+  </nav>
+
+  <div class="pub-actions hide-on-mobile">
+    <button class="btn-theme" (click)="theme.toggle()" [title]="theme.isDark() ? 'Modo claro' : 'Modo oscuro'">
+      <span class="material-symbols-outlined">{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+    </button>
+
+    @if (!auth.isLogged()) {
+      <a routerLink="/register" class="btn-ghost-sm">Registrarse</a>
+      <a routerLink="/login" class="btn-solid-sm">
+        Entrar
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </a>
+    } @else {
+      <span class="user-pill">
+        <span class="user-avatar">{{ auth.getName().charAt(0) | uppercase }}</span>
+        <span class="user-name">{{ auth.getName() }}</span>
+      </span>
+
+      <!-- El botón "Mi panel" solo se muestra si el usuario tiene un rol autorizado -->
+      @if (auth.hasPanelAccess()) {
+        <button class="btn-solid-sm" (click)="goToPanel()">
+          <span class="material-symbols-outlined">dashboard</span>
+          Mi panel
+        </button>
+      }
+
+      <button class="btn-danger-sm" (click)="logout()">
+        <span class="material-symbols-outlined">logout</span>
+      </button>
+    }
+  </div>
+
+  <button class="hamburger hide-on-desktop" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen" aria-label="Menú">
+    <span class="material-symbols-outlined">{{ isMenuOpen ? 'close' : 'menu' }}</span>
+  </button>
+</header>
+
+<div class="mobile-overlay" [class.open]="isMenuOpen && isMobile" (click)="toggleMenu()">
+  <nav class="mobile-nav" (click)="$event.stopPropagation()">
+    <div class="mobile-nav-header">
+      <span class="pub-title">CitaBella</span>
+      <button class="mobile-close-btn" (click)="toggleMenu()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="mobile-nav-links">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" (click)="toggleMenu()">
+        <span class="material-symbols-outlined">home</span>
+        Inicio
+      </a>
+      <a routerLink="/servicios" routerLinkActive="active" (click)="toggleMenu()">
+        <span class="material-symbols-outlined">spa</span>
+        Servicios
+      </a>
+      <a routerLink="/productos" routerLinkActive="active" (click)="toggleMenu()">
+        <span class="material-symbols-outlined">inventory_2</span>
+        Productos
+      </a>
+    </div>
+
+    <div class="mobile-nav-divider"></div>
+
+    <button class="mobile-theme-btn" (click)="theme.toggle()">
+      <span class="material-symbols-outlined">{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+      {{ theme.isDark() ? 'Modo claro' : 'Modo oscuro' }}
+    </button>
+
+    @if (!auth.isLogged()) {
+      <div class="mobile-auth-actions">
+        <a routerLink="/register" class="mobile-btn-outline" (click)="toggleMenu()">Registrarse</a>
+        <a routerLink="/login" class="mobile-btn-primary" (click)="toggleMenu()">Entrar</a>
+      </div>
+    } @else {
+      <div class="mobile-user-info">
+        <span class="user-avatar">{{ auth.getName().charAt(0) | uppercase }}</span>
+        <div>
+          <div class="mobile-user-name">{{ auth.getName() }}</div>
+          <!-- Se muestra el rol real en lugar de "Usuario activo" -->
+          <div class="mobile-user-role">{{ auth.getRole() || 'Usuario activo' }}</div>
+        </div>
+      </div>
+
+      <!-- El botón de panel solo se muestra si el rol lo permite -->
+      @if (auth.hasPanelAccess()) {
+        <button class="mobile-btn-primary" (click)="goToPanel()">Mi panel</button>
+      }
+
+      <button class="mobile-btn-danger" (click)="logout()">Cerrar sesión</button>
+    }
+  </nav>
+</div>

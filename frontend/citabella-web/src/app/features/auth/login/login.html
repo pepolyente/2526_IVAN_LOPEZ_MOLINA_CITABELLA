@@ -1,0 +1,58 @@
+<div class="auth-wrapper">
+  <div class="auth-card">
+
+    <a routerLink="/" class="auth-back-link">← Volver al inicio</a>
+
+    <div class="auth-logo">
+      <img src="/images/logoRedondo.png" alt="CitaBella" height="56">
+      <h1>CitaBella</h1>
+    </div>
+
+    <h2 class="auth-title">Bienvenido de nuevo</h2>
+    <p class="auth-sub">Introduce tus datos para acceder</p>
+
+    <div class="form-group">
+      <label>Usuario</label>
+      <input
+        type="text"
+        [value]="form.username"
+        (input)="form.username = $any($event.target).value"
+        class="input-large"
+        placeholder="Tu nombre de usuario"
+        autocomplete="username"
+      />
+    </div>
+
+    <div class="form-group">
+      <label>Contraseña</label>
+      <div class="input-with-toggle">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          [value]="form.password"
+          (input)="form.password = $any($event.target).value"
+          class="input-large"
+          placeholder="••••••••"
+          autocomplete="current-password"
+        />
+        <button class="toggle-password" (click)="showPassword = !showPassword" type="button"
+                aria-label="{{ showPassword ? 'Ocultar contraseña' : 'Ver contraseña' }}">
+            <span class="material-symbols-outlined">
+                {{ showPassword ? 'visibility_off' : 'visibility' }}
+            </span>
+        </button>
+      </div>
+    </div>
+
+    <button class="btn-primary btn-full" (click)="submit()" [disabled]="loading || !form.username.trim() || !form.password.trim()">
+      {{ loading ? 'Entrando...' : 'Entrar' }}
+    </button>
+    @if (error) {
+      <div class="auth-error">{{ error }}</div>
+    }
+
+    <p class="auth-footer">
+      ¿No tienes cuenta? <a routerLink="/register">Regístrate gratis</a>
+    </p>
+  </div>
+</div>
+<app-toast-container></app-toast-container>

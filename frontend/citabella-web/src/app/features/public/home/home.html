@@ -1,0 +1,184 @@
+<section class="hero-section">
+  <div class="hero-glow hero-glow-1"></div>
+  <div class="hero-glow hero-glow-2"></div>
+
+  <div class="hero-content">
+    <span class="hero-eyebrow">
+
+      Centro de Belleza Premium
+    </span>
+    <h1 class="hero-heading">Tu belleza,<br>nuestra pasión</h1>
+    <div class="hero-ctas">
+      @if (!auth.isLogged()) {
+        <p class="hero-sub">
+          Echale un vistazo a nuestros tratamientos y disfruta de la mejor atención personalizada en CitaBella.
+        </p>
+        <a routerLink="/login" class="btn-cta-primary">
+          Regístrate
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+        <a routerLink="/servicios" class="btn-cta-ghost">Ver servicios</a>
+      } @else if (auth.isLogged() && (auth.getRole() === "ADMIN" || auth.getRole() === "EMPLOYEE")) {
+        <p class="hero-sub">
+          Gestiona la agenda de CitaBella y administra tus citas de manera eficiente, consulta tus clientes y mucho más.
+        </p>
+        <a routerLink="/panel" class="btn-cta-primary">
+          PANEL DE GESTIÓN
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+      } @else if (auth.isLogged() && (auth.getRole() === "CLIENT" )) {
+        <p class="hero-sub">
+          Consulta tus citas y echale un vistazo a nuestros tratamientos y disfruta de la mejor atención personalizada en CitaBella.
+        </p>
+        <a routerLink="/panel" class="btn-cta-primary">
+          PANEL DE GESTIÓN
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+      } @else {
+        <p class="hero-sub">
+          Solicita a un empleado de CitaBella que active tu cuenta.
+        </p>
+        <a routerLink="/servicios" class="btn-cta-ghost">Ver servicios</a>
+      }
+    </div>
+    <div class="hero-social-proof">
+      <span class="proof-text">Gestión centralizada para centros de belleza</span>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hero-image-frame">
+      <img
+        src="/images/hero.jpg"
+        alt="CitaBella — Centro de Belleza"
+        class="hero-img"
+        (error)="$any($event.target).src='/images/citabella.jpg'"
+      />
+      <div class="hero-float-card">
+        <span class="float-card-icon material-symbols-outlined">event_available</span>
+        <div>
+          <div class="float-card-title">Ruth • Alisado keratina</div>
+          <div class="float-card-sub">16:00</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="home-section home-section-surface" id="productos">
+  <div class="section-header">
+    <span class="section-eyebrow">Nuestra tienda</span>
+    <h2 class="section-heading">Productos destacados</h2>
+    <p class="section-sub">Los mejores cosméticos y productos de belleza seleccionados por nuestras especialistas</p>
+  </div>
+
+  @if (products.length === 0) {
+    <div class="home-empty-state">
+      <span class="material-symbols-outlined">inventory_2</span>
+      <p>Próximamente...</p>
+    </div>
+  } @else {
+    <div class="products-home-grid">
+      @for (product of products; track product.id) {
+        <div class="product-home-card">
+          <div class="phc-img-wrap">
+            <img
+              [src]="getProductImage(product.imageKey)"
+              [alt]="product.name"
+              class="phc-img"
+              (error)="$any($event.target).src = placeholder"
+            />
+            @if (product.category) {
+              <span class="phc-category">{{ product.category }}</span>
+            }
+          </div>
+          <div class="phc-body">
+            <h3 class="phc-name">{{ product.name }}</h3>
+            <div class="phc-price">{{ product.salePrice | currency:'EUR' }}</div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <div class="section-cta-row">
+    <a routerLink="/productos" class="btn-see-all">
+      Ver todos los productos
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+  </div>
+</section>
+
+<section class="home-section" id="servicios">
+  <div class="section-header">
+    <span class="section-eyebrow">Servicios</span>
+    <h2 class="section-heading">Servicios pensados para ti</h2>
+    <p class="section-sub">Descubre nuestra amplia gama de tratamientos de belleza y bienestar</p>
+  </div>
+
+  @if (treatments.length === 0) {
+    <div class="home-empty-state">
+      <span class="material-symbols-outlined">spa</span>
+      <p>Próximamente...</p>
+    </div>
+  } @else {
+    <div class="services-home-grid">
+      @for (treatment of treatments; track treatment.id) {
+        <div class="service-home-card">
+          <div class="shc-icon-wrap">
+            <span class="material-symbols-outlined">spa</span>
+          </div>
+          <div class="shc-content">
+            <h3 class="shc-name">{{ treatment.name }}</h3>
+            <div class="shc-meta">
+              <span class="shc-duration">
+                <span class="material-symbols-outlined">schedule</span>
+                {{ treatment.minimumDuration }} min
+              </span>
+            </div>
+          </div>
+          <div class="shc-price">{{ treatment.price | currency:'EUR' }}</div>
+        </div>
+      }
+    </div>
+  }
+
+  <div class="section-cta-row">
+    <a routerLink="/servicios" class="btn-see-all">
+      Ver todos los servicios
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+  </div>
+</section>
+
+@if ((auth.getRole() !== "ADMIN" && auth.getRole() !== "EMPLOYEE")) {
+<section class="cta-banner">
+  <div class="cta-banner-inner">
+    <div class="cta-banner-content">
+      <span class="cta-eyebrow">¿No sabes a qué hora era tu cita?</span>
+      <h2 class="cta-heading">Revisa tu agenda fácilmente</h2>
+      <p class="cta-sub">Únete a cientos de clientas que confían en CitaBella para su cuidado personal. Pide a un profesional que vincule tu cuenta con tu agenda para poder visualizar tus citas.</p>
+      @if (!auth.isLogged()) {
+        <div class="cta-actions">
+          <a routerLink="/login" class="btn-cta-banner-primary">
+            Consulta tus citas
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </a>
+          <a routerLink="/register" class="btn-cta-banner-ghost">Crear cuenta gratis</a>
+        </div>
+      } @else if ((auth.getRole() !== "ADMIN" && auth.getRole() !== "EMPLOYEE" && auth.getRole() !== "CLIENT")){
+
+      } @else {
+        <a routerLink="/panel" class="btn-cta-banner-primary">
+          Ver mi agenda
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+      }
+    </div>
+    <div class="cta-banner-decoration" aria-hidden="true">
+      <img alt="CitaBella" src="/images/CitaBellaLogoFondoTransparente.png">
+    </div>
+  </div>
+</section>
+}
