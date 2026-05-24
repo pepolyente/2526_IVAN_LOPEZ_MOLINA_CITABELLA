@@ -7,7 +7,7 @@
 [![Docker Compose](https://img.shields.io/badge/despliegue-Docker%20Compose-blue?style=for-the-badge&logo=docker)](#)
 [![Java 17](https://img.shields.io/badge/backend-Java%2017%20%2B%20Spring%20Boot%203-6DB33F?style=for-the-badge&logo=spring)](#)
 [![Angular 21](https://img.shields.io/badge/frontend-Angular%2021-DD0031?style=for-the-badge&logo=angular)](#)
-[![Flutter](https://img.shields.io/badge/m%C3%B3vil-Flutter%20%2B%20WebView-02569B?style=for-the-badge&logo=flutter)](#)
+[![Flutter](https://img.shields.io/badge/m%C3%B3vil-Flutter%20%2B%20InAppWebView-02569B?style=for-the-badge&logo=flutter)](#)
 
 ---
 
