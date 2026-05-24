@@ -195,6 +195,6 @@ El modelo de datos y la arquitectura se diseñaron desde la Fase 1 para absorber
 
 ## 🪪 Licencia
 
-Copyright © 2025–2026 Iván López Molina. Todos los derechos reservados.
+Copyright © 2025–2026 Iván López Molina. Todos los derechos reservados. 
 
 Este código fuente y sus archivos asociados están protegidos por derechos de autor. No se permite su uso, reproducción, modificación, distribución o publicación total o parcial sin el consentimiento expreso del autor.
