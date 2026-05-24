@@ -185,7 +185,7 @@ El modelo de datos y la arquitectura se diseñaron desde la Fase 1 para absorber
 **Iván López Molina**
 
 * 🎓 CFGS Desarrollo de Aplicaciones Multiplataforma (DAM)
-* 🏫 IES La Vereda — Tutor: Francisco Hernández
+* 🏫 IES La Vereda — Tutor: Víctor Pla Soler
 * 📅 Curso 2025–2026
 * 📍 La Pobla de Vallbona, Valencia
 
