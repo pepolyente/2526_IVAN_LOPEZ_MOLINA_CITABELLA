@@ -36,7 +36,7 @@ La autenticación es **stateless mediante JWT (HS256)**. Tras el login, el token
 ###  Flujo de autenticación
 
 1. **Login** → el servidor genera un JWT firmado.
-2. El JWT se guarda en `localStorage` (web) o en el almacenamiento del WebView (móvil).
+2. El JWT se guarda en `localStorage` (web) o en el almacenamiento del InAppWebView (móvil).
 3. Un **interceptor** añade automáticamente `Authorization: Bearer <token>` a todas las peticiones.
 4. El filtro `JwtAuthFilter` valida el token, extrae el rol y lo inyecta en el `SecurityContextHolder`.
 
@@ -97,11 +97,11 @@ La autenticación es **stateless mediante JWT (HS256)**. Tras el login, el token
 | **Edición inline y formularios reactivos** | Tablas paginadas con búsqueda, ordenación y edición en línea para clientes, empleados, tratamientos y productos. |
 | **Zona pública** | Home, catálogo de servicios y productos accesibles sin autenticación. Efectos de glassmorfismo, skeleton loading y diseño atractivo. |
 
-### 📱 Aplicación Móvil — Shell nativo Flutter + WebView
+### 📱 Aplicación Móvil — Shell nativo Flutter + InAppWebView
 
 | Característica | Descripción |
 |---------------|-------------|
-| **WebView avanzado** | Utiliza `flutter_inappwebview` (no `webview_flutter`) para embeber la SPA Angular con soporte completo de JavaScript, DOM Storage e IndexedDB. |
+| **InAppWebView avanzado** | Utiliza `flutter_inappwebview` (no `webview_flutter`) para embeber la SPA Angular con soporte completo de JavaScript, DOM Storage e IndexedDB. |
 | **Experiencia nativa** | Splash screen nativo (API Android 12+), pantalla de error sin conexión, pull-to-refresh y gestión del botón Atrás con diálogo de salida. |
 | **Sin duplicar código** | Toda la lógica de negocio, autenticación e interfaz reside en la SPA Angular. Flutter solo gestiona la capa de presentación nativa y la conectividad. |
 | **Configuración por entorno** | URL del servidor centralizada en `app_config.dart`. Compatible con emulador Android, dispositivo físico en red local y despliegue productivo con Nginx. |
@@ -127,7 +127,7 @@ Cada módulo del sistema cuenta con su propia guía técnica detallada dentro de
 | [`docs/Backend.md`](docs/Backend.md) | API REST, paquetes, seguridad JWT, capas de servicio, endpoints, modelo de dominio, enums y buenas prácticas. |
 | [`docs/Frontend.md`](docs/Frontend.md) | Módulos Angular con lazy loading, guards, interceptores, componentes por zona, calendario, diseño visual, tokens CSS y configuración. |
 | [`docs/DevOps.md`](docs/DevOps.md) | Docker Compose, Dockerfiles multietapa, Nginx, healthchecks, persistencia, variables de entorno y checklist de producción. |
-| [`docs/App-Android-IOS.md`](docs/App-Android-IOS.md) | App Flutter WebView, flujo de arranque, estados de conectividad, configuración del WebView, permisos y compilación. |
+| [`docs/App-Android-IOS.md`](docs/App-Android-IOS.md) | App Flutter InAppWebView, flujo de arranque, estados de conectividad, configuración del InAppWebView, permisos y compilación. |
 | [`docs/Historias_de_usuario.md`](docs/Historias_de_usuario.md) | Definición completa de los requisitos funcionales del sistema expresados como historias de usuario. |
 | [`docs/api-docs.html`](docs/api-docs.html) | **Documentación interactiva de la API REST.** Página estática autogenerada con Springdoc OpenAPI que permite explorar y probar visualmente todos los endpoints sin compilar ni levantar el servidor. El tribunal puede auditar la API completa con un solo clic. |
 
