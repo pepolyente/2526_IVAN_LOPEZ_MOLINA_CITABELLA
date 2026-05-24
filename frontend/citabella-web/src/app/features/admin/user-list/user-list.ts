@@ -44,7 +44,9 @@ import { Router } from '@angular/router';
       <div class="filter-group">
         <label>Estado de cuenta</label>
         <select [(ngModel)]="filterStatus" (change)="applyFilter()">
-          <option value="">Todos</option>
+          <option value="" disabled selected hidden>
+            Todos
+          </option>
           <option value="PENDING">Pendiente</option>
           <option value="ACTIVE">Activo</option>
           <option value="LOCKED">Bloqueado</option>
@@ -56,7 +58,7 @@ import { Router } from '@angular/router';
         <div class="search-wrapper">
           <input type="text"
                  [(ngModel)]="searchTerm"
-                 placeholder="Usuario o email..."
+                 placeholder="Nombre del usuario "
                  (keyup.enter)="onSearch()"
                  class="inline-input" />
           <button class="btn-outline" (click)="onSearch()">Buscar</button>
@@ -119,7 +121,9 @@ import { Router } from '@angular/router';
                   @if (swapRoleId === u.id) {
                     <div class="inline-action">
                       <select [(ngModel)]="swapRoleName">
-                        <option value="">-- rol --</option>
+                        <option value="" disabled selected hidden>
+                          Seleccionar rol
+                        </option>
                         <option value="ADMIN">ADMIN</option>
                         <option value="EMPLOYEE">EMPLOYEE</option>
                         <option value="CLIENT">CLIENT</option>

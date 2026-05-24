@@ -32,7 +32,7 @@ import { Router } from '@angular/router';
             <span class="feature-icon material-symbols-outlined">verified</span>
             <div class="feature-text">
               <div class="feature-title">Profesionales expertas</div>
-              <div class="feature-desc">Equipo certificado con años de experiencia</div>
+              <div class="feature-desc">Equipo certificado con más de 25 años de experiencia</div>
             </div>
           </div>
           <div class="feature-sep"></div>
@@ -50,7 +50,7 @@ import { Router } from '@angular/router';
       <div class="pub-footer-inner">
         <div class="pub-footer-brand">
           <h3>CitaBella</h3>
-          <p>Tu centro de belleza de confianza. Reserva tus tratamientos favoritos en minutos.</p>
+          <p>Tu centro de belleza de confianza. Consulta tus tratamientos favoritos en minutos.</p>
         </div>
         <div class="pub-footer-col">
           <h4>Explorar</h4>

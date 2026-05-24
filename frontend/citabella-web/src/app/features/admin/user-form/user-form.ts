@@ -7,7 +7,7 @@ import { ToastService } from '../../../core/services/toast.service';
   selector: 'app-user-form',
   standalone: false,
   template: `
-    <div class="page-header">
+    <div class="page-header modal-create">
       <h2>Nuevo usuario</h2>
       <button class="btn-outline" (click)="router.navigate(['/panel/admin/users'])">Cancelar</button>
     </div>

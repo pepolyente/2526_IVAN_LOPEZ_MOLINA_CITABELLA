@@ -8,38 +8,41 @@
       Centro de Belleza Premium
     </span>
     <h1 class="hero-heading">Tu belleza,<br>nuestra pasión</h1>
-    <p class="hero-sub">
-      Echale un vistazo a nuestros tratamientos y disfruta de la mejor atención personalizada en CitaBella.
-    </p>
     <div class="hero-ctas">
       @if (!auth.isLogged()) {
+        <p class="hero-sub">
+          Echale un vistazo a nuestros tratamientos y disfruta de la mejor atención personalizada en CitaBella.
+        </p>
         <a routerLink="/login" class="btn-cta-primary">
-          Revisa tu citas
+          Regístrate
           <span class="material-symbols-outlined">arrow_forward</span>
         </a>
         <a routerLink="/servicios" class="btn-cta-ghost">Ver servicios</a>
       } @else if (auth.isLogged() && (auth.getRole() === "ADMIN" || auth.getRole() === "EMPLOYEE")) {
+        <p class="hero-sub">
+          Gestiona la agenda de CitaBella y administra tus citas de manera eficiente, consulta tus clientes y mucho más.
+        </p>
         <a routerLink="/panel" class="btn-cta-primary">
           PANEL DE GESTIÓN
           <span class="material-symbols-outlined">arrow_forward</span>
         </a>
-      }
-      @else {
+      } @else if (auth.isLogged() && (auth.getRole() === "CLIENT" )) {
+        <p class="hero-sub">
+          Consulta tus citas y echale un vistazo a nuestros tratamientos y disfruta de la mejor atención personalizada en CitaBella.
+        </p>
         <a routerLink="/panel" class="btn-cta-primary">
-          Mi agenda
+          PANEL DE GESTIÓN
           <span class="material-symbols-outlined">arrow_forward</span>
         </a>
+      } @else {
+        <p class="hero-sub">
+          Solicita a un empleado de CitaBella que active tu cuenta.
+        </p>
         <a routerLink="/servicios" class="btn-cta-ghost">Ver servicios</a>
       }
     </div>
     <div class="hero-social-proof">
-      <div class="proof-avatars">
-        <span class="proof-avatar">A</span>
-        <span class="proof-avatar">M</span>
-        <span class="proof-avatar">L</span>
-        <span class="proof-avatar">+</span>
-      </div>
-      <span class="proof-text">+500 clientes satisfechos este año</span>
+      <span class="proof-text">Gestión centralizada para centros de belleza</span>
     </div>
   </div>
 
@@ -54,56 +57,14 @@
       <div class="hero-float-card">
         <span class="float-card-icon material-symbols-outlined">event_available</span>
         <div>
-          <div class="float-card-title">Tratamiento de keratina</div>
-          <div class="float-card-sub">Hoy a las 16:00</div>
+          <div class="float-card-title">Ruth • Alisado keratina</div>
+          <div class="float-card-sub">16:00</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-
-<section class="home-section" id="servicios">
-  <div class="section-header">
-    <span class="section-eyebrow">Tratamientos</span>
-    <h2 class="section-heading">Servicios pensados para ti</h2>
-    <p class="section-sub">Descubre nuestra amplia gama de tratamientos de belleza y bienestar</p>
-  </div>
-
-  @if (treatments.length === 0) {
-    <div class="home-empty-state">
-      <span class="material-symbols-outlined">spa</span>
-      <p>Próximamente...</p>
-    </div>
-  } @else {
-    <div class="services-home-grid">
-      @for (treatment of treatments; track treatment.id) {
-        <div class="service-home-card">
-          <div class="shc-icon-wrap">
-            <span class="material-symbols-outlined">spa</span>
-          </div>
-          <div class="shc-content">
-            <h3 class="shc-name">{{ treatment.name }}</h3>
-            <div class="shc-meta">
-              <span class="shc-duration">
-                <span class="material-symbols-outlined">schedule</span>
-                {{ treatment.minimumDuration }} min
-              </span>
-            </div>
-          </div>
-          <div class="shc-price">{{ treatment.price | currency:'EUR' }}</div>
-        </div>
-      }
-    </div>
-  }
-
-  <div class="section-cta-row">
-    <a routerLink="/servicios" class="btn-see-all">
-      Ver todos los servicios
-      <span class="material-symbols-outlined">arrow_forward</span>
-    </a>
-  </div>
-</section>
 
 <section class="home-section home-section-surface" id="productos">
   <div class="section-header">
@@ -149,6 +110,49 @@
   </div>
 </section>
 
+<section class="home-section" id="servicios">
+  <div class="section-header">
+    <span class="section-eyebrow">Servicios</span>
+    <h2 class="section-heading">Servicios pensados para ti</h2>
+    <p class="section-sub">Descubre nuestra amplia gama de tratamientos de belleza y bienestar</p>
+  </div>
+
+  @if (treatments.length === 0) {
+    <div class="home-empty-state">
+      <span class="material-symbols-outlined">spa</span>
+      <p>Próximamente...</p>
+    </div>
+  } @else {
+    <div class="services-home-grid">
+      @for (treatment of treatments; track treatment.id) {
+        <div class="service-home-card">
+          <div class="shc-icon-wrap">
+            <span class="material-symbols-outlined">spa</span>
+          </div>
+          <div class="shc-content">
+            <h3 class="shc-name">{{ treatment.name }}</h3>
+            <div class="shc-meta">
+              <span class="shc-duration">
+                <span class="material-symbols-outlined">schedule</span>
+                {{ treatment.minimumDuration }} min
+              </span>
+            </div>
+          </div>
+          <div class="shc-price">{{ treatment.price | currency:'EUR' }}</div>
+        </div>
+      }
+    </div>
+  }
+
+  <div class="section-cta-row">
+    <a routerLink="/servicios" class="btn-see-all">
+      Ver todos los servicios
+      <span class="material-symbols-outlined">arrow_forward</span>
+    </a>
+  </div>
+</section>
+
+@if ((auth.getRole() !== "ADMIN" && auth.getRole() !== "EMPLOYEE")) {
 <section class="cta-banner">
   <div class="cta-banner-inner">
     <div class="cta-banner-content">
@@ -158,7 +162,7 @@
       @if (!auth.isLogged()) {
         <div class="cta-actions">
           <a routerLink="/login" class="btn-cta-banner-primary">
-            Reservar ahora
+            Consulta tus citas
             <span class="material-symbols-outlined">arrow_forward</span>
           </a>
           <a routerLink="/register" class="btn-cta-banner-ghost">Crear cuenta gratis</a>
@@ -175,3 +179,4 @@
     </div>
   </div>
 </section>
+}

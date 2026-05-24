@@ -26,7 +26,7 @@ export class Home implements OnInit {
   ngOnInit(): void {
     this.treatmentService.getAll().subscribe({
       next: data => {
-        this.treatments = data.content.slice(0, 4);
+        this.treatments = data.content.slice(0, 6);
         this.changeDetectorRef.detectChanges();
       },
       error: () => {

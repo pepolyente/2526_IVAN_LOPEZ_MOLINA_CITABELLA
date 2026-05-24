@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {ChangeDetectorRef, Component} from '@angular/core';
 import { Router } from '@angular/router';
 import { ClientService } from '../../../core/services/client.service';
 import { ClientRequest } from '../../../shared/models/client.model';
@@ -7,7 +7,7 @@ import { ClientRequest } from '../../../shared/models/client.model';
   selector: 'app-client-form',
   standalone: false,
   template: `
-    <div class="page-header">
+    <div class="page-header modal-create">
       <h2>Nuevo cliente</h2>
       <button class="btn-outline" (click)="router.navigate(['/panel/clients'])">Cancelar</button>
     </div>
@@ -22,12 +22,14 @@ import { ClientRequest } from '../../../shared/models/client.model';
       </div>
       <div class="form-group">
         <label>Fecha de nacimiento</label>
-        <input type="date" [(ngModel)]="form.birthday" name="birthday" />
+        <input type="text" appFlatpickr  [(ngModel)]="form.birthday" name="birthday" />
       </div>
       <div class="form-group">
         <label>Género</label>
         <select [(ngModel)]="form.gender" name="gender">
-          <option value="">Sin especificar</option>
+          <option value="" disabled selected hidden>
+            Sin especificar
+          </option>
           <option value="MALE">Hombre</option>
           <option value="FEMALE">Mujer</option>
           <option value="OTHER">Otro</option>
@@ -44,7 +46,7 @@ export class ClientForm {
   form: ClientRequest = { name: '', phoneNumber: '' };
   loading = false;
   error   = '';
-  constructor(private svc: ClientService, public router: Router) {}
+  constructor(private svc: ClientService, public router: Router, private changeDetectorRef: ChangeDetectorRef) {}
   submit(): void {
     this.loading = true;
     this.svc.create(this.form).subscribe({

@@ -7,7 +7,7 @@ import { EmployeeRequest } from '../../../shared/models/employee.model';
   selector: 'app-employee-form',
   standalone: false,
   template: `
-    <div class="page-header">
+    <div class="page-header modal-create">
       <h2>Nuevo empleado</h2>
       <button class="btn-outline" (click)="router.navigate(['/panel/employees'])">Cancelar</button>
     </div>

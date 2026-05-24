@@ -7,6 +7,7 @@ import { AppointmentForm } from './appointment-form/appointment-form';
 import { AppointmentCalendar } from './appointment-calendar/appointment-calendar';
 import { AppointmentModal } from './appointment-modal/appointment-modal';
 import { AppointmentCreateModal } from './appointment-create-modal/appointment-create-modal';
+import {SharedModule} from "../../shared/shared-module";
 
 @NgModule({
   declarations: [
@@ -15,11 +16,12 @@ import { AppointmentCreateModal } from './appointment-create-modal/appointment-c
     AppointmentModal,
     AppointmentCreateModal,
   ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    FullCalendarModule,
-    AppointmentsRoutingModule,
-  ],
+    imports: [
+        CommonModule,
+        FormsModule,
+        FullCalendarModule,
+        AppointmentsRoutingModule,
+        SharedModule,
+    ],
 })
 export class AppointmentsModule {}

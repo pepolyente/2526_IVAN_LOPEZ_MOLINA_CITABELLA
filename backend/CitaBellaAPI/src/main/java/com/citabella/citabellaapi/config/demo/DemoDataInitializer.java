@@ -385,6 +385,13 @@ public class DemoDataInitializer {
                 90,
                 55
         );
+
+        createTreatment(
+                "Extensiones premium",
+                "Colocación y adaptación de extensiones naturales",
+                150,
+                120
+        );
     }
 
     private void createTreatment(
@@ -629,28 +636,6 @@ public class DemoDataInitializer {
                 "L'Oréal Professionnel",
                 false,
                 "20_product"
-        );
-
-        createProduct(
-                "Navaja Profesional",
-                "Barbería",
-                12.00,
-                28.90,
-                UsageType.INTERNAL,
-                "Eurostil",
-                true,
-                "21_product"
-        );
-
-        createProduct(
-                "Loción Capilar Anticaída",
-                "Cabello",
-                9.20,
-                21.95,
-                UsageType.BOTH,
-                "Tahe",
-                false,
-                "22_product"
         );
     }
 

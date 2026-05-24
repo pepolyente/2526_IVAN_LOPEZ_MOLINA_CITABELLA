@@ -7,7 +7,7 @@ import { TreatmentRequest } from '../../../shared/models/treatment.model';
   selector: 'app-treatment-form',
   standalone: false,
   template: `
-    <div class="page-header">
+    <div class="page-header modal-create">
       <h2>Nuevo tratamiento</h2>
       <button class="btn-outline" (click)="router.navigate(['/panel/treatments'])">Cancelar</button>
     </div>

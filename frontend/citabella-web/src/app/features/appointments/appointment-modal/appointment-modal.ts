@@ -50,8 +50,8 @@ import { ConfirmService } from '../../../core/services/confirm.service';
           @if (showReschedule) {
             <div class="form-group">
               <label>Nueva fecha/hora</label>
-              <input type="datetime-local" [(ngModel)]="rescheduleForm.startAt" />
-              <input type="datetime-local" [(ngModel)]="rescheduleForm.endAt" />
+              <input type="text" appFlatpickr [(ngModel)]="rescheduleForm.startAt" />
+              <input type="text" appFlatpickr [(ngModel)]="rescheduleForm.endAt" />
             </div>
             <div class="action-row">
               <button class="btn-primary" (click)="confirmReschedule()" [disabled]="loading">Confirmar reagendado</button>

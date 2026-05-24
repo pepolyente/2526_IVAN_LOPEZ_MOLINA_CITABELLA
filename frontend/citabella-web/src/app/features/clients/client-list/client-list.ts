@@ -33,7 +33,7 @@ import { ConfirmService } from '../../../core/services/confirm.service';
         <div class="search-wrapper">
           <input type="text"
                  [(ngModel)]="searchTerm"
-                 placeholder="Nombre o teléfono..."
+                 placeholder="Nombre del cliente"
                  (keyup.enter)="onSearch()"
                  class="inline-input" />
           <button class="btn-outline" (click)="onSearch()">Buscar</button>
@@ -77,7 +77,9 @@ import { ConfirmService } from '../../../core/services/confirm.service';
                   <td data-label="Teléfono"><input [(ngModel)]="editForm.phoneNumber" class="inline-input" /></td>
                   <td data-label="Género">
                     <select [(ngModel)]="editForm.gender" class="inline-input">
-                      <option value="">—</option>
+                      <option value="" disabled selected hidden>
+                        _
+                      </option>
                       <option value="MALE">Hombre</option>
                       <option value="FEMALE">Mujer</option>
                       <option value="OTHER">Otro</option>
@@ -99,7 +101,9 @@ import { ConfirmService } from '../../../core/services/confirm.service';
                       <span class="badge badge-cancelled">Sin cuenta</span>
                     }
                   </td>
+
                   <td data-label="Acciones" class="actions-cell">
+                    @if (client.active) {
                     <button class="btn-xs btn-outline" (click)="startEdit(client)" title="Editar">
                       <span class="material-symbols-outlined">edit</span>
                     </button>
@@ -115,7 +119,9 @@ import { ConfirmService } from '../../../core/services/confirm.service';
                     <button class="btn-xs btn-danger" (click)="deactivate(client.id)" title="Desactivar">
                       <span class="material-symbols-outlined">person_off</span>
                     </button>
+                    }
                   </td>
+
                 }
               </tr>
             }
@@ -268,7 +274,8 @@ export class ClientList implements OnInit {
         );
         this.cdr.detectChanges();
       },
-      error: (err) =>{ this.toast.show('Error al buscar usuarios', 'error'); console.error(err)},
+      error: () =>{ this.toast.show('Error al buscar usuarios', 'error');this.cdr.detectChanges();},
+
     });
   }
 

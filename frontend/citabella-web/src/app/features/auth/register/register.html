@@ -53,9 +53,12 @@
         {{ loading ? 'Creando cuenta...' : 'Crear cuenta' }}
       </button>
     </form>
-
+    @if (error) {
+      <div class="auth-error">{{ error }}</div>
+    }
     <p class="auth-footer">
       ¿Ya tienes cuenta? <a routerLink="/login">Inicia sesión</a>
     </p>
   </div>
 </div>
+<app-toast-container></app-toast-container>

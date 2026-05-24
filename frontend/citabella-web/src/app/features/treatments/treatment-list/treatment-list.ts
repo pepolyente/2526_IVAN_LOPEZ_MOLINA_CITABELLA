@@ -10,7 +10,7 @@ import { ConfirmService } from '../../../core/services/confirm.service';
   standalone: false,
   template: `
     <div class="page-header">
-      <h2>Tratamientos</h2>
+      <h2>Servicios</h2>
       <button class="btn-primary" (click)="router.navigate(['/panel/treatments/new'])">
         <span class="material-symbols-outlined">add</span>
       </button>
@@ -31,7 +31,7 @@ import { ConfirmService } from '../../../core/services/confirm.service';
         <div class="search-wrapper">
           <input type="text"
                  [(ngModel)]="searchTerm"
-                 placeholder="Nombre del tratamiento..."
+                 placeholder="Nombre del servicio..."
                  (keyup.enter)="onSearch()"
                  class="inline-input" />
           <button class="btn-outline" (click)="onSearch()">Buscar</button>
@@ -169,7 +169,7 @@ export class TreatmentList implements OnInit {
   nextPage(): void { if (this.page < this.totalPages - 1) { this.page++; this.load(); } }
 
   async deactivate(id: number): Promise<void> {
-    const ok = await this.confirmSvc.confirm('¿Desactivar este tratamiento?');
+    const ok = await this.confirmSvc.confirm('¿Desactivar este servicio?');
     if (!ok) return;
     this.svc.deactivate(id).subscribe({
       next: () => { this.toast.show('Tratamiento desactivado'); this.load(); },

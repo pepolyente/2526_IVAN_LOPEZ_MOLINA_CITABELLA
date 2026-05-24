@@ -1,52 +1,112 @@
-<div class="page-header">
+<div class="page-header modal-create">
   <h2>Nueva cita</h2>
   <button class="btn-outline" (click)="cancel()">Cancelar</button>
 </div>
 
 <form class="form-card" (ngSubmit)="submit()">
-
   <div class="form-group">
     <label>Cliente</label>
-    <select [(ngModel)]="form.clientId" name="clientId">
-      <option [ngValue]="undefined">Sin cliente</option>
-      @for (c of clients; track c.id) {
-        <option [ngValue]="c.id">{{ c.name }} – {{ c.phoneNumber }}</option>
+    @if (!selectedClient) {
+      <div class="search-group">
+        <input type="text"
+               [(ngModel)]="clientSearchTerm"
+               (input)="searchClients()"
+               placeholder="Nombre del cliente"
+               class="input-large"
+               name="clientSearch" />
+      </div>
+      @if (clientResults.length > 0) {
+        <div class="results-list">
+          @for (c of clientResults; track c.id) {
+            <button type="button" class="result-item" (click)="selectClient(c)">
+              <strong>{{ c.name }}</strong> — {{ c.phoneNumber }}
+            </button>
+          }
+        </div>
       }
-    </select>
+    } @else {
+      <div class="selected-badge">
+        <span>{{ selectedClient.name }} ({{ selectedClient.phoneNumber }})</span>
+        <button type="button" class="btn-xs btn-outline" (click)="clearClient()">Cambiar</button>
+      </div>
+    }
   </div>
 
   <div class="form-group">
     <label>Empleado</label>
-    <select [(ngModel)]="form.employeeId" name="employeeId">
-      <option [ngValue]="undefined">Sin asignar</option>
-      @for (e of employees; track e.id) {
-        <option [ngValue]="e.id">{{ e.name }} ({{ e.position }})</option>
+    @if (!selectedEmployee) {
+      <div class="search-group">
+        <input type="text"
+               [(ngModel)]="employeeSearchTerm"
+               (input)="searchEmployees()"
+               placeholder="Nombre del empleado..."
+               class="input-large"
+               name="employeeSearch" />
+      </div>
+      @if (employeeResults.length > 0) {
+        <div class="results-list">
+          @for (e of employeeResults; track e.id) {
+            <button type="button" class="result-item" (click)="selectEmployee(e)">
+              {{ e.name }} — {{ e.position }}
+            </button>
+          }
+        </div>
       }
-    </select>
+    } @else {
+      <div class="selected-badge">
+        <span>{{ selectedEmployee.name }} ({{ selectedEmployee.position }})</span>
+        <button type="button" class="btn-xs btn-outline" (click)="clearEmployee()">Cambiar</button>
+      </div>
+    }
+  </div>
+
+  <div class="form-group">
+    <label>Tratamientos</label>
+    <div class="search-group">
+      <input type="text"
+             [(ngModel)]="treatmentSearchTerm"
+             (input)="searchTreatments()"
+             placeholder="Buscar tratamiento..."
+             class="input-large"
+             name="treatmentSearch" />
+    </div>
+    @if (treatmentResults.length > 0) {
+      <div class="treatments-grid">
+        @for (t of treatmentResults; track t.id) {
+          <button type="button"
+                  class="treatment-chip"
+                  [class.selected]="isTreatmentSelected(t.id)"
+                  (click)="toggleTreatment(t)">
+            <span class="chip-name">{{ t.name }}</span>
+            <span class="chip-price">{{ t.price }}€</span>
+            <span class="chip-duration">{{ t.minimumDuration }} min</span>
+          </button>
+        }
+      </div>
+    }
+    @if (selectedTreatments.length > 0) {
+      <div class="selected-treatments">
+        <label>Seleccionados:</label>
+        <div class="selected-chips">
+          @for (t of selectedTreatments; track t.id) {
+            <span class="selected-chip">
+              {{ t.name }}
+              <button type="button" class="remove-chip" (click)="toggleTreatment(t)">✕</button>
+            </span>
+          }
+        </div>
+      </div>
+    }
   </div>
 
   <div class="form-row">
     <div class="form-group">
       <label>Inicio</label>
-      <input type="datetime-local" [(ngModel)]="form.startAt" name="startAt" />
+      <input type="text" appFlatpickr [(ngModel)]="form.startAt" name="startAt" class="input-large" />
     </div>
     <div class="form-group">
       <label>Fin</label>
-      <input type="datetime-local" [(ngModel)]="form.endAt" name="endAt" />
-    </div>
-  </div>
-
-  <div class="form-group">
-    <label>Tratamientos</label>
-    <div class="treatments-list">
-      @for (t of treatments; track t.id) {
-        <label class="treatment-check">
-          <input type="checkbox"
-                 [checked]="isSelected(t.id)"
-                 (change)="toggleTreatment(t.id)" />
-          {{ t.name }} – {{ t.price | currency:'EUR' }}
-        </label>
-      }
+      <input type="text" appFlatpickr [(ngModel)]="form.endAt" name="endAt" class="input-large" />
     </div>
   </div>
 
@@ -55,9 +115,7 @@
     <textarea [(ngModel)]="form.notes" name="notes" rows="3" placeholder="Opcional..."></textarea>
   </div>
 
-  @if (error) { <p class="error-msg">{{ error }}</p> }
-
-  <button type="submit" class="btn-primary" [disabled]="loading || form.treatmentsIds.length === 0">
+  <button type="submit" class="btn-primary" [disabled]="loading">
     {{ loading ? 'Guardando...' : 'Crear cita' }}
   </button>
 </form>

@@ -21,7 +21,7 @@ import { ConfirmService } from '../../../core/services/confirm.service';
         <div class="search-wrapper">
           <input type="text"
                  [(ngModel)]="searchTerm"
-                 placeholder="Nombre o puesto..."
+                 placeholder="Nombre del empleado"
                  (keyup.enter)="onSearch()"
                  class="inline-input" />
           <button class="btn-outline" (click)="onSearch()">Buscar</button>

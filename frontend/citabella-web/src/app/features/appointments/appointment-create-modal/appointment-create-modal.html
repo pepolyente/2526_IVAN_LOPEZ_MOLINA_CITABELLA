@@ -32,7 +32,7 @@
             <div class="search-group">
               <input type="text"
                      [(ngModel)]="clientSearchTerm"
-                     placeholder="Nombre o teléfono..."
+                     placeholder="Nombre del cliente"
                      class="input-large"
                      (keyup.enter)="searchClients()" />
               <button class="btn-primary" (click)="searchClients()">Buscar</button>
@@ -59,11 +59,11 @@
         <div class="form-row-2" style="margin-top: 16px;">
           <div class="form-group">
             <label>Inicio</label>
-            <input type="datetime-local" [(ngModel)]="form.startAt" class="input-large" />
+            <input type="text" appFlatpickr [(ngModel)]="form.startAt" class="input-large" />
           </div>
           <div class="form-group">
             <label>Fin</label>
-            <input type="datetime-local" [(ngModel)]="form.endAt" class="input-large" />
+            <input type="text" appFlatpickr [(ngModel)]="form.endAt" class="input-large" />
           </div>
         </div>
       </div>
@@ -154,19 +154,19 @@
         <p class="step-hint">Revisa los datos antes de guardar</p>
         <div class="confirm-card">
           <div class="confirm-row">
-            <span class="confirm-label">🕐 Hora</span>
+            <span class="confirm-label">Hora</span>
             <span>{{ formatTime(form.startAt) }} – {{ formatTime(form.endAt) }}</span>
           </div>
           <div class="confirm-row">
-            <span class="confirm-label">👤 Cliente</span>
+            <span class="confirm-label">Cliente</span>
             <span>{{ selectedClient?.name || 'Sin cliente' }}</span>
           </div>
           <div class="confirm-row">
-            <span class="confirm-label">✂ Empleado</span>
+            <span class="confirm-label">Empleado</span>
             <span>{{ selectedEmployee?.name || 'Sin asignar' }}</span>
           </div>
           <div class="confirm-row">
-            <span class="confirm-label">💅 Servicios</span>
+            <span class="confirm-label">Servicios</span>
             <span>{{ selectedTreatments.map(t => t.name).join(', ') || 'Ninguno' }}</span>
           </div>
         </div>

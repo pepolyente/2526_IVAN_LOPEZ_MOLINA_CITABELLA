@@ -43,7 +43,9 @@ import { Router } from '@angular/router';
           <div class="form-group">
             <label>Tipo de uso</label>
             <select [(ngModel)]="newProduct.usageType" name="usageType">
-              <option value="">Sin especificar</option>
+              <option value="" disabled selected hidden>
+                Sin especificar
+              </option>
               <option value="INTERNAL">Uso interno</option>
               <option value="SALE">Venta</option>
               <option value="BOTH">Ambos</option>
@@ -82,7 +84,7 @@ import { Router } from '@angular/router';
         <div class="search-wrapper">
           <input type="text"
                  [(ngModel)]="searchTerm"
-                 placeholder="Nombre o categoría..."
+                 placeholder="Nombre del producto"
                  (keyup.enter)="onSearch()"
                  class="inline-input" />
           <button class="btn-outline" (click)="onSearch()">Buscar</button>

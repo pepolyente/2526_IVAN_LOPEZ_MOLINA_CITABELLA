@@ -7,7 +7,7 @@ import { ProductRequest } from '../../../shared/models/product.model';
   selector: 'app-product-form',
   standalone: false,
   template: `
-    <div class="page-header">
+    <div class="page-header modal-create">
       <h2>Nuevo producto</h2>
       <button class="btn-outline" (click)="router.navigate(['/panel/products'])">Cancelar</button>
     </div>
@@ -36,7 +36,9 @@ import { ProductRequest } from '../../../shared/models/product.model';
         <div class="form-group">
           <label>Tipo de uso</label>
           <select [(ngModel)]="form.usageType" name="usageType">
-            <option value="">Sin especificar</option>
+            <option value="" disabled selected hidden>
+              Sin especificar
+            </option>
             <option value="INTERNAL">Uso interno</option>
             <option value="SALE">Venta</option>
             <option value="BOTH">Ambos</option>
