@@ -35,6 +35,7 @@ export class FlatpickrDirective implements AfterViewInit, OnDestroy {
       dateFormat: 'Y-m-d\\TH:i:S',
       altInput: true,
       altFormat: 'd-m-Y H:i',
+      disableMobile: true,
     };
 
     const config = { ...defaultConfig, ...this.flatpickrConfig };

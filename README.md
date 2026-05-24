@@ -1,281 +1,182 @@
-# CitaBella — Sistema Integral de Gestión para Peluquerías
+#  CitaBella — Sistema Integral de Gestión para Peluquerías
 
-> **CitaBella** es un proyecto desarrollado como parte del módulo de **Proyecto Intermodular** del
-> **Ciclo Formativo de Grado Superior en Desarrollo de Aplicaciones Multiplataforma (DAM)**.
+> **Proyecto académico | Módulo de Proyecto Intermodular**
+> **CFGS Desarrollo de Aplicaciones Multiplataforma (DAM) — Curso 2025–2026**
 
----
-
-## ¿Qué es CitaBella y qué problema resuelve?
-
-Muchas peluquerías y pequeños negocios de estética siguen gestionando su día a día con medios que no escalan: una agenda
-de papel para las citas, el móvil personal para confirmar reservas por WhatsApp y hojas de cálculo para llevar un
-control básico del negocio. Este modelo manual es propenso a errores, genera duplicidades, no ofrece visibilidad en
-tiempo real y limita la capacidad de crecer.
-
-**CitaBella nace para digitalizar ese flujo de trabajo completo.** El objetivo es sustituir los procesos manuales por
-una solución moderna, segura y escalable, desarrollada específicamente para el contexto de una peluquería real, con sus
-empleados, sus tratamientos y sus clientes.
-
-El sistema cubre el ciclo completo de una cita: desde que un cliente se registra o es dado de alta por el personal,
-pasando por la reserva y confirmación, hasta el cierre del servicio. Todo ello con control de acceso por roles,
-historial de estados y una interfaz clara tanto en escritorio como en móvil.
+[![Estado MVP](https://img.shields.io/badge/Fase%201%20MVP-100%25%20completado-success?style=for-the-badge&logo=github)](#)
+[![Docker Compose](https://img.shields.io/badge/despliegue-Docker%20Compose-blue?style=for-the-badge&logo=docker)](#)
+[![Java 17](https://img.shields.io/badge/backend-Java%2017%20%2B%20Spring%20Boot%203-6DB33F?style=for-the-badge&logo=spring)](#)
+[![Angular 21](https://img.shields.io/badge/frontend-Angular%2021-DD0031?style=for-the-badge&logo=angular)](#)
+[![Flutter](https://img.shields.io/badge/m%C3%B3vil-Flutter%20%2B%20WebView-02569B?style=for-the-badge&logo=flutter)](#)
 
 ---
 
-## ✅ Estado actual — Fase 1 completada (MVP)
+##  Visión general
 
-| Componente                                 | Estado         |
-|--------------------------------------------|----------------|
-| 🧩 Análisis y diseño del sistema           | ✅ Completado   |
-| ⚙️ Backend API REST (Spring Boot + JWT)    | ✅ Completado   |
-| 💻 Frontend web (Angular 18)               | ✅ Completado   |
-| 📱 Aplicación móvil (Flutter WebView)      | ✅ Completado   |
-| 🐳 Arquitectura Docker Compose integrada   | ✅ Completado   |
-| 📝 Documentación técnica (memoria)         | ✅ Completado   |
-| 📈 Gestión de ventas e inventario (Fase 2) | 🔜 Planificado |
-| 🔔 Notificaciones automáticas (Fase 3)     | 🔜 Planificado |
+**CitaBella** digitaliza por completo la operativa diaria de una peluquería o centro de estética. Sustituye las agendas de papel, las confirmaciones manuales por WhatsApp y las hojas de cálculo dispersas por un ecosistema de software moderno, seguro y desplegable con un solo comando.
+
+La **Fase 1 (MVP)** está completamente cerrada, probada y lista para evaluación. Cubre el ciclo de vida completo de una cita —desde el registro del cliente hasta el cierre del servicio— con control de acceso por roles, interfaz web SPA, aplicación móvil nativa y una arquitectura de contenedores lista para producción académica.
+
+<p align="center">
+  <img src="docs/diagrams/Diagrama de Contexto del Sistema.png" alt="Diagrama de Contexto del Sistema" width="600">
+</p>
 
 ---
 
-## Qué ofrece la Fase 1 (MVP)
+## 🏗 Arquitectura del sistema
 
-La Fase 1 constituye el núcleo operativo del sistema. No es una demo ni un prototipo: es una aplicación funcional y
-desplegable que cubre los procesos cotidianos de una peluquería de principio a fin.
+El sistema sigue una arquitectura **cliente‑servidor contenerizada** con un único punto de entrada. Solo el proxy inverso Nginx está expuesto al exterior; el backend Spring Boot y la base de datos MySQL viven en una red interna aislada (`app-net`).
 
-### Gestión de citas
+<p align="center">
+  <img src="docs/diagrams/Arquitectura del Sistema — Docker Compose.png" alt="Arquitectura Docker Compose" width="750">
+</p>
 
-El módulo central del sistema. Permite crear, visualizar, modificar y cancelar citas con una interfaz de calendario
-integrada (vistas por mes, semana y día). Cada cita atraviesa una máquina de estados controlada:
+La autenticación es **stateless mediante JWT (HS256)**. Tras el login, el token se almacena en el cliente y viaja en cada petición dentro de un interceptor HTTP. El backend valida la firma y los roles en cada endpoint sin mantener sesión en servidor.
 
-```
-PENDING → CONFIRMED → IN_PROGRESS → COMPLETED
-                   ↘ CANCELLED / NO_SHOW
-```
+###  Flujo de autenticación
 
-El sistema detecta automáticamente solapamientos de citas para el mismo empleado y los advierte visualmente. La creación
-de citas sigue un asistente de tres pasos: selección de cliente y horario, elección de tratamientos y empleado, y
-confirmación con resumen.
+1. **Login** → el servidor genera un JWT firmado.
+2. El JWT se guarda en `localStorage` (web) o en el almacenamiento del WebView (móvil).
+3. Un **interceptor** añade automáticamente `Authorization: Bearer <token>` a todas las peticiones.
+4. El filtro `JwtAuthFilter` valida el token, extrae el rol y lo inyecta en el `SecurityContextHolder`.
 
-### Gestión de clientes y empleados
-
-Alta, edición y desactivación de clientes y empleados con borrado lógico (los registros nunca se eliminan físicamente,
-garantizando trazabilidad). Cada cliente o empleado puede vincularse a una cuenta de usuario del sistema, activando
-automáticamente el rol y permisos correspondientes.
-
-### Catálogo de tratamientos y productos
-
-Gestión completa del catálogo de servicios (con duración mínima/máxima y precio) y del inventario de productos (con
-precio de compra, precio de venta, tipo de uso y proveedor). La zona pública del sistema muestra estos catálogos sin
-necesidad de autenticación.
-
-### Zona pública informativa
-
-Página de inicio, listado de servicios y catálogo de productos accesibles para cualquier visitante, sin necesidad de
-cuenta. Pensada para ser el escaparate digital del negocio.
-
-### Control de acceso por roles
-
-Cuatro roles con permisos diferenciados: `ADMIN`, `EMPLOYEE`, `CLIENT` y `USER`. El acceso a cada sección del panel
-privado está protegido tanto a nivel de enrutamiento (frontend) como a nivel de endpoint (backend), sin posibilidad de
-saltarse las restricciones desde el cliente.
-
-| Rol        | Capacidades                                                                                |
-|------------|--------------------------------------------------------------------------------------------|
-| `ADMIN`    | Acceso completo: citas, clientes, empleados, tratamientos, productos y gestión de usuarios |
-| `EMPLOYEE` | Gestión operativa: crear y consultar citas, registrar y consultar clientes                 |
-| `CLIENT`   | Consulta de sus propias citas desde el panel privado                                       |
-| Visitante  | Zona pública: inicio, servicios y productos (sin autenticación)                            |
-
-### Aplicación móvil funcional
-
-Una app Android nativa (Flutter) que empaqueta la interfaz web Angular mediante WebView avanzado, ofreciendo experiencia
-móvil completa desde el primer día sin duplicar código ni lógica de negocio.
-
-### Despliegue con un solo comando
-
-Toda la infraestructura (base de datos, backend y frontend) arranca con `docker compose up`. No se requiere
-configuración manual de servicios ni instalación de dependencias en el servidor.
+| Diagrama de secuencia | Enlace |
+|-----------------------|--------|
+| Login JWT | [UML - Login JWT.png](docs/diagrams/UML%20-%20Login%20JWT.png) |
+| Petición autenticada | [UML - Peticion Autenticada JWT.png](docs/diagrams/UML%20-%20Peticion%20Autenticada%20JWT.png) |
+| JWT expirado/inválido | [UML - JWT Expirado o Invalido.png](docs/diagrams/UML%20-%20JWT%20Expirado%20o%20Invalido.png) |
 
 ---
 
-## Arquitectura del sistema
+##  Stack tecnológico
 
-El sistema sigue una **arquitectura cliente-servidor completamente contenerizada**, con un único punto de entrada
-externo. El backend y la base de datos nunca están expuestos directamente: toda la comunicación pasa por Nginx.
-
-```
-                    ┌─────────────────────────────────────────┐
-                    │              Docker Compose              │
-                    │                                          │
-  Navegador / App ──┼──► Nginx (:80) ──► Angular (SPA)        │
-                    │        │                                 │
-                    │        └──► /api ──► Spring Boot (:8080) │
-                    │                          │               │
-                    │                       MySQL 8 (:3306)    │
-                    └─────────────────────────────────────────┘
-```
-
-La autenticación es **stateless mediante JWT** (HS256). Una vez que el usuario inicia sesión, el token se almacena en
-`localStorage` y se adjunta automáticamente a todas las peticiones posteriores mediante un interceptor HTTP en Angular.
-El backend valida el token en cada petición sin necesidad de mantener sesión en servidor.
+| Componente | Tecnología |
+| :--- | :--- |
+| Lenguaje backend | Java 17 |
+| Framework backend | Spring Boot 3.x (Maven) |
+| Seguridad | Spring Security + JWT (HS256) |
+| Base de datos | MySQL 8 |
+| ORM | JPA / Hibernate (Spring Data) |
+| Frontend web | Angular 21 (SPA, NgModules) |
+| Aplicación móvil | Flutter ≥3.3 + InAppWebView |
+| Proxy inverso | Nginx (Alpine) |
+| Contenerización | Docker + Docker Compose |
+| Documentación API | Springdoc OpenAPI (Swagger UI) |
+| Gestión de proyecto | GitHub Projects + monorepo Git |
 
 ---
 
-## Stack tecnológico
+##  Pilares técnicos del MVP
 
-| Componente           | Tecnología                     |
-|----------------------|--------------------------------|
-| Lenguaje backend     | Java 17                        |
-| Framework backend    | Spring Boot 3.x                |
-| Seguridad            | Spring Security + JWT (HS256)  |
-| Base de datos        | MySQL 8                        |
-| ORM                  | JPA / Hibernate (Spring Data)  |
-| Frontend web         | Angular 18                     |
-| Aplicación móvil     | Flutter SDK ≥3.3 (WebView)     |
-| Proxy inverso        | Nginx                          |
-| Contenerización      | Docker / Docker Compose        |
-| Documentación API    | Springdoc OpenAPI (Swagger UI) |
-| Control de versiones | Git / GitHub                   |
-| Gestión de tareas    | GitHub Projects                |
+### ⚙️ Backend — API REST profesional
 
----
+| Característica | Descripción |
+|---------------|-------------|
+| **Arquitectura por capas** | Controladores → Servicios → Repositorios → Entidades JPA. Separación estricta de responsabilidades. |
+| **Seguridad sin estado** | JWT HS256 + filtro `OncePerRequestFilter`. Roles `ADMIN`, `EMPLOYEE`, `CLIENT` y `USER`. Endpoints protegidos con `@PreAuthorize`. |
+| **Máquina de estados de citas** | `PENDING → CONFIRMED → IN_PROGRESS → COMPLETED`. Transiciones con cancelación y `NO_SHOW`. Detección automática de solapamientos mediante JPQL. |
+| **Borrado lógico** | Todos los registros se desactivan (`active = false`). Los usuarios se bloquean (`LOCKED`). Trazabilidad total. |
+| **DTOs inmutables** | Uso de `record` de Java + validación Jakarta (`@NotBlank`, `@Email`, etc.). Respuestas paginadas uniformes con `PageResponse<T>`. |
+| **Manejo global de excepciones** | `GlobalExceptionHandler` que traduce cada excepción (404, 400, 403, 500) a un JSON estructurado. |
+| **Inicializador de datos demo** | `DemoDataInitializer` puebla automáticamente roles, administrador, empleados, clientes, tratamientos y productos si la BD está vacía y `app.demo.enabled=true`. |
 
-## 📁 Estructura del repositorio
+<p align="center">
+  <img src="docs/diagrams/ERD Chen - Usuarios, Clientes y Seguridad.png" alt="ERD Usuarios, Clientes y Seguridad" width="650">
+  <br>
+  <em>Modelo entidad-relación del núcleo de seguridad y clientes.</em>
+</p>
 
-```
-CitaBella/
-│
-├── app/                    → Aplicación móvil (Flutter WebView)
-├── backend/                → API REST (Spring Boot + Dockerfile multistage)
-│   └── CitaBellaAPI/
-├── db/                     → Scripts y configuración de base de datos
-├── frontend/               → Aplicación web (Angular 18 + Dockerfile multistage)
-│   └── citabella-web/
-├── nginx/                  → Configuración del proxy inverso
-│   └── nginx.conf
-├── docs/                   → Documentación técnica
-│   ├── Backend.md          → API REST, entidades, seguridad y endpoints
-│   ├── Frontend.md         → Angular, módulos, enrutamiento y diseño
-│   ├── DevOps.md           → Docker Compose, Dockerfiles y despliegue
-│   ├── App-Android-IOS.md  → Aplicación Flutter y configuración móvil
-│   ├── capturas/
-│   └── diagramas/
-│
-├── .env.example            → Plantilla de variables de entorno
-├── docker-compose.yml      → Orquestación completa del sistema
-├── LICENSE
-└── README.md
-```
+### 💻 Frontend Web — SPA en Angular 21
 
----
+| Característica | Descripción |
+|---------------|-------------|
+| **Lazy loading por módulos** | Cada área funcional (citas, clientes, empleados, etc.) se carga bajo demanda. Rutas protegidas por `AuthGuard` y `RoleGuard`. |
+| **Interceptor JWT automático** | Adjunta el token a todas las peticiones salientes. Maneja errores 401 y 403 redirigiendo al login o a la home. |
+| **Calendario interactivo** | Integración con FullCalendar (vistas mes/semana/día). Creación de citas mediante un asistente de 3 pasos. Colores por estado e indicador de solapamiento (⚠️). |
+| **Diseño responsivo con tokens CSS** | Más de 60 variables CSS (colores, sombras, radios). Tema claro (Navy) y oscuro (Gold) con selector de tema persistente. |
+| **Edición inline y formularios reactivos** | Tablas paginadas con búsqueda, ordenación y edición en línea para clientes, empleados, tratamientos y productos. |
+| **Zona pública** | Home, catálogo de servicios y productos accesibles sin autenticación. Efectos de glassmorfismo, skeleton loading y diseño atractivo. |
 
-## 📚 Documentación técnica
+### 📱 Aplicación Móvil — Shell nativo Flutter + WebView
 
-La documentación detallada de cada componente se encuentra en la carpeta `docs/`. Cada archivo describe en profundidad
-la arquitectura, las decisiones de diseño y las instrucciones de uso de su módulo:
+| Característica | Descripción |
+|---------------|-------------|
+| **WebView avanzado** | Utiliza `flutter_inappwebview` (no `webview_flutter`) para embeber la SPA Angular con soporte completo de JavaScript, DOM Storage e IndexedDB. |
+| **Experiencia nativa** | Splash screen nativo (API Android 12+), pantalla de error sin conexión, pull-to-refresh y gestión del botón Atrás con diálogo de salida. |
+| **Sin duplicar código** | Toda la lógica de negocio, autenticación e interfaz reside en la SPA Angular. Flutter solo gestiona la capa de presentación nativa y la conectividad. |
+| **Configuración por entorno** | URL del servidor centralizada en `app_config.dart`. Compatible con emulador Android, dispositivo físico en red local y despliegue productivo con Nginx. |
 
-| Documento                                            | Contenido                                                                                                                                 |
-|------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------|
-| [`docs/Backend.md`](docs/Backend.md)                 | Estructura de paquetes, capas (controladores, servicios, repositorios, DTOs), seguridad JWT, endpoints, modelo de dominio y enums         |
-| [`docs/Frontend.md`](docs/Frontend.md)               | Módulos Angular con lazy loading, sistema de enrutamiento, guards, interceptores, componentes por zona y sistema de diseño con tokens CSS |
-| [`docs/DevOps.md`](docs/DevOps.md)                   | Dockerfiles multistage, Docker Compose, variables de entorno, Nginx como proxy inverso, healthchecks y checklist de producción            |
-| [`docs/App-Android-IOS.md`](docs/App-Android-IOS.md) | Arquitectura Flutter WebView, flujo de arranque, estados del WebView, conectividad, configuración por entorno y compilación               |
+### 🐳 DevOps e Infraestructura — Docker Compose
 
-La memoria completa del proyecto está disponible en [`docs/Memoria.pdf`](docs/Memoria.pdf).
+| Característica | Descripción |
+|---------------|-------------|
+| **Tres servicios contenerizados** | `mysql` (MySQL 8), `backend` (Spring Boot + Maven multistage), `nginx` (Angular + proxy inverso). Solo Nginx expone el puerto 80. |
+| **Healthchecks y arranque ordenado** | El backend espera a que MySQL esté listo con `wait-for-it.sh`. Nginx solo arranca cuando el backend supera el healthcheck de Spring Actuator (`service_healthy`). |
+| **Dockerfiles multietapa** | Backend compila con Maven y empaqueta solo el JAR en una imagen ligera de `eclipse-temurin`. Frontend compila con Node 22 y sirve los estáticos con Nginx Alpine. |
+| **Persistencia de datos** | Volumen Docker `mysql_data` para conservar la BD entre recreaciones de contenedores. Backend and Nginx son completamente stateless. |
+| **Variables de entorno centralizadas** | Archivo `.env` para credenciales, JWT, administrador inicial. El perfil Docker de Spring Boot activa `application-docker.properties`. |
 
 ---
 
-## 🚀 Instalación y ejecución
+## 📚 Documentación avanzada
+
+Cada módulo del sistema cuenta con su propia guía técnica detallada dentro del directorio `docs/`.
+
+| Documento | Contenido |
+|-----------|---|
+| [`docs/Backend.md`](docs/Backend.md) | API REST, paquetes, seguridad JWT, capas de servicio, endpoints, modelo de dominio, enums y buenas prácticas. |
+| [`docs/Frontend.md`](docs/Frontend.md) | Módulos Angular con lazy loading, guards, interceptores, componentes por zona, calendario, diseño visual, tokens CSS y configuración. |
+| [`docs/DevOps.md`](docs/DevOps.md) | Docker Compose, Dockerfiles multietapa, Nginx, healthchecks, persistencia, variables de entorno y checklist de producción. |
+| [`docs/App-Android-IOS.md`](docs/App-Android-IOS.md) | App Flutter WebView, flujo de arranque, estados de conectividad, configuración del WebView, permisos y compilación. |
+| [`docs/Historias_de_usuario.md`](docs/Historias_de_usuario.md) | Definición completa de los requisitos funcionales del sistema expresados como historias de usuario. |
+| [`docs/api-docs.html`](docs/api-docs.html) | **Documentación interactiva de la API REST.** Página estática autogenerada con Springdoc OpenAPI que permite explorar y probar visualmente todos los endpoints sin compilar ni levantar el servidor. El tribunal puede auditar la API completa con un solo clic. |
+
+Los diagramas de arquitectura, entidad‑relación y secuencia UML están disponibles en la carpeta [`docs/diagrams/`](docs/diagrams/).
+
+---
+
+## 🚀 Despliegue rápido
 
 ### Requisitos previos
-
-- Docker Desktop (o Docker Engine + Compose v2)
-- Fichero `.env` configurado a partir de la plantilla:
+- Docker Desktop (o Docker Engine + Docker Compose v2)
+- Archivo `.env` configurado a partir de la plantilla
 
 ```bash
 cp .env.example .env
 # Editar .env con los valores reales
+
 ```
 
-### Opción 1 — Entorno completo con Docker (recomendado)
+### Entorno completo (recomendado)
 
 ```bash
-git clone https://github.com/pepolyente/2526_IVAN_LOPEZ_MOLINA_CITABELLA.git
+git clone [https://github.com/pepolyente/2526_IVAN_LOPEZ_MOLINA_CITABELLA.git](https://github.com/pepolyente/2526_IVAN_LOPEZ_MOLINA_CITABELLA.git)
 cd 2526_IVAN_LOPEZ_MOLINA_CITABELLA
 docker compose up -d
+
 ```
 
 La aplicación estará disponible en `http://localhost`.
-La documentación interactiva de la API (Swagger UI) estará en `http://localhost/swagger-ui.html`.
 
-Para reconstruir tras cambios en el código:
+La documentación interactiva Swagger UI en `http://localhost/swagger-ui.html`.
 
-```bash
-docker compose up -d --build
-```
-
-### Opción 2 — Frontend en modo desarrollo
-
-```bash
-cd frontend/citabella-web
-npm install
-ng serve        # Disponible en http://localhost:4200
-```
-
-El proxy de Angular redirige automáticamente `/api` hacia el backend en `localhost:8080`.
-
-### Opción 3 — Aplicación móvil (Flutter)
-
-```bash
-cd app
-flutter pub get
-# Ajustar baseUrl en lib/core/config/app_config.dart según el entorno
-flutter run
-```
-
-La app carga la interfaz Angular mediante WebView. Ver [`docs/App-Android-IOS.md`](docs/App-Android-IOS.md) para la
-configuración de URLs por entorno (emulador, dispositivo físico, producción).
+> 💡 **Usuarios de prueba**
+> Tras el primer arranque (con `app.demo.enabled=true` por defecto), el inicializador crea automáticamente los siguientes accesos:
+> * **Administrador:** `citabella` / `citabella123`
+> * Clientes, empleados y usuarios adicionales listados en la documentación del backend.
+>
+>
 
 ---
 
-## 🔀 Repositorio y flujo de trabajo
+## 🛣️ Roadmap / Futuras líneas de trabajo (Fase 2 y 3)
 
-El proyecto utiliza una estrategia de **monorepo** con ramas separadas por módulo:
+El modelo de datos y la arquitectura se diseñaron desde la Fase 1 para absorber las siguientes ampliaciones sin reestructuraciones. Las entidades y repositorios ya están definidos en el código base.
 
-| Rama           | Propósito                         |
-|----------------|-----------------------------------|
-| `main`         | Versión estable del sistema       |
-| `dev`          | Rama de integración principal     |
-| `dev-backend`  | Desarrollo de la API REST         |
-| `dev-frontend` | Desarrollo de la interfaz web     |
-| `dev-app`      | Desarrollo de la aplicación móvil |
-| `docs`         | Documentación y memoria técnica   |
-
-### Flujo de integración
-
-```
-dev-backend ──┐
-dev-frontend ──┼──► dev ──► main
-dev-app ───────┘
-docs ──────────┘
-```
-
-La planificación y el seguimiento de tareas se han gestionado con **GitHub Projects**, organizando el trabajo en
-estados (pendiente, en desarrollo, completada) de forma incremental y alineada con las fases del proyecto.
-
----
-
-## 🗓️ Fases del proyecto
-
-El modelo de datos y la arquitectura están diseñados desde la Fase 1 para soportar las ampliaciones futuras sin
-reestructuraciones. Los dominios de ventas, stock, notificaciones y auditoría ya tienen entidades y repositorios
-definidos en el backend, pendientes de implementar en las siguientes fases.
-
-| Fase          | Periodo             | Contenido                                                             |
-|---------------|---------------------|-----------------------------------------------------------------------|
-| **Fase 1** ✅  | Oct 2025 – Abr 2026 | Análisis, diseño, backend, frontend, app móvil, Docker, documentación |
-| **Fase 2** 🔜 | Planificado         | Gestión de ventas, inventario y control de stock                      |
-| **Fase 3** 🔜 | Planificado         | Notificaciones automáticas por email, push y WhatsApp                 |
+| Fase | Estado | Contenido |
+| --- | --- | --- |
+| **Fase 2** | Planificado | Gestión de ventas (TPV), inventario y control de stock en tiempo real. |
+| **Fase 3** | Planificado | Notificaciones automáticas por email, push (FCM) y WhatsApp. Recordatorios de cita, felicitaciones de cumpleaños y promociones. |
 
 ---
 
@@ -283,10 +184,10 @@ definidos en el backend, pendientes de implementar en las siguientes fases.
 
 **Iván López Molina**
 
-- 🎓 Ciclo Formativo de Grado Superior en Desarrollo de Aplicaciones Multiplataforma (DAM)
-- 🏫 IES La Vereda — Tutor: Francisco Hernández
-- 📅 Curso 2025–2026
-- 📍 La Pobla de Vallbona, Valencia
+* 🎓 CFGS Desarrollo de Aplicaciones Multiplataforma (DAM)
+* 🏫 IES La Vereda — Tutor: Francisco Hernández
+* 📅 Curso 2025–2026
+* 📍 La Pobla de Vallbona, Valencia
 
 🔗 [LinkedIn](https://www.linkedin.com/in/ivan-lopez-molina) · [GitHub](https://github.com/pepolyente)
 
@@ -297,5 +198,3 @@ definidos en el backend, pendientes de implementar en las siguientes fases.
 Copyright © 2025–2026 Iván López Molina. Todos los derechos reservados.
 
 Este código fuente y sus archivos asociados están protegidos por derechos de autor. No se permite su uso, reproducción, modificación, distribución o publicación total o parcial sin el consentimiento expreso del autor.
-
-> ⚠️ Este repositorio es privado y corresponde a un proyecto académico en curso.
