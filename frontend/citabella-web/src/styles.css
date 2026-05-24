@@ -156,6 +156,25 @@ html, body {
   background: var(--color-border);
   color: var(--color-text);
 }
+.inactive-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  background: var(--badge-cancelled-bg);
+  color: var(--badge-cancelled-text);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+@media (max-width: 767px) {
+  .actions-cell .inactive-badge {
+    width: 100%;
+    justify-content: center;
+  }
+}
 
 .badge-pending    { background: var(--badge-pending-bg);     color: var(--badge-pending-text); }
 .badge-confirmed  { background: var(--badge-confirmed-bg);   color: var(--badge-confirmed-text); }
@@ -3561,13 +3580,11 @@ button, a, input, select, textarea, label {
   transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
 }
 
-
 .flatpickr-day:hover:not(.selected):not(.today) {
   background: var(--color-primary-alpha);
   color: var(--color-primary);
   border-color: transparent;
 }
-
 
 .flatpickr-day.selected,
 .flatpickr-day.selected:hover {
@@ -3629,6 +3646,7 @@ html.theme-dark .flatpickr-day.selected:hover {
   background: var(--color-primary);
   color: #ffffff !important;
 }
+
 .flatpickr-time input:focus,
 .flatpickr-time .numInputWrapper input:focus {
   border-color: var(--color-primary);
@@ -3642,10 +3660,79 @@ html.theme-dark .flatpickr-day.selected:hover {
   background: var(--color-primary-alpha);
   color: var(--color-text);
 }
+
 .flatpickr-input[readonly] {
   background: var(--color-surface) !important;
   cursor: pointer;
 }
+
+/* ── Estilo unificado y robusto para el select de meses (Flatpickr) ── */
+.flatpickr-monthDropdown-months,
+.flatpickr-monthDropdown-months:focus,
+.flatpickr-monthDropdown-months:active,
+.flatpickr-monthDropdown-months:focus-visible,
+.flatpickr-monthDropdown-months:hover {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background: var(--color-surface) !important;
+  border: 1px solid var(--color-border) !important;
+  border-radius: var(--radius) !important;
+  color: var(--color-text) !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 14px !important;
+  padding: 4px 24px 4px 10px !important;
+  cursor: pointer !important;
+  outline: none !important;
+  box-shadow: none !important;
+  line-height: normal;
+}
+
+.flatpickr-monthDropdown-months:hover {
+  border-color: var(--color-primary) !important;
+}
+
+.flatpickr-monthDropdown-months:focus,
+.flatpickr-monthDropdown-months:focus-visible {
+  border-color: var(--color-primary) !important;
+  box-shadow: 0 0 0 3px var(--color-primary-focus) !important;
+}
+
+/* Opciones internas del select (meses) */
+.flatpickr-monthDropdown-months option {
+  background: var(--color-surface) !important;
+  color: var(--color-text) !important;
+  padding: 8px !important;
+}
+
+.flatpickr-monthDropdown-months option:checked,
+.flatpickr-monthDropdown-months option:hover {
+  background: var(--color-primary-alpha) !important;
+  color: var(--color-primary) !important;
+}
+
+/* Tema oscuro (si usas .theme-dark) */
+html.theme-dark .flatpickr-monthDropdown-months,
+html.theme-dark .flatpickr-monthDropdown-months:focus,
+html.theme-dark .flatpickr-monthDropdown-months:active,
+html.theme-dark .flatpickr-monthDropdown-months:focus-visible,
+html.theme-dark .flatpickr-monthDropdown-months:hover {
+  background: var(--color-surface) !important;
+  border-color: var(--color-border) !important;
+  color: var(--color-text) !important;
+}
+
+html.theme-dark .flatpickr-monthDropdown-months option {
+  background: var(--color-surface) !important;
+  color: var(--color-text) !important;
+}
+
+html.theme-dark .flatpickr-monthDropdown-months option:checked,
+html.theme-dark .flatpickr-monthDropdown-months option:hover {
+  background: var(--color-primary-alpha) !important;
+  color: var(--color-primary) !important;
+}
+
 /*-------------------------------------------------------------------------*/
 
 /* ── Estilos para selects (desplegables) ───────────────────────── */

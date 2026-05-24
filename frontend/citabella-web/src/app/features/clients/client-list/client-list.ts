@@ -104,21 +104,26 @@ import { ConfirmService } from '../../../core/services/confirm.service';
 
                   <td data-label="Acciones" class="actions-cell">
                     @if (client.active) {
-                    <button class="btn-xs btn-outline" (click)="startEdit(client)" title="Editar">
-                      <span class="material-symbols-outlined">edit</span>
-                    </button>
-                    @if (!client.linkedUsername) {
-                      <button class="btn-xs btn-outline" (click)="openLinkModal(client)" title="Vincular usuario">
-                        <span class="material-symbols-outlined">link</span>
+                      <!-- Botones para clientes activos -->
+                      <button class="btn-xs btn-outline" (click)="startEdit(client)" title="Editar">
+                        <span class="material-symbols-outlined">edit</span>
+                      </button>
+                      @if (!client.linkedUsername) {
+                        <button class="btn-xs btn-outline" (click)="openLinkModal(client)" title="Vincular usuario">
+                          <span class="material-symbols-outlined">link</span>
+                        </button>
+                      } @else {
+                        <button class="btn-xs btn-danger" (click)="unlink(client.id)" title="Desvincular usuario">
+                          <span class="material-symbols-outlined">link_off</span>
+                        </button>
+                      }
+                      <button class="btn-xs btn-danger" (click)="deactivate(client.id)" title="Desactivar">
+                        <span class="material-symbols-outlined">person_off</span>
                       </button>
                     } @else {
-                      <button class="btn-xs btn-danger" (click)="unlink(client.id)" title="Desvincular usuario">
-                        <span class="material-symbols-outlined">link_off</span>
-                      </button>
-                    }
-                    <button class="btn-xs btn-danger" (click)="deactivate(client.id)" title="Desactivar">
-                      <span class="material-symbols-outlined">person_off</span>
-                    </button>
+                        <span class="badge badge-cancelled inactive-badge">
+                        <span class="material-symbols-outlined">block</span> Inactivo
+                        </span>
                     }
                   </td>
 

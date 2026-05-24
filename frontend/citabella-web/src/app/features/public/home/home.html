@@ -167,6 +167,8 @@
           </a>
           <a routerLink="/register" class="btn-cta-banner-ghost">Crear cuenta gratis</a>
         </div>
+      } @else if ((auth.getRole() !== "ADMIN" && auth.getRole() !== "EMPLOYEE" && auth.getRole() !== "CLIENT")){
+
       } @else {
         <a routerLink="/panel" class="btn-cta-banner-primary">
           Ver mi agenda
